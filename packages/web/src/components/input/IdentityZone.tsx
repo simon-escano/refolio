@@ -88,9 +88,11 @@ export function IdentityZone({ value, onChange, disabled }: Props) {
             {/* Contact fields */}
             <div className="space-y-2.5">
               <InputRow icon={Mail} label="Email" value={value.email} onChange={(v) => update("email", v)} placeholder="hello@example.com" disabled={disabled} />
+              <InputRow icon={Phone} label="Mobile" value={value.mobile || ""} onChange={(v) => update("mobile", v)} placeholder="+1 234 567 890" disabled={disabled} />
               <InputRow icon={Github} label="GitHub" value={value.github} onChange={(v) => update("github", v)} placeholder="https://github.com/username" disabled={disabled} />
               <InputRow icon={Linkedin} label="LinkedIn" value={value.linkedin} onChange={(v) => update("linkedin", v)} placeholder="https://linkedin.com/in/username" disabled={disabled} />
               <InputRow icon={Globe} label="Website" value={value.website} onChange={(v) => update("website", v)} placeholder="https://yoursite.dev" disabled={disabled} />
+              <InputRow icon={Heart} label="Hobbies" value={value.hobbies || ""} onChange={(v) => update("hobbies", v)} placeholder="Photography, Keyboards, Hiking" disabled={disabled} />
             </div>
           </div>
         </div>

@@ -3,6 +3,8 @@ import { Header } from "./components/layout/Header";
 import { Footer } from "./components/layout/Footer";
 import { IdentityZone } from "./components/input/IdentityZone";
 import { GitloreQueue, type ProjectEntry } from "./components/input/GitloreQueue";
+import { ExperienceZone, type ExperienceEntry } from "./components/input/ExperienceZone";
+import { SkillsZone, type SkillEntry, type LanguageEntry } from "./components/input/SkillsZone";
 import { HustleZone, type AchievementEntry, type CredentialEntry } from "./components/input/HustleZone";
 import { ProgressFeed } from "./components/progress/ProgressFeed";
 import { OutputTabs } from "./components/output/OutputTabs";
@@ -22,13 +24,16 @@ import type { ProgressEvent } from "./types/portfolio";
 export default function App() {
   // ─── Form State ───
   const [profile, setProfile] = usePersistedState("monofolio_profile", {
-    name: "", role: "", email: "", github: "", linkedin: "", website: "",
+    name: "", role: "", email: "", mobile: "", github: "", linkedin: "", website: "", hobbies: "",
   });
   const [projects, setProjects] = usePersistedState<ProjectEntry[]>("monofolio_projects", [
     { url: "", title: "", contributions: "", context: "", gallery: [], links: [] },
   ]);
   const [achievements, setAchievements] = usePersistedState<AchievementEntry[]>("monofolio_achievements", []);
   const [credentials, setCredentials] = usePersistedState<CredentialEntry[]>("monofolio_credentials", []);
+  const [experience, setExperience] = usePersistedState<ExperienceEntry[]>("monofolio_experience", []);
+  const [tech, setTech] = usePersistedState<SkillEntry[]>("monofolio_tech", []);
+  const [languages, setLanguages] = usePersistedState<LanguageEntry[]>("monofolio_languages", []);
 
   // ─── Pipeline State ───
   const [progress, setProgress] = useState<ProgressEvent[]>([]);
@@ -58,13 +63,20 @@ export default function App() {
         profile: {
           name: profile.name, role: profile.role,
           email: profile.email || undefined,
+          mobile: profile.mobile || undefined,
           github: profile.github || undefined,
           linkedin: profile.linkedin || undefined,
           website: profile.website || undefined,
+          hobbies: profile.hobbies || undefined,
         },
         projects: projects.filter((p) => p.url.trim() && p.title.trim()),
         achievements: achievements.filter((a) => a.title.trim()),
         credentials: credentials.filter((c) => c.title.trim()),
+        experience: experience.filter((e) => e.company.trim() && e.role.trim()),
+        skills: {
+          tech: tech.filter((t) => t.title.trim()),
+          languages: languages.filter((l) => l.title.trim()),
+        },
       },
       {
         onProgress: (event) => setProgress((prev) => [...prev, event]),
@@ -161,6 +173,12 @@ export default function App() {
                   <GitloreQueue projects={projects} onChange={setProjects} disabled={isGenerating} />
                 </div>
 
+                {/* Row 2: Experience + Skills side by side */}
+                <div className="grid gap-4 md:grid-cols-[1.4fr_1fr]">
+                  <ExperienceZone experience={experience} onChange={setExperience} disabled={isGenerating} />
+                  <SkillsZone tech={tech} languages={languages} onTechChange={setTech} onLanguagesChange={setLanguages} disabled={isGenerating} />
+                </div>
+
                 {/* Row 2: Achievements + Credentials side by side */}
                 <div className="grid gap-4 md:grid-cols-2">
                   <HustleZone
@@ -191,6 +209,8 @@ export default function App() {
                 <div className="space-y-3 lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto lg:pr-2 lg:sticky lg:top-20">
                   <IdentityZone value={profile} onChange={setProfile} disabled={isGenerating} />
                   <GitloreQueue projects={projects} onChange={setProjects} disabled={isGenerating} />
+                  <ExperienceZone experience={experience} onChange={setExperience} disabled={isGenerating} />
+                  <SkillsZone tech={tech} languages={languages} onTechChange={setTech} onLanguagesChange={setLanguages} disabled={isGenerating} />
                   <HustleZone
                     achievements={achievements}
                     credentials={credentials}

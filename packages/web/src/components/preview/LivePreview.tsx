@@ -1,10 +1,6 @@
-import { memo, useMemo } from "react";
-import {
-  ExternalLink, Github, Zap, Layers, Shield,
-  GraduationCap, Award, Trophy, Star,
-} from "lucide-react";
+import * as LucideIcons from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import type { MasterPortfolio, Solution, Achievement, Credential } from "../../types/portfolio";
+import type { MasterPortfolio, Solution, Achievement, Credential, Experience, Skill, Hobby } from "../../types/portfolio";
 import type { SortMode } from "../sort/SortBar";
 import { Mermaid } from "./Mermaid";
 
@@ -205,22 +201,31 @@ function CredentialCard({ cred, index }: { cred: Credential; index: number }) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.4, delay: index * 0.05, ease: "easeOut" }}
-      className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 card-hover"
+      className="group rounded-2xl border border-(--color-border) bg-(--color-bg-secondary) p-4 space-y-2 card-hover relative overflow-hidden"
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-start gap-3 min-w-0 flex-1">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950/30">
+      <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-(--color-accent)/10 to-transparent rounded-bl-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
+      <div className="flex items-start justify-between gap-3 relative">
+        <div className="flex gap-3 min-w-0">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-(--color-bg) border border-(--color-border) shadow-sm group-hover:border-(--color-accent)/30 transition-colors">
             {cred.type === "education" ? (
-              <GraduationCap className="h-4 w-4 text-emerald-500" />
+              <LucideIcons.GraduationCap className="h-5 w-5 text-indigo-500" />
             ) : (
-              <Award className="h-4 w-4 text-blue-500" />
+              <LucideIcons.Award className="h-5 w-5 text-rose-500" />
             )}
           </div>
           <div className="space-y-1 min-w-0">
-            <h4 className="text-sm font-medium text-(--color-text) truncate">{cred.title}</h4>
-            <p className="text-xs text-(--color-text-secondary)">{cred.institution}</p>
+            <h4 className="text-sm font-semibold text-(--color-text) truncate">{cred.title}</h4>
+            <div className="flex items-center gap-2 text-xs text-(--color-text-secondary) truncate">
+              <span className="font-medium text-(--color-text)">{cred.institution}</span>
+              {cred.date && (
+                <>
+                  <span className="h-1 w-1 rounded-full bg-(--color-border)" />
+                  <span>{cred.date}</span>
+                </>
+              )}
+            </div>
             {cred.description && (
-              <p className="text-[10px] text-(--color-text-muted) leading-relaxed line-clamp-2">
+              <p className="text-xs text-(--color-text-muted) leading-relaxed mt-1 line-clamp-2 group-hover:line-clamp-none transition-all">
                 {cred.description}
               </p>
             )}
@@ -230,6 +235,55 @@ function CredentialCard({ cred, index }: { cred: Credential; index: number }) {
       </div>
     </motion.div>
   );
+}
+
+function ExperienceCard({ exp, index }: { exp: Experience; index: number }) {
+  return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.4, delay: index * 0.05, ease: "easeOut" }}
+      className="group rounded-2xl border border-(--color-border) bg-(--color-bg-secondary) p-5 space-y-4 card-hover relative overflow-hidden"
+    >
+      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-500/5 to-transparent rounded-bl-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
+      <div className="flex items-start justify-between gap-3 relative">
+        <div className="flex gap-3 min-w-0">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-(--color-bg) border border-(--color-border) shadow-sm group-hover:border-blue-500/30 transition-colors">
+            <LucideIcons.Briefcase className="h-5 w-5 text-blue-500" />
+          </div>
+          <div className="space-y-1.5 min-w-0">
+            <h4 className="text-base font-semibold text-(--color-text) truncate">{exp.role}</h4>
+            <div className="flex flex-wrap items-center gap-2 text-xs text-(--color-text-secondary)">
+              <span className="font-medium text-(--color-text)">{exp.company}</span>
+              {(exp.location || exp.date_range) && <span className="h-1 w-1 rounded-full bg-(--color-border)" />}
+              {exp.location && <span>{exp.location}</span>}
+              {exp.location && exp.date_range && <span className="h-1 w-1 rounded-full bg-(--color-border)" />}
+              {exp.date_range && <span>{exp.date_range}</span>}
+            </div>
+          </div>
+        </div>
+        <ScoreBadge score={exp.relevance_score} />
+      </div>
+      {exp.contributions.length > 0 && (
+        <ul className="space-y-2 mt-2 ml-14 relative z-10">
+          {exp.contributions.map((c, i) => (
+            <li key={i} className="text-xs text-(--color-text-muted) leading-relaxed flex items-start gap-2">
+              <span className="text-blue-500/50 mt-0.5 shrink-0">•</span>
+              <span>{c}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </motion.div>
+  );
+}
+
+function DynamicIcon({ name, colorClass, size = "w-4 h-4" }: { name: string; colorClass?: string; size?: string }) {
+  // @ts-ignore
+  const Icon = LucideIcons[name] || LucideIcons.Zap;
+  return <Icon className={`${size} ${colorClass || "text-(--color-text-muted)"}`} />;
 }
 
 export const LivePreview = memo(function LivePreview({ portfolio, sortMode }: Props) {
@@ -259,6 +313,14 @@ export const LivePreview = memo(function LivePreview({ portfolio, sortMode }: Pr
     return items;
   }, [portfolio.credentials, sortMode]);
 
+  const sortedExperience = useMemo(() => {
+    const items = [...portfolio.experience];
+    if (sortMode === "rank") {
+      items.sort((a, b) => b.relevance_score - a.relevance_score);
+    }
+    return items;
+  }, [portfolio.experience, sortMode]);
+
   return (
     <div className="space-y-6">
       {/* Profile Header */}
@@ -279,22 +341,119 @@ export const LivePreview = memo(function LivePreview({ portfolio, sortMode }: Pr
             "{portfolio.profile.philosophy}"
           </p>
         )}
-        {/* Quick stats */}
-        <div className="flex gap-4 pt-2">
-          {[
-            { label: "Solutions", count: portfolio.solutions.length, icon: Star },
-            { label: "Achievements", count: portfolio.achievements.length, icon: Trophy },
-            { label: "Credentials", count: portfolio.credentials.length, icon: Award },
-          ].map((s) => (
-            <div key={s.label} className="flex items-center gap-1.5">
-              <s.icon className="h-3 w-3 text-(--color-text-muted)" />
-              <span className="text-xs text-(--color-text-secondary)">
-                <span className="font-semibold tabular-nums">{s.count}</span> {s.label}
-              </span>
+        {/* Quick stats and Links */}
+        <div className="flex flex-wrap items-center gap-4 pt-2">
+          {portfolio.profile.contact.email && (
+            <div className="flex items-center gap-1.5">
+              <LucideIcons.Mail className="h-3 w-3 text-(--color-text-muted)" />
+              <span className="text-xs text-(--color-text-secondary)">{portfolio.profile.contact.email}</span>
             </div>
-          ))}
+          )}
+          {portfolio.profile.mobile && (
+            <div className="flex items-center gap-1.5">
+              <LucideIcons.Phone className="h-3 w-3 text-(--color-text-muted)" />
+              <span className="text-xs text-(--color-text-secondary)">{portfolio.profile.mobile}</span>
+            </div>
+          )}
+          <div className="flex items-center gap-1.5 ml-auto">
+            <LucideIcons.Star className="h-3 w-3 text-(--color-text-muted)" />
+            <span className="text-xs text-(--color-text-secondary)">
+              <span className="font-semibold tabular-nums">{portfolio.solutions.length}</span> Solutions
+            </span>
+          </div>
         </div>
+
+        {/* Hobbies */}
+        {portfolio.profile.hobbies && portfolio.profile.hobbies.length > 0 && (
+          <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-(--color-border)/50">
+            <span className="text-[10px] font-semibold uppercase text-(--color-text-muted) mr-1">Hobbies</span>
+            {portfolio.profile.hobbies.map((hobby, i) => (
+              <div key={i} className="flex items-center gap-1.5 rounded-full bg-(--color-bg-tertiary) px-2.5 py-1 text-[10px] font-medium text-(--color-text-secondary) border border-(--color-border)/50">
+                <DynamicIcon name={hobby.icon} colorClass="text-current" size="w-3 h-3" />
+                <span style={{ color: hobby.color }}>{hobby.title}</span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
+
+      {/* Experience */}
+      {sortedExperience.length > 0 && (
+        <motion.div layout className="space-y-3">
+          <h3 className="text-[10px] font-bold uppercase tracking-[0.15em] text-(--color-text-muted) px-1">
+            Work Experience
+          </h3>
+          <AnimatePresence mode="popLayout">
+            {sortedExperience.map((exp, i) => (
+              <ExperienceCard key={exp.id} exp={exp} index={i} />
+            ))}
+          </AnimatePresence>
+        </motion.div>
+      )}
+
+      {/* Skills */}
+      {(portfolio.skills.tech.length > 0 || portfolio.skills.languages.length > 0) && (
+        <motion.div layout className="space-y-3">
+          <h3 className="text-[10px] font-bold uppercase tracking-[0.15em] text-(--color-text-muted) px-1">
+            Proficiencies
+          </h3>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {portfolio.skills.tech.length > 0 && (
+              <div className="rounded-2xl border border-(--color-border) glass-card p-5 space-y-4">
+                <h4 className="text-xs font-semibold text-(--color-text) flex items-center gap-2">
+                  <LucideIcons.Code className="h-4 w-4 text-emerald-500" /> Technical
+                </h4>
+                <div className="space-y-3">
+                  {portfolio.skills.tech.sort((a, b) => b.proficiency - a.proficiency).map((skill, i) => (
+                    <div key={i} className="space-y-1.5">
+                      <div className="flex justify-between text-xs">
+                        <span className="text-(--color-text-secondary) flex items-center gap-1.5">
+                          <DynamicIcon name={skill.icon || "Code"} size="w-3 h-3 text-(--color-text-muted)" />
+                          {skill.title}
+                        </span>
+                        <span className="text-(--color-text-muted) font-medium">{skill.proficiency}/10</span>
+                      </div>
+                      <div className="h-1.5 w-full bg-(--color-border) rounded-full overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${(skill.proficiency / 10) * 100}%` }}
+                          transition={{ duration: 1, ease: "easeOut" }}
+                          className="h-full bg-emerald-500 rounded-full"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            {portfolio.skills.languages.length > 0 && (
+              <div className="rounded-2xl border border-(--color-border) glass-card p-5 space-y-4">
+                <h4 className="text-xs font-semibold text-(--color-text) flex items-center gap-2">
+                  <LucideIcons.Globe className="h-4 w-4 text-orange-500" /> Languages
+                </h4>
+                <div className="space-y-3">
+                  {portfolio.skills.languages.sort((a, b) => b.proficiency - a.proficiency).map((lang, i) => (
+                    <div key={i} className="space-y-1.5">
+                      <div className="flex justify-between text-xs">
+                        <span className="text-(--color-text-secondary)">{lang.title}</span>
+                        <span className="text-(--color-text-muted) font-medium">{lang.proficiency}/10</span>
+                      </div>
+                      <div className="h-1.5 w-full bg-(--color-border) rounded-full overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${(lang.proficiency / 10) * 100}%` }}
+                          transition={{ duration: 1, ease: "easeOut" }}
+                          className="h-full bg-orange-500 rounded-full"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </motion.div>
+      )}
 
       {/* Solutions */}
       {sortedSolutions.length > 0 && (
@@ -303,7 +462,7 @@ export const LivePreview = memo(function LivePreview({ portfolio, sortMode }: Pr
             Solutions
           </h3>
           <AnimatePresence mode="popLayout">
-            {sortedSolutions.map((sol, i) => (
+            {sortedSolutions.map((sol: Solution, i: number) => (
               <SolutionCard key={sol.id} sol={sol} index={i} />
             ))}
           </AnimatePresence>
@@ -317,7 +476,7 @@ export const LivePreview = memo(function LivePreview({ portfolio, sortMode }: Pr
             Achievements
           </h3>
           <AnimatePresence mode="popLayout">
-            {sortedAchievements.map((ach, i) => (
+            {sortedAchievements.map((ach: Achievement, i: number) => (
               <AchievementCard key={ach.id} ach={ach} index={i} />
             ))}
           </AnimatePresence>
@@ -331,7 +490,7 @@ export const LivePreview = memo(function LivePreview({ portfolio, sortMode }: Pr
             Credentials
           </h3>
           <AnimatePresence mode="popLayout">
-            {sortedCredentials.map((cred, i) => (
+            {sortedCredentials.map((cred: Credential, i: number) => (
               <CredentialCard key={cred.id} cred={cred} index={i} />
             ))}
           </AnimatePresence>
