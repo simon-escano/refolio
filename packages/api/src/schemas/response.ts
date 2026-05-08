@@ -1,12 +1,14 @@
 import { z } from "zod";
 
+const optionalString = z.string().nullish().transform((val) => val ?? undefined);
+
 // --- Shared sub-schemas ---
 
 const ContactSchema = z.object({
   email: z.string().default(""),
   github: z.string().default(""),
-  linkedin: z.string().optional(),
-  website: z.string().optional(),
+  linkedin: optionalString,
+  website: optionalString,
 });
 
 const HobbySchema = z.object({
@@ -19,8 +21,8 @@ const ProfileSchema = z.object({
   name: z.string(),
   role: z.string(),
   contact: ContactSchema,
-  mobile: z.string().optional(),
-  philosophy: z.string().optional(),
+  mobile: optionalString,
+  philosophy: optionalString,
   hobbies: z.array(HobbySchema).default([]),
 });
 
@@ -34,9 +36,9 @@ const AchievementSchema = z.object({
   id: z.string(),
   title: z.string(),
   description: z.string(),
-  date: z.string().optional(),
+  date: optionalString,
   verifiable: z.boolean().default(false),
-  evidence_url: z.string().optional(),
+  evidence_url: optionalString,
   relevance_score: z.number().min(0).max(100).default(50),
 });
 
@@ -104,8 +106,8 @@ const CredentialSchema = z.object({
   type: z.enum(["education", "certification"]),
   title: z.string(),
   institution: z.string(),
-  date: z.string().optional(),
-  description: z.string().optional(),
+  date: optionalString,
+  description: optionalString,
   relevance_score: z.number().min(0).max(100).default(50),
 });
 
@@ -113,16 +115,16 @@ const ExperienceSchema = z.object({
   id: z.string(),
   company: z.string(),
   role: z.string(),
-  location: z.string().optional(),
-  date_range: z.string().optional(),
+  location: optionalString,
+  date_range: optionalString,
   contributions: z.array(z.string()).default([]),
   relevance_score: z.number().min(0).max(100).default(50),
 });
 
 const SkillSchema = z.object({
   title: z.string(),
-  category: z.string().optional(),
-  icon: z.string().optional(),
+  category: optionalString,
+  icon: optionalString,
   proficiency: z.number().min(1).max(10),
 });
 
