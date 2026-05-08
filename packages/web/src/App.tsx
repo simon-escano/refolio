@@ -9,6 +9,7 @@ import { OutputTabs } from "./components/output/OutputTabs";
 import { SortBar, type SortMode } from "./components/sort/SortBar";
 import { LivePreview } from "./components/preview/LivePreview";
 import { MonacoEditor } from "./components/editor/MonacoEditor";
+import { ErrorBoundary } from "./components/layout/ErrorBoundary";
 import { usePortfolioSync } from "./lib/sync";
 import { usePersistedState } from "./lib/hooks";
 import { streamGenerate } from "./lib/api";
@@ -226,13 +227,17 @@ export default function App() {
                       </div>
 
                       {activeTab === "preview" ? (
-                        <LivePreview portfolio={sync.portfolio} sortMode={sortMode} />
+                        <ErrorBoundary>
+                          <LivePreview portfolio={sync.portfolio} sortMode={sortMode} />
+                        </ErrorBoundary>
                       ) : (
-                        <MonacoEditor
-                          value={sync.jsonString}
-                          onChange={sync.setFromEditor}
-                          error={sync.jsonError}
-                        />
+                        <ErrorBoundary>
+                          <MonacoEditor
+                            value={sync.jsonString}
+                            onChange={sync.setFromEditor}
+                            error={sync.jsonError}
+                          />
+                        </ErrorBoundary>
                       )}
                     </>
                   )}
