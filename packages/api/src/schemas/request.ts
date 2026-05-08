@@ -1,5 +1,19 @@
 import { z } from "zod";
 
+const optionalUrlSchema = z
+  .string()
+  .url("Must be a valid URL")
+  .or(z.literal(""))
+  .transform((val) => (val === "" ? undefined : val))
+  .optional();
+
+const optionalEmailSchema = z
+  .string()
+  .email("Must be a valid email")
+  .or(z.literal(""))
+  .transform((val) => (val === "" ? undefined : val))
+  .optional();
+
 /** Single project URL entry for Gitlore processing */
 const ProjectInputSchema = z.object({
   url: z.string().url("Must be a valid GitHub URL"),
@@ -24,11 +38,11 @@ export const GenerateRequestSchema = z.object({
   profile: z.object({
     name: z.string().min(1, "Name is required"),
     role: z.string().min(1, "Role is required"),
-    email: z.string().email().optional(),
+    email: optionalEmailSchema,
     mobile: z.string().optional(),
-    github: z.string().url().optional(),
-    linkedin: z.string().url().optional(),
-    website: z.string().url().optional(),
+    github: optionalUrlSchema,
+    linkedin: optionalUrlSchema,
+    website: optionalUrlSchema,
     hobbies: z.string().optional(),
   }),
 
@@ -40,7 +54,7 @@ export const GenerateRequestSchema = z.object({
     .array(
       z.object({
         accomplishment: z.string().min(1),
-        evidence_url: z.string().url().optional(),
+        evidence_url: optionalUrlSchema,
       })
     )
     .optional()
