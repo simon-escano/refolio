@@ -83,15 +83,28 @@ export function stitchPortfolio(
     (c, i) => {
       const cid = `credential-${i}`;
       const enhancement = narrative.items.find((item) => item.id === cid);
-      return {
-        id: cid,
-        type: c.type,
-        title: c.title,
-        institution: c.institution,
-        date: c.date,
-        description: enhancement?.enhanced_description ?? c.description,
-        relevance_score: scoreMap.get(cid) ?? 50,
-      };
+      
+      if (c.type === "education") {
+        return {
+          id: cid,
+          type: "education",
+          title: c.title || "",
+          institution: c.institution || "",
+          date: c.startDate && c.endDate ? `${c.startDate} - ${c.endDate}` : c.startDate || c.endDate,
+          description: enhancement?.enhanced_description,
+          relevance_score: scoreMap.get(cid) ?? 50,
+        };
+      } else {
+        return {
+          id: cid,
+          type: "certification",
+          title: enhancement?.generated_title || "Certification",
+          institution: enhancement?.generated_institution || "",
+          date: enhancement?.generated_date,
+          description: enhancement?.enhanced_description || c.certification,
+          relevance_score: scoreMap.get(cid) ?? 50,
+        };
+      }
     }
   );
 

@@ -29,8 +29,9 @@ The JSON MUST match this structure:
       "relevance_score": number (0-100),
       "enhanced_contributions": "string — polished role titles (for solutions) or improved bullet points (for experiences)",
       "enhanced_description": "string — polished professional description (for achievements/credentials)",
-      "generated_title": "string — (ONLY FOR ACHIEVEMENTS) A concise, professional title summarizing the accomplishment",
-      "generated_date": "string — (ONLY FOR ACHIEVEMENTS) Extracted or estimated date/timeframe if mentioned (e.g. '2023' or 'May 2024'), otherwise omit"
+      "generated_title": "string — (ONLY FOR ACHIEVEMENTS OR CERTIFICATIONS) A concise, professional title summarizing the accomplishment or certification",
+      "generated_institution": "string — (ONLY FOR CERTIFICATIONS) The issuing organization",
+      "generated_date": "string — (ONLY FOR ACHIEVEMENTS OR CERTIFICATIONS) Extracted or estimated date/timeframe if mentioned (e.g. '2023' or 'May 2024'), otherwise omit"
     }
   ],
   "hobbies_enriched": [
@@ -104,11 +105,16 @@ ${a.evidence_url ? `Evidence: ${a.evidence_url}` : ""}`;
   const credentialsList = request.credentials
     .map((c, i) => {
       const cid = `credential-${i}`;
-      return `### Credential [${cid}]: ${c.title}
-Type: ${c.type}
+      if (c.type === "education") {
+        return `### Credential [${cid}]: ${c.title}
+Type: education
 Institution: ${c.institution}
-${c.date ? `Date: ${c.date}` : ""}
-${c.description ? `Description: ${c.description}` : ""}`;
+Dates: ${c.startDate || ""} - ${c.endDate || ""}`;
+      } else {
+        return `### Credential [${cid}]:
+Type: certification
+Details: ${c.certification}`;
+      }
     })
     .join("\n\n");
 
@@ -119,7 +125,7 @@ ${c.description ? `Description: ${c.description}` : ""}`;
 Location: ${e.location || "N/A"}
 Dates: ${e.startDate || ""} - ${e.endDate || ""}
 Contributions:
-${e.contributions.map(c => `- ${c}`).join("\n")}`;
+${e.contributions}`;
     })
     .join("\n\n");
 

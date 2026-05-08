@@ -30,14 +30,14 @@ function ProficiencyBars({
   disabled?: boolean;
 }) {
   return (
-    <div className="flex gap-0.5 mt-1 cursor-pointer" onMouseLeave={() => {}}>
+    <div className="flex gap-1 mt-1 cursor-pointer w-24" onMouseLeave={() => {}}>
       {Array.from({ length: 10 }).map((_, i) => (
         <button
           key={i}
           type="button"
           disabled={disabled}
           onClick={() => onChange(i + 1)}
-          className={`h-4 w-2 rounded-[2px] transition-colors ${
+          className={`h-1.5 flex-1 rounded-full transition-colors ${
             i < value ? "bg-(--color-accent)" : "bg-(--color-border) hover:bg-(--color-border-focus)"
           }`}
         />
@@ -97,8 +97,13 @@ export function SkillsZone({ tech, languages, onTechChange, onLanguagesChange, d
           </div>
         </button>
 
-        <div className={`overflow-hidden transition-all duration-300 ${techExpanded ? "max-h-[800px] opacity-100" : "max-h-0 opacity-0"}`}>
-          <div className="p-4 space-y-3 bg-(--color-bg)/30">
+        <div
+          className={`grid transition-all duration-300 ease-out ${
+            techExpanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+          }`}
+        >
+          <div className="overflow-hidden">
+            <div className="space-y-3 px-5 pb-5 pt-1">
             {tech.map((t, i) => (
               <div 
                 key={i} 
@@ -136,6 +141,7 @@ export function SkillsZone({ tech, languages, onTechChange, onLanguagesChange, d
             >
               <Plus className="h-3.5 w-3.5" /> Add Tech Skill
             </button>
+            </div>
           </div>
         </div>
       </div>
@@ -167,8 +173,13 @@ export function SkillsZone({ tech, languages, onTechChange, onLanguagesChange, d
           </div>
         </button>
 
-        <div className={`overflow-hidden transition-all duration-300 ${langExpanded ? "max-h-[800px] opacity-100" : "max-h-0 opacity-0"}`}>
-          <div className="p-4 space-y-3 bg-(--color-bg)/30">
+        <div
+          className={`grid transition-all duration-300 ease-out ${
+            langExpanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+          }`}
+        >
+          <div className="overflow-hidden">
+            <div className="space-y-3 px-5 pb-5 pt-1">
             {languages.map((l, i) => (
               <div 
                 key={i} 
@@ -206,6 +217,7 @@ export function SkillsZone({ tech, languages, onTechChange, onLanguagesChange, d
             >
               <Plus className="h-3.5 w-3.5" /> Add Language
             </button>
+            </div>
           </div>
         </div>
       </div>

@@ -22,11 +22,11 @@
   --color-text-secondary: #52525b;
   --color-text-muted: #a1a1aa;
 
-  /* ─── Primary: Teal → Rose spectrum ─── */
-  --color-accent: #0d9488;
-  --color-accent-hover: #0f766e;
-  --color-accent-subtle: #ccfbf1;
-  --color-accent-glow: rgba(13, 148, 136, 0.15);
+  /* ─── Primary: Rose spectrum ─── */
+  --color-accent: #f43f5e;
+  --color-accent-hover: #e11d48;
+  --color-accent-subtle: #fff1f2;
+  --color-accent-glow: rgba(244, 63, 94, 0.15);
 
   /* ─── Secondary accents ─── */
   --color-rose: #f43f5e;
@@ -94,10 +94,10 @@
     --color-text-secondary: #a1a1aa;
     --color-text-muted: #52525b;
 
-    --color-accent: #2dd4bf;
-    --color-accent-hover: #5eead4;
-    --color-accent-subtle: #042f2e;
-    --color-accent-glow: rgba(45, 212, 191, 0.12);
+    --color-accent: #fb7185;
+    --color-accent-hover: #fda4af;
+    --color-accent-subtle: #4c0519;
+    --color-accent-glow: rgba(251, 113, 133, 0.12);
 
     --color-rose: #fb7185;
     --color-rose-subtle: #1c0a10;

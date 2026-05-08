@@ -8,10 +8,13 @@ export interface AchievementEntry {
 
 export interface CredentialEntry {
   type: "education" | "certification";
+  // Education fields
   title: string;
   institution: string;
-  date: string;
-  description: string;
+  startDate: string;
+  endDate: string;
+  // Certification fields
+  certification: string;
 }
 
 interface Props {
@@ -136,7 +139,7 @@ export function HustleZone({
               Education & certifications
             </p>
           </div>
-          <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-950/30 px-1.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
+          <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-violet-50 dark:bg-violet-950/30 px-1.5 text-[10px] font-bold text-violet-600 dark:text-violet-400 tabular-nums">
             {credentials.length}
           </span>
           <div className={`text-(--color-text-muted) transition-transform duration-300 ${credentialsExpanded ? "" : "-rotate-180"}`}>
@@ -156,7 +159,7 @@ export function HustleZone({
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       {c.type === "education" ? (
-                        <GraduationCap className="h-3 w-3 text-emerald-500" />
+                        <GraduationCap className="h-3 w-3 text-violet-500" />
                       ) : (
                         <Award className="h-3 w-3 text-blue-500" />
                       )}
@@ -197,30 +200,72 @@ export function HustleZone({
                     ))}
                   </div>
 
-                  <input
-                    type="text"
-                    value={c.title}
-                    onChange={(e) => {
-                      const updated = [...credentials];
-                      updated[i] = { ...updated[i], title: e.target.value };
-                      onCredentialsChange(updated);
-                    }}
-                    disabled={disabled}
-                    placeholder="e.g., BS in Computer Science"
-                    className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
-                  />
-                  <input
-                    type="text"
-                    value={c.institution}
-                    onChange={(e) => {
-                      const updated = [...credentials];
-                      updated[i] = { ...updated[i], institution: e.target.value };
-                      onCredentialsChange(updated);
-                    }}
-                    disabled={disabled}
-                    placeholder="Institution"
-                    className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
-                  />
+                  {/* Dynamic Fields */}
+                  {c.type === "education" ? (
+                    <>
+                      <input
+                        type="text"
+                        value={c.title}
+                        onChange={(e) => {
+                          const updated = [...credentials];
+                          updated[i] = { ...updated[i], title: e.target.value };
+                          onCredentialsChange(updated);
+                        }}
+                        disabled={disabled}
+                        placeholder="Degree/Major (e.g., BS in Computer Science)"
+                        className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
+                      />
+                      <input
+                        type="text"
+                        value={c.institution}
+                        onChange={(e) => {
+                          const updated = [...credentials];
+                          updated[i] = { ...updated[i], institution: e.target.value };
+                          onCredentialsChange(updated);
+                        }}
+                        disabled={disabled}
+                        placeholder="Institution"
+                        className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
+                      />
+                      <div className="grid grid-cols-2 gap-2">
+                        <input
+                          value={c.startDate}
+                          onChange={(e) => {
+                            const updated = [...credentials];
+                            updated[i] = { ...updated[i], startDate: e.target.value };
+                            onCredentialsChange(updated);
+                          }}
+                          disabled={disabled}
+                          placeholder="Start Date"
+                          className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 text-xs text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
+                        />
+                        <input
+                          value={c.endDate}
+                          onChange={(e) => {
+                            const updated = [...credentials];
+                            updated[i] = { ...updated[i], endDate: e.target.value };
+                            onCredentialsChange(updated);
+                          }}
+                          disabled={disabled}
+                          placeholder="End Date"
+                          className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 text-xs text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <textarea
+                      value={c.certification}
+                      onChange={(e) => {
+                        const updated = [...credentials];
+                        updated[i] = { ...updated[i], certification: e.target.value };
+                        onCredentialsChange(updated);
+                      }}
+                      disabled={disabled}
+                      placeholder="Explain your certification (e.g., AWS Certified Solutions Architect - May 2024)"
+                      rows={3}
+                      className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50 resize-none leading-relaxed"
+                    />
+                  )}
                 </div>
               ))}
               <button
@@ -228,11 +273,11 @@ export function HustleZone({
                 onClick={() =>
                   onCredentialsChange([
                     ...credentials,
-                    { type: "education", title: "", institution: "", date: "", description: "" },
+                    { type: "education", title: "", institution: "", startDate: "", endDate: "", certification: "" },
                   ])
                 }
                 disabled={disabled}
-                className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-(--color-border) bg-(--color-bg)/50 py-2.5 text-xs font-medium text-(--color-text-muted) transition-all hover:border-emerald-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50/30 dark:hover:bg-emerald-950/10 disabled:opacity-50 active:scale-[0.98]"
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-(--color-border) bg-(--color-bg)/50 py-2.5 text-xs font-medium text-(--color-text-muted) transition-all hover:border-violet-400 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-violet-50/30 dark:hover:bg-violet-950/10 disabled:opacity-50 active:scale-[0.98]"
               >
                 <Plus className="h-3.5 w-3.5" />
                 Add Credential

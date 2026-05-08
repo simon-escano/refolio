@@ -51,10 +51,11 @@ export const GenerateRequestSchema = z.object({
     .array(
       z.object({
         type: z.enum(["education", "certification"]),
-        title: z.string().min(1),
-        institution: z.string().min(1),
-        date: z.string().optional(),
-        description: z.string().optional(),
+        title: z.string().optional(),
+        institution: z.string().optional(),
+        startDate: z.string().optional(),
+        endDate: z.string().optional(),
+        certification: z.string().optional(),
       })
     )
     .optional()
@@ -69,7 +70,7 @@ export const GenerateRequestSchema = z.object({
         location: z.string().optional(),
         startDate: z.string().optional(),
         endDate: z.string().optional(),
-        contributions: z.array(z.string()).default([]),
+        contributions: z.string().default(""),
       })
     )
     .optional()

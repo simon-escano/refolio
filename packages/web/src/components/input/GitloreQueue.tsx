@@ -50,17 +50,15 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
         onClick={() => setExpanded(!expanded)}
         className="flex w-full items-center gap-3 px-5 py-4 text-left transition-colors hover:bg-(--color-bg-secondary)/50"
       >
-        <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 text-white shadow-sm">
+        <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-rose-500 text-white shadow-sm">
           <GitBranch className="h-4 w-4" />
         </div>
-        <div className="flex-1 min-w-0">
-          <h3 className="text-sm font-semibold text-(--color-text) tracking-tight">Gitlore Queue</h3>
-          <p className="text-[11px] text-(--color-text-muted)">
-            {projects.length} project{projects.length !== 1 ? "s" : ""} queued for analysis
-          </p>
+        <div className="flex-1 min-w-0 flex items-center gap-2">
+          <h3 className="text-sm font-semibold text-(--color-text) tracking-tight">Projects</h3>
+          <span className="text-[10px] uppercase tracking-wider font-medium text-(--color-text-muted) opacity-60">Powered by Gitlore</span>
         </div>
         {/* Count badge */}
-        <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-teal-50 dark:bg-teal-950/40 px-1.5 text-[10px] font-bold text-teal-600 dark:text-teal-400 tabular-nums">
+        <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-purple-50 dark:bg-purple-950/40 px-1.5 text-[10px] font-bold text-purple-600 dark:text-purple-400 tabular-nums">
           {projects.length}
         </span>
         <div className={`text-(--color-text-muted) transition-transform duration-300 ${expanded ? "" : "-rotate-180"}`}>
@@ -129,9 +127,9 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
                   value={project.contributions}
                   onChange={(e) => updateProject(i, "contributions", e.target.value)}
                   disabled={disabled}
-                  placeholder="What did you build? (e.g., 'Built the API pipeline, designed the Mermaid validation')"
-                  rows={2}
-                  className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50 resize-none"
+                  placeholder="What did you contribute?"
+                  rows={3}
+                  className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50 resize-none leading-relaxed"
                 />
 
                 {/* Context (optional) */}
@@ -151,7 +149,7 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
               type="button"
               onClick={addProject}
               disabled={disabled}
-              className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-(--color-border) bg-(--color-bg)/50 py-3 text-xs font-medium text-(--color-text-muted) transition-all hover:border-(--color-accent) hover:text-(--color-accent) hover:bg-(--color-accent-subtle)/30 disabled:opacity-50 active:scale-[0.98]"
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-(--color-border) bg-(--color-bg)/50 py-3 text-xs font-medium text-(--color-text-muted) transition-all hover:border-purple-400 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50/30 dark:hover:bg-purple-950/10 disabled:opacity-50 active:scale-[0.98]"
             >
               <Plus className="h-3.5 w-3.5" />
               Add Project

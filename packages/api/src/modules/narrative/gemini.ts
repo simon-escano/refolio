@@ -15,6 +15,7 @@ export interface NarrativeOutput {
     enhanced_contributions?: string;
     enhanced_description?: string;
     generated_title?: string;
+    generated_institution?: string;
     generated_date?: string;
   }>;
   hobbies_enriched?: Array<{ title: string; icon: string; color: string }>;

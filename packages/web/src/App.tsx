@@ -71,7 +71,10 @@ export default function App() {
         },
         projects: projects.filter((p) => p.url.trim() && p.title.trim()),
         achievements: achievements.filter((a) => a.accomplishment?.trim()),
-        credentials: credentials.filter((c) => c.title.trim()),
+        credentials: credentials.filter((c) => {
+          if (c.type === "education") return c.title?.trim();
+          return c.certification?.trim();
+        }),
         experience: experience.filter((e) => e.company.trim() && e.role.trim()),
         skills: {
           tech: tech.filter((t) => t.title.trim()),

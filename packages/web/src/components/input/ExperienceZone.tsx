@@ -7,7 +7,7 @@ export interface ExperienceEntry {
   location: string;
   startDate: string;
   endDate: string;
-  contributions: string[];
+  contributions: string;
 }
 
 interface Props {
@@ -19,7 +19,7 @@ interface Props {
 export function ExperienceZone({ experience, onChange, disabled }: Props) {
   const [expanded, setExpanded] = useState(true);
 
-  const updateEntry = (index: number, field: keyof ExperienceEntry, value: string | string[]) => {
+  const updateEntry = (index: number, field: keyof ExperienceEntry, value: string) => {
     const next = [...experience];
     next[index] = { ...next[index], [field]: value };
     onChange(next);
@@ -27,8 +27,7 @@ export function ExperienceZone({ experience, onChange, disabled }: Props) {
 
   const addEntry = () => {
     onChange([
-      ...experience,
-      { company: "", role: "", location: "", startDate: "", endDate: "", contributions: [] },
+      { company: "", role: "", location: "", startDate: "", endDate: "", contributions: "" },
     ]);
   };
 
@@ -65,8 +64,13 @@ export function ExperienceZone({ experience, onChange, disabled }: Props) {
       </button>
 
       {/* Content */}
-      <div className={`overflow-hidden transition-all duration-300 ${expanded ? "max-h-[1200px] opacity-100" : "max-h-0 opacity-0"}`}>
-        <div className="p-4 space-y-4 bg-(--color-bg)/30">
+      <div
+        className={`grid transition-all duration-300 ease-out ${
+          expanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+        }`}
+      >
+        <div className="overflow-hidden">
+          <div className="space-y-3 px-5 pb-5 pt-1">
           {experience.map((exp, i) => (
             <div 
               key={i} 
@@ -87,73 +91,53 @@ export function ExperienceZone({ experience, onChange, disabled }: Props) {
                 </button>
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div className="space-y-1.5">
-                  <label className="text-[10px] font-semibold uppercase tracking-wider text-(--color-text-muted)">Role</label>
-                  <input
-                    value={exp.role}
-                    onChange={(e) => updateEntry(i, "role", e.target.value)}
-                    disabled={disabled}
-                    placeholder="e.g. Senior Backend Engineer"
-                    className="input-field"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <label className="text-[10px] font-semibold uppercase tracking-wider text-(--color-text-muted)">Company</label>
-                  <input
-                    value={exp.company}
-                    onChange={(e) => updateEntry(i, "company", e.target.value)}
-                    disabled={disabled}
-                    placeholder="e.g. Acme Corp"
-                    className="input-field"
-                  />
-                </div>
-              </div>
+              <input
+                value={exp.role}
+                onChange={(e) => updateEntry(i, "role", e.target.value)}
+                disabled={disabled}
+                placeholder="Role (e.g. Senior Backend Engineer)"
+                className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
+              />
+              <input
+                value={exp.company}
+                onChange={(e) => updateEntry(i, "company", e.target.value)}
+                disabled={disabled}
+                placeholder="Company (e.g. Acme Corp)"
+                className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
+              />
+              <input
+                value={exp.location}
+                onChange={(e) => updateEntry(i, "location", e.target.value)}
+                disabled={disabled}
+                placeholder="Location (e.g. San Francisco, Remote)"
+                className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
+              />
 
-              <div className="grid gap-3 sm:grid-cols-3">
-                <div className="space-y-1.5">
-                  <label className="text-[10px] font-semibold uppercase tracking-wider text-(--color-text-muted)">Start Date</label>
-                  <input
-                    value={exp.startDate}
-                    onChange={(e) => updateEntry(i, "startDate", e.target.value)}
-                    disabled={disabled}
-                    placeholder="e.g. 2021"
-                    className="input-field"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <label className="text-[10px] font-semibold uppercase tracking-wider text-(--color-text-muted)">End Date</label>
-                  <input
-                    value={exp.endDate}
-                    onChange={(e) => updateEntry(i, "endDate", e.target.value)}
-                    disabled={disabled}
-                    placeholder="e.g. Present"
-                    className="input-field"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <label className="text-[10px] font-semibold uppercase tracking-wider text-(--color-text-muted)">Location</label>
-                  <input
-                    value={exp.location}
-                    onChange={(e) => updateEntry(i, "location", e.target.value)}
-                    disabled={disabled}
-                    placeholder="e.g. San Francisco"
-                    className="input-field"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-[10px] font-semibold uppercase tracking-wider text-(--color-text-muted)">Contributions (One per line)</label>
-                <textarea
-                  value={exp.contributions.join("\n")}
-                  onChange={(e) => updateEntry(i, "contributions", e.target.value.split("\n"))}
+              <div className="grid grid-cols-2 gap-2">
+                <input
+                  value={exp.startDate}
+                  onChange={(e) => updateEntry(i, "startDate", e.target.value)}
                   disabled={disabled}
-                  placeholder="Led migration to Kubernetes..."
-                  rows={3}
-                  className="input-field resize-none leading-relaxed"
+                  placeholder="Start Date (e.g. 2021)"
+                  className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 text-xs text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
+                />
+                <input
+                  value={exp.endDate}
+                  onChange={(e) => updateEntry(i, "endDate", e.target.value)}
+                  disabled={disabled}
+                  placeholder="End Date (e.g. Present)"
+                  className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 text-xs text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
                 />
               </div>
+
+              <textarea
+                value={exp.contributions}
+                onChange={(e) => updateEntry(i, "contributions", e.target.value)}
+                disabled={disabled}
+                placeholder="What did you contribute?"
+                rows={3}
+                className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50 resize-none leading-relaxed"
+              />
             </div>
           ))}
 
@@ -166,6 +150,7 @@ export function ExperienceZone({ experience, onChange, disabled }: Props) {
             <Plus className="h-3.5 w-3.5" />
             Add Experience
           </button>
+          </div>
         </div>
       </div>
     </div>
