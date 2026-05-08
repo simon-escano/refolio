@@ -245,13 +245,13 @@ export default function App() {
 
                   {/* Collapsed Section Labels */}
                   <div className="flex flex-col gap-2">
-                    <div className="bg-[var(--color-surface-variant)]/50 px-3 py-1 font-mono text-xs font-semibold tracking-[0.1em] uppercase text-[var(--color-on-surface-variant)] inline-block w-max rounded-sm -rotate-1 shadow-sm backdrop-blur-sm">
+                    <div className="bg-[var(--color-surface-variant)]/50 px-3 py-1 font-mono text-xs font-semibold tracking-[0.1em] uppercase text-[var(--color-on-surface-variant)] inline-block w-max rounded-sm -rotate-1 shadow-sm backdrop-blur-md">
                       Experience
                     </div>
-                    <div className="bg-[var(--color-surface-variant)]/50 px-3 py-1 font-mono text-xs font-semibold tracking-[0.1em] uppercase text-[var(--color-on-surface-variant)] inline-block w-max rounded-sm rotate-1 shadow-sm backdrop-blur-sm">
+                    <div className="bg-[var(--color-surface-variant)]/50 px-3 py-1 font-mono text-xs font-semibold tracking-[0.1em] uppercase text-[var(--color-on-surface-variant)] inline-block w-max rounded-sm rotate-1 shadow-sm backdrop-blur-md">
                       Skills
                     </div>
-                    <div className="bg-[var(--color-surface-variant)]/50 px-3 py-1 font-mono text-xs font-semibold tracking-[0.1em] uppercase text-[var(--color-on-surface-variant)] inline-block w-max rounded-sm -rotate-[0.5deg] shadow-sm backdrop-blur-sm">
+                    <div className="bg-[var(--color-surface-variant)]/50 px-3 py-1 font-mono text-xs font-semibold tracking-[0.1em] uppercase text-[var(--color-on-surface-variant)] inline-block w-max rounded-sm -rotate-[0.5deg] shadow-sm backdrop-blur-md">
                       Achievements
                     </div>
                   </div>
@@ -305,7 +305,7 @@ export default function App() {
 
         {/* Pipeline Modal */}
         {isGenerating && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-md animate-fade-in">
             <div className="w-full max-w-md animate-scale-in">
               <ProgressFeed events={progress} isActive={true} onCancel={handleCancel} />
             </div>
