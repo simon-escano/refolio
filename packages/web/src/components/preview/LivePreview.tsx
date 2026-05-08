@@ -249,10 +249,10 @@ function ExperienceCard({ exp, index }: { exp: Experience; index: number }) {
   );
 }
 
-function DynamicIcon({ name, colorClass, size = "w-4 h-4" }: { name: string; colorClass?: string; size?: string }) {
+function DynamicIcon({ name, colorClass, size = "w-4 h-4", style }: { name: string; colorClass?: string; size?: string; style?: React.CSSProperties }) {
   // @ts-ignore
   const Icon = LucideIcons[name] || LucideIcons.Zap;
-  return <Icon className={`${size} ${colorClass || "text-(--color-text-muted)"}`} />;
+  return <Icon className={`${size} ${colorClass || "text-(--color-text-muted)"}`} style={style} />;
 }
 
 export const LivePreview = memo(function LivePreview({ portfolio }: Props) {
@@ -304,8 +304,8 @@ export const LivePreview = memo(function LivePreview({ portfolio }: Props) {
             <span className="text-[10px] font-semibold uppercase text-(--color-text-muted) mr-1">Hobbies</span>
             {portfolio.profile.hobbies.map((hobby, i) => (
               <div key={i} className="flex items-center gap-1.5 rounded-full bg-(--color-bg-tertiary) px-2.5 py-1 text-[10px] font-medium text-(--color-text-secondary) border border-(--color-border)/50">
-                <DynamicIcon name={hobby.icon} colorClass="text-current" size="w-3 h-3" />
-                <span style={{ color: hobby.color }}>{hobby.title}</span>
+                <DynamicIcon name={hobby.icon} colorClass="text-current" size="w-3 h-3" style={{ color: hobby.color }} />
+                <span>{hobby.title}</span>
               </div>
             ))}
           </div>

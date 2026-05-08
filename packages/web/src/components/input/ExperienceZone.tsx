@@ -115,21 +115,27 @@ export function ExperienceZone({ experience, onChange, disabled }: Props) {
                 className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
               />
 
-              <div className="grid grid-cols-2 gap-2">
-                <input
-                  value={exp.startDate}
-                  onChange={(e) => updateEntry(i, "startDate", e.target.value)}
-                  disabled={disabled}
-                  placeholder="Start Date (e.g. 2021)"
-                  className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 text-xs text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
-                />
-                <input
-                  value={exp.endDate}
-                  onChange={(e) => updateEntry(i, "endDate", e.target.value)}
-                  disabled={disabled}
-                  placeholder="End Date (e.g. Present)"
-                  className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 text-xs text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
-                />
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1 text-left">
+                  <label className="text-[10px] font-semibold text-(--color-text-muted) px-1 uppercase tracking-wider">Start Date</label>
+                  <input
+                    type="date"
+                    value={exp.startDate}
+                    onChange={(e) => updateEntry(i, "startDate", e.target.value)}
+                    disabled={disabled}
+                    className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 text-xs text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
+                  />
+                </div>
+                <div className="space-y-1 text-left">
+                  <label className="text-[10px] font-semibold text-(--color-text-muted) px-1 uppercase tracking-wider">End Date</label>
+                  <input
+                    type="date"
+                    value={exp.endDate}
+                    onChange={(e) => updateEntry(i, "endDate", e.target.value)}
+                    disabled={disabled}
+                    className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 text-xs text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
+                  />
+                </div>
               </div>
 
               <textarea
