@@ -57,7 +57,7 @@ export const MonacoEditor = memo(function MonacoEditor({
       <div className="flex items-center justify-between border-b border-[var(--color-outline-variant)] px-4 py-2.5 bg-[var(--color-surface-container)]">
         <div className="flex items-center gap-2">
           <Code2 className="h-3.5 w-3.5 text-[var(--color-primary)]" />
-          <span className="font-mono text-xs font-bold tracking-[0.05em] text-[var(--color-on-surface)]">
+          <span className="font-mono text-xs font-semibold tracking-[0.05em] text-[var(--color-on-surface)]">
             MasterPortfolio.json
           </span>
         </div>
@@ -71,7 +71,7 @@ export const MonacoEditor = memo(function MonacoEditor({
             </div>
           )}
           {readOnly && (
-            <span className="rounded-md bg-[var(--color-surface-variant)] px-2 py-0.5 font-mono text-[10px] font-bold tracking-wider uppercase text-[var(--color-outline)]">
+            <span className="rounded-md bg-[var(--color-surface-variant)] px-2 py-0.5 font-mono text-[10px] font-semibold tracking-wider uppercase text-[var(--color-outline)]">
               READ ONLY
             </span>
           )}

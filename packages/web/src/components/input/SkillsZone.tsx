@@ -43,7 +43,7 @@ export function SkillsZone({ tech, languages, onTechChange, onLanguagesChange, d
           <div className="space-y-6">
             {/* Tech Proficiency Module */}
             <div className="playing-card rounded-xl p-5 space-y-4">
-              <h4 className="font-mono text-xs font-bold tracking-[0.1em] uppercase text-[var(--color-primary)]">
+              <h4 className="font-mono text-xs font-semibold tracking-[0.1em] uppercase text-[var(--color-primary)]">
                 Tech Proficiency
               </h4>
 
@@ -107,7 +107,7 @@ export function SkillsZone({ tech, languages, onTechChange, onLanguagesChange, d
 
             {/* Languages Module */}
             <div className="playing-card rounded-xl p-5 space-y-4">
-              <h4 className="font-mono text-xs font-bold tracking-[0.1em] uppercase text-[var(--color-primary)]">
+              <h4 className="font-mono text-xs font-semibold tracking-[0.1em] uppercase text-[var(--color-primary)]">
                 Languages
               </h4>
 

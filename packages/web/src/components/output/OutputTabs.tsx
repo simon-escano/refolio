@@ -24,7 +24,7 @@ export const OutputTabs = memo(function OutputTabs({ active, onChange }: Props) 
             <button
               key={tab.key}
               onClick={() => onChange(tab.key)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-mono text-xs font-bold tracking-[0.1em] uppercase transition-all duration-200 ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-mono text-xs font-semibold tracking-[0.1em] uppercase transition-all duration-200 ${
                 isActive
                   ? "bg-[var(--color-surface-container-lowest)] text-[var(--color-primary)] shadow-sm"
                   : "text-[var(--color-on-surface-variant)] hover:bg-[var(--color-surface-variant)] hover:text-[var(--color-on-surface)]"

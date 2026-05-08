@@ -39,7 +39,7 @@ export function ProgressFeed({ events, isActive, onCancel }: Props) {
       {/* Header */}
       <div className="flex items-center gap-2 mb-3 border-b border-[var(--color-sticky-border)] pb-2">
         {isActive && <Loader2 className="h-3.5 w-3.5 animate-spin text-[var(--color-sticky-text)]" />}
-        <span className="font-mono text-xs font-bold tracking-[0.1em] uppercase text-[var(--color-sticky-text)] flex-1">
+        <span className="font-mono text-xs font-semibold tracking-[0.1em] uppercase text-[var(--color-sticky-text)] flex-1">
           {isActive ? "Compiling..." : "Compilation Log"}
         </span>
 
@@ -68,7 +68,7 @@ export function ProgressFeed({ events, isActive, onCancel }: Props) {
           <button
             type="button"
             onClick={onCancel}
-            className="font-mono text-[10px] font-bold tracking-wider uppercase text-[var(--color-error)] hover:underline"
+            className="font-mono text-[10px] font-semibold tracking-wider uppercase text-[var(--color-error)] hover:underline"
           >
             Cancel
           </button>

@@ -36,7 +36,7 @@ function ProjectCard({ proj, index }: { proj: Project; index: number }) {
       {/* Header */}
       <div className="flex justify-between items-start">
         <div>
-          <h4 className="text-lg font-bold text-[var(--color-on-surface)] mb-2">{proj.title}</h4>
+          <h4 className="text-lg font-semibold text-[var(--color-on-surface)] mb-2">{proj.title}</h4>
           {proj.one_liner && (
             <p className="text-sm text-[var(--color-on-surface-variant)] leading-relaxed mb-2">{proj.one_liner}</p>
           )}
@@ -69,7 +69,7 @@ function ProjectCard({ proj, index }: { proj: Project; index: number }) {
               if (!items || items.length === 0) return null;
               return (
                 <div key={role}>
-                  <strong className="text-[var(--color-primary)] font-mono text-xs font-bold tracking-[0.1em] uppercase block mb-2 border-b border-[var(--color-outline-variant)] pb-1">
+                  <strong className="text-[var(--color-primary)] font-mono text-xs font-semibold tracking-[0.1em] uppercase block mb-2 border-b border-[var(--color-outline-variant)] pb-1">
                     {role}
                   </strong>
                   <span className="text-sm text-[var(--color-on-surface-variant)]">
@@ -102,7 +102,7 @@ function ProjectCard({ proj, index }: { proj: Project; index: number }) {
                 <div key={label}>
                   <div className="flex items-center gap-1.5 mb-1">
                     <Icon className="h-4 w-4 text-[var(--color-primary)]" />
-                    <span className="font-mono text-xs font-bold tracking-[0.1em] uppercase text-[var(--color-on-surface-variant)]">
+                    <span className="font-mono text-xs font-semibold tracking-[0.1em] uppercase text-[var(--color-on-surface-variant)]">
                       {label}
                     </span>
                   </div>
@@ -152,8 +152,8 @@ function ExperienceCard({ exp, index }: { exp: Experience; index: number }) {
       className="relative border-l-2 border-[var(--color-surface-variant)] pl-6 pb-6"
     >
       <div className="absolute w-3 h-3 bg-[var(--color-primary)] rounded-full -left-[7px] top-1.5 ring-4 ring-[var(--color-surface-container-lowest)]" />
-      <h4 className="text-base font-bold text-[var(--color-on-surface)]">{exp.role}</h4>
-      <div className="font-mono text-xs font-bold tracking-[0.1em] uppercase text-[var(--color-on-surface-variant)] mb-3">
+      <h4 className="text-base font-semibold text-[var(--color-on-surface)]">{exp.role}</h4>
+      <div className="font-mono text-xs font-semibold tracking-[0.1em] uppercase text-[var(--color-on-surface-variant)] mb-3">
         {exp.company}
         {exp.location && ` · ${exp.location}`}
         {exp.date_range && ` · ${exp.date_range}`}
@@ -242,10 +242,10 @@ export const LivePreview = memo(function LivePreview({ portfolio }: Props) {
     <div className="bg-[var(--color-surface-container-lowest)] rounded-b-xl overflow-y-auto p-12 shadow-[0_20px_40px_-10px_rgba(21,66,18,0.1)] relative border-x border-b border-[var(--color-outline-variant)]/20">
       {/* Profile Header — Centered */}
       <header className="flex flex-col items-center text-center mb-16 animate-fade-up">
-        <div className="w-24 h-24 bg-[var(--color-surface-container)] rounded-full flex items-center justify-center text-4xl font-bold text-[var(--color-primary)] mb-6 border-4 border-[var(--color-surface)]">
+        <div className="w-24 h-24 bg-[var(--color-surface-container)] rounded-full flex items-center justify-center text-4xl font-semibold text-[var(--color-primary)] mb-6 border-4 border-[var(--color-surface)]">
           {portfolio.profile.name.charAt(0).toUpperCase()}
         </div>
-        <h1 className="text-4xl font-bold tracking-tight text-[var(--color-on-surface)] mb-2" style={{ lineHeight: 1.2 }}>
+        <h1 className="text-4xl font-semibold tracking-tight text-[var(--color-on-surface)] mb-2" style={{ lineHeight: 1.2 }}>
           {portfolio.profile.name}
         </h1>
         <h2 className="font-mono text-lg tracking-[0.15em] uppercase text-[var(--color-primary)] mb-4">
@@ -336,7 +336,7 @@ export const LivePreview = memo(function LivePreview({ portfolio }: Props) {
                       .sort((a, b) => b.proficiency - a.proficiency)
                       .map((skill, i) => (
                         <div key={i}>
-                          <div className="flex justify-between font-mono text-xs font-bold tracking-[0.05em] mb-1">
+                          <div className="flex justify-between font-mono text-xs font-semibold tracking-[0.05em] mb-1">
                             <span className="text-[var(--color-on-surface)]">{skill.title}</span>
                             <span className="text-[var(--color-primary)]">{skill.proficiency}/10</span>
                           </div>
@@ -397,7 +397,7 @@ export const LivePreview = memo(function LivePreview({ portfolio }: Props) {
             </h4>
             {[...portfolio.languages].sort((a, b) => b.proficiency - a.proficiency).map((lang, i) => (
               <div key={i}>
-                <div className="flex justify-between font-mono text-xs font-bold tracking-[0.05em] mb-1">
+                <div className="flex justify-between font-mono text-xs font-semibold tracking-[0.05em] mb-1">
                   <span className="text-[var(--color-on-surface)]">{lang.title}</span>
                   <span className="text-[var(--color-secondary)]">{lang.proficiency}/10</span>
                 </div>

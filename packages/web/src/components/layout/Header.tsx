@@ -16,7 +16,7 @@ export function Header() {
         {/* Brand */}
         <div className="flex items-center gap-2.5">
           <span className="text-[var(--color-primary)] text-2xl">⬡</span>
-          <span className="text-xl font-bold tracking-tight text-[var(--color-primary)]" style={{ fontFamily: "var(--font-sans)" }}>
+          <span className="text-xl font-semibold tracking-tight text-[var(--color-primary)]" style={{ fontFamily: "var(--font-sans)" }}>
             Refolio
           </span>
           <span className="stamp-badge ml-3 hidden sm:inline-block">

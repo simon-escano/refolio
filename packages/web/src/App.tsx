@@ -114,23 +114,50 @@ export default function App() {
         <div className="w-full">
           <section id="workspace" className="mx-auto max-w-[1440px] px-5 md:px-16 py-8">
             {!hasOutput ? (
-              /* ─── VERTICAL STEP-BY-STEP WORKSPACE LAYOUT ─── */
-              <div className="max-w-3xl mx-auto flex flex-col gap-12">
-                {/* Step 1: Profile & Identity */}
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <span className="bg-[var(--color-primary)] text-white font-mono text-xs font-bold px-3 py-1 rounded-sm shadow-sm tracking-wider">
-                      STEP 01 / PROFILE
-                    </span>
-                    <div className="h-px bg-[var(--color-outline-variant)]/60 flex-1" />
+              /* ─── MAIN LANDING & WORKSPACE FLOW ─── */
+              <div className="space-y-12 pb-20">
+                {/* ─── EYE-CATCHING HERO SECTION ─── */}
+                <div className="py-16 md:py-24 text-center max-w-4xl mx-auto flex flex-col items-center gap-8 px-4 animate-fade-down">
+                  {/* Engine Tag */}
+                  <div className="bg-[var(--color-primary)]/10 text-[var(--color-primary)] border border-[var(--color-primary)]/30 font-mono text-[10px] font-semibold px-3 py-1 rounded-full tracking-[0.2em] uppercase shadow-sm">
+                    ENGINE: BUILD r1
                   </div>
-                  <IdentityZone value={profile} onChange={setProfile} disabled={isGenerating} />
+                  
+                  <div className="space-y-4">
+                    <h1 className="text-4xl md:text-6xl font-semibold tracking-tight text-[var(--color-on-background)] max-w-3xl leading-[1.08]">
+                      Translate Raw Repositories Into <span className="text-[var(--color-primary)]">Living Blueprints</span>
+                    </h1>
+                    <p className="text-base md:text-lg text-[var(--color-on-surface-variant)] max-w-2xl mx-auto leading-relaxed">
+                      An automated engineering narrative engine that ingests raw source code and compiles gorgeous interactive portfolios, technical timelines, and live architectural diagrams.
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={() => document.getElementById("workspace-steps")?.scrollIntoView({ behavior: "smooth" })}
+                    className="group bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/95 text-white font-mono text-xs font-semibold tracking-[0.15em] uppercase px-8 py-4.5 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-3 border border-[var(--color-primary)]"
+                  >
+                    Enter Drafting Studio
+                    <span className="group-hover:translate-y-0.5 transition-transform duration-200">↓</span>
+                  </button>
                 </div>
+
+                {/* ─── VERTICAL STEP-BY-STEP WORKSPACE ─── */}
+                <div id="workspace-steps" className="max-w-3xl mx-auto flex flex-col gap-12 scroll-mt-24">
+                  {/* Step 1: Profile & Identity */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3">
+                      <span className="bg-[var(--color-primary)] text-white font-mono text-xs font-semibold px-3 py-1 rounded-sm shadow-sm tracking-wider">
+                        STEP 01 / PROFILE
+                      </span>
+                      <div className="h-px bg-[var(--color-outline-variant)]/60 flex-1" />
+                    </div>
+                    <IdentityZone value={profile} onChange={setProfile} disabled={isGenerating} />
+                  </div>
 
                 {/* Step 2: Key Architectures (Projects) */}
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
-                    <span className="bg-[var(--color-primary)] text-white font-mono text-xs font-bold px-3 py-1 rounded-sm shadow-sm tracking-wider">
+                    <span className="bg-[var(--color-primary)] text-white font-mono text-xs font-semibold px-3 py-1 rounded-sm shadow-sm tracking-wider">
                       STEP 02 / PROJECTS
                     </span>
                     <div className="h-px bg-[var(--color-outline-variant)]/60 flex-1" />
@@ -141,7 +168,7 @@ export default function App() {
                 {/* Step 3: Professional History */}
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
-                    <span className="bg-[var(--color-primary)] text-white font-mono text-xs font-bold px-3 py-1 rounded-sm shadow-sm tracking-wider">
+                    <span className="bg-[var(--color-primary)] text-white font-mono text-xs font-semibold px-3 py-1 rounded-sm shadow-sm tracking-wider">
                       STEP 03 / EXPERIENCE
                     </span>
                     <div className="h-px bg-[var(--color-outline-variant)]/60 flex-1" />
@@ -152,7 +179,7 @@ export default function App() {
                 {/* Step 4: Technical & Languages */}
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
-                    <span className="bg-[var(--color-primary)] text-white font-mono text-xs font-bold px-3 py-1 rounded-sm shadow-sm tracking-wider">
+                    <span className="bg-[var(--color-primary)] text-white font-mono text-xs font-semibold px-3 py-1 rounded-sm shadow-sm tracking-wider">
                       STEP 04 / SKILLS
                     </span>
                     <div className="h-px bg-[var(--color-outline-variant)]/60 flex-1" />
@@ -163,7 +190,7 @@ export default function App() {
                 {/* Step 5: Achievements */}
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
-                    <span className="bg-[var(--color-primary)] text-white font-mono text-xs font-bold px-3 py-1 rounded-sm shadow-sm tracking-wider">
+                    <span className="bg-[var(--color-primary)] text-white font-mono text-xs font-semibold px-3 py-1 rounded-sm shadow-sm tracking-wider">
                       STEP 05 / ACHIEVEMENTS
                     </span>
                     <div className="h-px bg-[var(--color-outline-variant)]/60 flex-1" />
@@ -178,7 +205,7 @@ export default function App() {
                 {/* Step 6: Credentials */}
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
-                    <span className="bg-[var(--color-primary)] text-white font-mono text-xs font-bold px-3 py-1 rounded-sm shadow-sm tracking-wider">
+                    <span className="bg-[var(--color-primary)] text-white font-mono text-xs font-semibold px-3 py-1 rounded-sm shadow-sm tracking-wider">
                       STEP 06 / CREDENTIALS
                     </span>
                     <div className="h-px bg-[var(--color-outline-variant)]/60 flex-1" />
@@ -203,6 +230,7 @@ export default function App() {
                 {!isGenerating && progress.length > 0 && (
                   <ProgressFeed events={progress} isActive={false} />
                 )}
+                </div>
               </div>
             ) : (
               /* ─── SPLIT LAYOUT (Drafting Table + Output Canvas) ─── */
@@ -217,13 +245,13 @@ export default function App() {
 
                   {/* Collapsed Section Labels */}
                   <div className="flex flex-col gap-2">
-                    <div className="bg-[var(--color-surface-variant)]/50 px-3 py-1 font-mono text-xs font-bold tracking-[0.1em] uppercase text-[var(--color-on-surface-variant)] inline-block w-max rounded-sm -rotate-1 shadow-sm backdrop-blur-sm">
+                    <div className="bg-[var(--color-surface-variant)]/50 px-3 py-1 font-mono text-xs font-semibold tracking-[0.1em] uppercase text-[var(--color-on-surface-variant)] inline-block w-max rounded-sm -rotate-1 shadow-sm backdrop-blur-sm">
                       Experience
                     </div>
-                    <div className="bg-[var(--color-surface-variant)]/50 px-3 py-1 font-mono text-xs font-bold tracking-[0.1em] uppercase text-[var(--color-on-surface-variant)] inline-block w-max rounded-sm rotate-1 shadow-sm backdrop-blur-sm">
+                    <div className="bg-[var(--color-surface-variant)]/50 px-3 py-1 font-mono text-xs font-semibold tracking-[0.1em] uppercase text-[var(--color-on-surface-variant)] inline-block w-max rounded-sm rotate-1 shadow-sm backdrop-blur-sm">
                       Skills
                     </div>
-                    <div className="bg-[var(--color-surface-variant)]/50 px-3 py-1 font-mono text-xs font-bold tracking-[0.1em] uppercase text-[var(--color-on-surface-variant)] inline-block w-max rounded-sm -rotate-[0.5deg] shadow-sm backdrop-blur-sm">
+                    <div className="bg-[var(--color-surface-variant)]/50 px-3 py-1 font-mono text-xs font-semibold tracking-[0.1em] uppercase text-[var(--color-on-surface-variant)] inline-block w-max rounded-sm -rotate-[0.5deg] shadow-sm backdrop-blur-sm">
                       Achievements
                     </div>
                   </div>
@@ -245,7 +273,7 @@ export default function App() {
                 <section className="w-3/4 flex flex-col min-w-0 animate-slide-in-right">
                   {error && (
                     <div className="rounded-xl border border-[var(--color-error-container)] bg-[var(--color-error-container)] p-5 space-y-2 animate-scale-in mb-4">
-                      <p className="text-sm font-bold text-[var(--color-on-error-container)]">Pipeline Error</p>
+                      <p className="text-sm font-semibold text-[var(--color-on-error-container)]">Pipeline Error</p>
                       <p className="text-xs font-mono text-[var(--color-on-error-container)]/80 leading-relaxed">{error}</p>
                     </div>
                   )}
@@ -298,13 +326,13 @@ function MiniIdCard({ name, role }: { name: string; role: string }) {
       <div className="w-12 h-3 bg-[var(--color-surface-variant)] rounded-full mx-auto mb-1 shadow-inner" />
       <div className="flex items-center gap-3 relative z-20">
         <div className="w-14 h-14 rounded-lg bg-[var(--color-surface-container)] flex items-center justify-center border border-[var(--color-outline-variant)] overflow-hidden">
-          <span className="text-xl font-bold text-[var(--color-primary)]">
+          <span className="text-xl font-semibold text-[var(--color-primary)]">
             {name ? name.charAt(0).toUpperCase() : "?"}
           </span>
         </div>
         <div>
           <h2 className="text-base font-semibold text-[var(--color-primary)]">{name || "Your Name"}</h2>
-          <p className="font-mono text-xs font-bold tracking-[0.1em] uppercase text-[var(--color-on-surface-variant)]">{role || "Your Role"}</p>
+          <p className="font-mono text-xs font-semibold tracking-[0.1em] uppercase text-[var(--color-on-surface-variant)]">{role || "Your Role"}</p>
         </div>
       </div>
       <div className="font-mono text-[10px] text-[var(--color-outline)] text-center relative z-20 tracking-[0.15em]">
@@ -323,21 +351,21 @@ function StackedQueue({ projects }: { projects: ProjectEntry[] }) {
     <div className="relative h-28">
       {filledProjects.length > 2 && (
         <div className="bg-[var(--color-surface-container-lowest)] rounded-lg p-3 level-2 absolute w-full top-2 left-2 rotate-[2deg] opacity-60 flex justify-between">
-          <span className="font-mono text-xs font-bold tracking-[0.1em] uppercase text-[var(--color-on-surface-variant)]">
+          <span className="font-mono text-xs font-semibold tracking-[0.1em] uppercase text-[var(--color-on-surface-variant)]">
             {filledProjects[2]?.title || "Project"}
           </span>
         </div>
       )}
       {filledProjects.length > 1 && (
         <div className="bg-[var(--color-surface-container-lowest)] rounded-lg p-3 level-2 absolute w-full top-1 left-1 rotate-[1deg] opacity-80 flex justify-between">
-          <span className="font-mono text-xs font-bold tracking-[0.1em] uppercase text-[var(--color-on-surface-variant)]">
+          <span className="font-mono text-xs font-semibold tracking-[0.1em] uppercase text-[var(--color-on-surface-variant)]">
             {filledProjects[1]?.title || "Project"}
           </span>
         </div>
       )}
       <div className="bg-[var(--color-surface-container-lowest)] rounded-lg p-4 level-2 absolute w-full top-0 left-0 z-10 border border-[var(--color-outline-variant)]/30 flex justify-between items-center">
         <div>
-          <div className="font-mono text-xs font-bold tracking-[0.1em] uppercase text-[var(--color-primary)] mb-1">
+          <div className="font-mono text-xs font-semibold tracking-[0.1em] uppercase text-[var(--color-primary)] mb-1">
             Queue: {filledProjects.length} Items
           </div>
           <div className="text-base font-semibold text-[var(--color-on-surface)]">

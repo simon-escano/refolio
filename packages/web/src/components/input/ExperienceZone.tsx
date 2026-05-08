@@ -78,7 +78,7 @@ export function ExperienceZone({ experience, onChange, disabled }: Props) {
                   <X className="h-3.5 w-3.5" />
                 </button>
 
-                <div className="font-mono text-[10px] font-bold tracking-[0.15em] uppercase text-[var(--color-outline-variant)]">
+                <div className="font-mono text-[10px] font-semibold tracking-[0.15em] uppercase text-[var(--color-outline-variant)]">
                   Role {String(i + 1).padStart(2, "0")}
                 </div>
 

@@ -58,7 +58,7 @@ export function AchievementsZone({ achievements, onChange, disabled }: Achieveme
                   <X className="h-3.5 w-3.5" />
                 </button>
 
-                <div className="font-mono text-[10px] font-bold tracking-[0.15em] uppercase text-[var(--color-outline-variant)]">
+                <div className="font-mono text-[10px] font-semibold tracking-[0.15em] uppercase text-[var(--color-outline-variant)]">
                   Achievement {String(i + 1).padStart(2, "0")}
                 </div>
 
@@ -161,7 +161,7 @@ export function CredentialsZone({ credentials, onChange, disabled }: Credentials
                   ) : (
                     <Award className="h-3.5 w-3.5 text-[var(--color-tertiary)]" />
                   )}
-                  <span className="font-mono text-[10px] font-bold tracking-[0.15em] uppercase text-[var(--color-outline-variant)]">
+                  <span className="font-mono text-[10px] font-semibold tracking-[0.15em] uppercase text-[var(--color-outline-variant)]">
                     {c.type}
                   </span>
                 </div>
@@ -178,7 +178,7 @@ export function CredentialsZone({ credentials, onChange, disabled }: Credentials
                         onChange(updated);
                       }}
                       disabled={disabled}
-                      className={`rounded-md px-3 py-1 font-mono text-[10px] font-bold tracking-wider uppercase transition-all ${
+                      className={`rounded-md px-3 py-1 font-mono text-[10px] font-semibold tracking-wider uppercase transition-all ${
                         c.type === t
                           ? "bg-[var(--color-primary-fixed)] text-[var(--color-primary)]"
                           : "text-[var(--color-outline-variant)] hover:bg-[var(--color-surface-variant)]"
