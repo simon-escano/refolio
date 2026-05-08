@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import {
-  Database, GitBranch, Sparkles, BarChart3, Puzzle, CheckCircle,
+  Database, GitBranch, Sparkles, Puzzle, CheckCircle,
   Loader2, type LucideIcon,
 } from "lucide-react";
 import type { ProgressEvent, ProgressPhase } from "../../types/portfolio";
@@ -41,13 +41,7 @@ const phaseConfig: Record<ProgressPhase, PhaseConfig> = {
     bg: "bg-(--color-phase-narrative-subtle)",
     glow: "ring-(--color-phase-narrative)/30",
   },
-  ranking: {
-    icon: BarChart3,
-    label: "Relevance Ranking",
-    color: "text-(--color-phase-ranking)",
-    bg: "bg-(--color-phase-ranking-subtle)",
-    glow: "ring-(--color-phase-ranking)/30",
-  },
+
   stitching: {
     icon: Puzzle,
     label: "Portfolio Assembly",
@@ -65,7 +59,7 @@ const phaseConfig: Record<ProgressPhase, PhaseConfig> = {
 };
 
 const phaseOrder: ProgressPhase[] = [
-  "cache", "gitlore", "narrative", "ranking", "stitching", "validation",
+  "cache", "gitlore", "narrative", "stitching", "validation",
 ];
 
 export function ProgressFeed({ events, isActive, onCancel }: Props) {

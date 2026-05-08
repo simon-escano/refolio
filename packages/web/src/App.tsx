@@ -15,7 +15,7 @@ import { usePortfolioSync } from "./lib/sync";
 import { usePersistedState } from "./lib/hooks";
 import { streamGenerate } from "./lib/api";
 import {
-  Sparkles, Rocket, Target, Brain,
+  Sparkles, Rocket, Brain,
   ArrowRight, GitBranch,
 } from "lucide-react";
 import type { ProgressEvent } from "./types/portfolio";
