@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Trophy, Plus, X, ChevronUp, GraduationCap, Award } from "lucide-react";
+import { Plus, X, ChevronUp, GraduationCap, Award } from "lucide-react";
 
 export interface AchievementEntry {
   accomplishment: string;
@@ -8,14 +8,14 @@ export interface AchievementEntry {
 
 export interface CredentialEntry {
   type: "education" | "certification";
-  // Education fields
   title: string;
   institution: string;
   startDate: string;
   endDate: string;
-  // Certification fields
   certification: string;
 }
+
+/* ─── Achievements ─── */
 
 interface AchievementsProps {
   achievements: AchievementEntry[];
@@ -23,91 +23,84 @@ interface AchievementsProps {
   disabled?: boolean;
 }
 
-export function AchievementsZone({
-  achievements,
-  onChange,
-  disabled,
-}: AchievementsProps) {
+export function AchievementsZone({ achievements, onChange, disabled }: AchievementsProps) {
   const [expanded, setExpanded] = useState(true);
 
   return (
-    <div className="rounded-2xl border border-(--color-border) glass-card overflow-hidden card-hover animate-fade-up stagger-2">
-      <button
-        type="button"
-        onClick={() => setExpanded(!expanded)}
-        className="flex w-full items-center gap-3 px-5 py-4 text-left transition-colors hover:bg-(--color-bg-secondary)/50"
-      >
-        <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-red-500 to-rose-500 text-white shadow-sm shadow-red-500/20">
-          <Trophy className="h-4 w-4" />
+    <section className="relative">
+      <button type="button" onClick={() => setExpanded(!expanded)} className="flex items-center gap-3 mb-4 group">
+        <div className="drafting-tape -rotate-[0.5deg]">
+          Achievements
+          {achievements.length > 0 && (
+            <span className="ml-2 text-[var(--color-primary)]">{achievements.length}</span>
+          )}
         </div>
-        <div className="flex-1 min-w-0">
-          <h3 className="text-sm font-semibold text-(--color-text) tracking-tight">Achievements</h3>
-          <p className="text-[11px] text-(--color-text-muted)">
-            Milestones, awards & notable accomplishments
-          </p>
-        </div>
-        <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-rose-50 dark:bg-rose-950/30 px-1.5 text-[10px] font-bold text-rose-600 dark:text-rose-400 tabular-nums">
-          {achievements.length}
-        </span>
-        <div className={`text-(--color-text-muted) transition-transform duration-300 ${expanded ? "" : "-rotate-180"}`}>
+        <div className={`text-[var(--color-outline)] transition-transform duration-300 ${expanded ? "" : "-rotate-180"}`}>
           <ChevronUp className="h-4 w-4" />
         </div>
       </button>
 
       <div className={`grid transition-all duration-300 ease-out ${expanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
         <div className="overflow-hidden">
-          <div className="space-y-3 px-5 pb-5 pt-1">
-              {achievements.map((a, i) => (
-                <div
-                  key={i}
-                  className="group/ach relative rounded-xl border border-(--color-border) bg-(--color-bg) p-3.5 space-y-2.5 animate-scale-in hover:border-(--color-border-focus) transition-all"
-                  style={{ animationDelay: `${i * 60}ms` }}
-                >
+          <div className="space-y-3">
+            {achievements.map((a, i) => (
+              <div
+                key={i}
+                className="playing-card rounded-xl p-4 space-y-3 relative group/ach animate-fade-up card-hover"
+                style={{ animationDelay: `${i * 60}ms` }}
+              >
                 <button
                   type="button"
                   onClick={() => onChange(achievements.filter((_, j) => j !== i))}
                   disabled={disabled}
-                  className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white shadow-sm hover:bg-red-600 transition-all opacity-0 group-hover/ach:opacity-100 disabled:opacity-0 active:scale-90"
+                  className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-[var(--color-error)] text-white shadow-md hover:bg-red-700 transition-all opacity-0 group-hover/ach:opacity-100 disabled:opacity-0 active:scale-90 z-20"
                 >
-                  <X className="h-3 w-3" />
+                  <X className="h-3.5 w-3.5" />
                 </button>
 
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-(--color-text-muted)">
-                    Achievement {String(i + 1).padStart(2, "0")}
-                  </span>
+                <div className="font-mono text-[10px] font-bold tracking-[0.15em] uppercase text-[var(--color-outline-variant)]">
+                  Achievement {String(i + 1).padStart(2, "0")}
                 </div>
-                <textarea
-                  value={a.accomplishment}
-                  onChange={(e) => {
-                    const updated = [...achievements];
-                    updated[i] = { ...updated[i], accomplishment: e.target.value };
-                    onChange(updated);
-                  }}
-                  disabled={disabled}
-                  placeholder="What did you accomplish? (e.g. Rank #1 in Batch, Published an article on dev.to)"
-                  rows={2}
-                  className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50 resize-none"
-                />
-                <input
-                  type="text"
-                  value={a.evidence_url}
-                  onChange={(e) => {
-                    const updated = [...achievements];
-                    updated[i] = { ...updated[i], evidence_url: e.target.value };
-                    onChange(updated);
-                  }}
-                  disabled={disabled}
-                  placeholder="Evidence URL (optional)"
-                  className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
-                />
+
+                <div className="flex flex-col gap-1">
+                  <label className="field-label text-[10px]">Accomplishment</label>
+                  <textarea
+                    value={a.accomplishment}
+                    onChange={(e) => {
+                      const updated = [...achievements];
+                      updated[i] = { ...updated[i], accomplishment: e.target.value };
+                      onChange(updated);
+                    }}
+                    disabled={disabled}
+                    placeholder="What did you accomplish?"
+                    rows={2}
+                    className="input-drafting input-drafting-sm resize-none leading-relaxed"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="field-label text-[10px]">Evidence URL</label>
+                  <input
+                    type="text"
+                    value={a.evidence_url}
+                    onChange={(e) => {
+                      const updated = [...achievements];
+                      updated[i] = { ...updated[i], evidence_url: e.target.value };
+                      onChange(updated);
+                    }}
+                    disabled={disabled}
+                    placeholder="Evidence URL (optional)"
+                    className="input-drafting input-drafting-sm font-mono text-xs"
+                  />
+                </div>
               </div>
             ))}
+
             <button
               type="button"
               onClick={() => onChange([...achievements, { accomplishment: "", evidence_url: "" }])}
               disabled={disabled}
-              className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-(--color-border) bg-(--color-bg)/50 py-2.5 text-xs font-medium text-(--color-text-muted) transition-all hover:border-red-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50/30 dark:hover:bg-red-950/10 disabled:opacity-50 active:scale-[0.98]"
+              className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[var(--color-outline-variant)] bg-[var(--color-surface-container-lowest)]/30 py-3 font-mono text-xs font-medium text-[var(--color-outline-variant)] tracking-wider uppercase transition-all hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] disabled:opacity-50 active:scale-[0.98]"
             >
               <Plus className="h-3.5 w-3.5" />
               Add Achievement
@@ -115,9 +108,11 @@ export function AchievementsZone({
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
+
+/* ─── Credentials ─── */
 
 interface CredentialsProps {
   credentials: CredentialEntry[];
@@ -125,95 +120,80 @@ interface CredentialsProps {
   disabled?: boolean;
 }
 
-export function CredentialsZone({
-  credentials,
-  onChange,
-  disabled,
-}: CredentialsProps) {
+export function CredentialsZone({ credentials, onChange, disabled }: CredentialsProps) {
   const [expanded, setExpanded] = useState(true);
 
   return (
-    <div className="rounded-2xl border border-(--color-border) glass-card overflow-hidden card-hover animate-fade-up stagger-3">
-      <button
-        type="button"
-        onClick={() => setExpanded(!expanded)}
-        className="flex w-full items-center gap-3 px-5 py-4 text-left transition-colors hover:bg-(--color-bg-secondary)/50"
-      >
-        <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-violet-500 text-white shadow-sm shadow-purple-500/20">
-          <GraduationCap className="h-4 w-4" />
+    <section className="relative">
+      <button type="button" onClick={() => setExpanded(!expanded)} className="flex items-center gap-3 mb-4 group">
+        <div className="drafting-tape rotate-[0.5deg]">
+          Credentials
+          {credentials.length > 0 && (
+            <span className="ml-2 text-[var(--color-primary)]">{credentials.length}</span>
+          )}
         </div>
-        <div className="flex-1 min-w-0">
-          <h3 className="text-sm font-semibold text-(--color-text) tracking-tight">Credentials</h3>
-          <p className="text-[11px] text-(--color-text-muted)">
-            Education & certifications
-          </p>
-        </div>
-        <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-violet-50 dark:bg-violet-950/30 px-1.5 text-[10px] font-bold text-violet-600 dark:text-violet-400 tabular-nums">
-          {credentials.length}
-        </span>
-        <div className={`text-(--color-text-muted) transition-transform duration-300 ${expanded ? "" : "-rotate-180"}`}>
+        <div className={`text-[var(--color-outline)] transition-transform duration-300 ${expanded ? "" : "-rotate-180"}`}>
           <ChevronUp className="h-4 w-4" />
         </div>
       </button>
 
       <div className={`grid transition-all duration-300 ease-out ${expanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
         <div className="overflow-hidden">
-          <div className="space-y-3 px-5 pb-5 pt-1">
-              {credentials.map((c, i) => (
-                <div
-                  key={i}
-                  className="group/cred relative rounded-xl border border-(--color-border) bg-(--color-bg) p-3.5 space-y-2.5 animate-scale-in hover:border-(--color-border-focus) transition-all"
-                  style={{ animationDelay: `${i * 60}ms` }}
+          <div className="space-y-3">
+            {credentials.map((c, i) => (
+              <div
+                key={i}
+                className="playing-card rounded-xl p-4 space-y-3 relative group/cred animate-fade-up card-hover"
+                style={{ animationDelay: `${i * 60}ms` }}
+              >
+                <button
+                  type="button"
+                  onClick={() => onChange(credentials.filter((_, j) => j !== i))}
+                  disabled={disabled}
+                  className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-[var(--color-error)] text-white shadow-md hover:bg-red-700 transition-all opacity-0 group-hover/cred:opacity-100 disabled:opacity-0 active:scale-90 z-20"
                 >
-                  {/* Offset Delete Button */}
-                  <button
-                    type="button"
-                    onClick={() => onChange(credentials.filter((_, j) => j !== i))}
-                    disabled={disabled}
-                    className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white shadow-sm hover:bg-red-600 transition-all opacity-0 group-hover/cred:opacity-100 disabled:opacity-0 active:scale-90"
-                  >
-                    <X className="h-3 w-3" />
-                  </button>
+                  <X className="h-3.5 w-3.5" />
+                </button>
 
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      {c.type === "education" ? (
-                        <GraduationCap className="h-3 w-3 text-violet-500" />
-                      ) : (
-                        <Award className="h-3 w-3 text-blue-500" />
-                      )}
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-(--color-text-muted)">
-                        {c.type}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Type toggle */}
-                  <div className="flex gap-1.5">
-                    {(["education", "certification"] as const).map((t) => (
-                      <button
-                        key={t}
-                        type="button"
-                        onClick={() => {
-                          const updated = [...credentials];
-                          updated[i] = { ...updated[i], type: t };
-                          onChange(updated);
-                        }}
-                        disabled={disabled}
-                        className={`rounded-lg px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider transition-all ${
-                          c.type === t
-                            ? "bg-(--color-accent-subtle) text-(--color-accent)"
-                            : "text-(--color-text-muted) hover:bg-(--color-bg-secondary)"
-                        }`}
-                      >
-                        {t}
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Dynamic Fields */}
+                <div className="flex items-center gap-2">
                   {c.type === "education" ? (
-                    <>
+                    <GraduationCap className="h-3.5 w-3.5 text-[var(--color-primary)]" />
+                  ) : (
+                    <Award className="h-3.5 w-3.5 text-[var(--color-tertiary)]" />
+                  )}
+                  <span className="font-mono text-[10px] font-bold tracking-[0.15em] uppercase text-[var(--color-outline-variant)]">
+                    {c.type}
+                  </span>
+                </div>
+
+                {/* Type Toggle */}
+                <div className="flex gap-1.5">
+                  {(["education", "certification"] as const).map((t) => (
+                    <button
+                      key={t}
+                      type="button"
+                      onClick={() => {
+                        const updated = [...credentials];
+                        updated[i] = { ...updated[i], type: t };
+                        onChange(updated);
+                      }}
+                      disabled={disabled}
+                      className={`rounded-md px-3 py-1 font-mono text-[10px] font-bold tracking-wider uppercase transition-all ${
+                        c.type === t
+                          ? "bg-[var(--color-primary-fixed)] text-[var(--color-primary)]"
+                          : "text-[var(--color-outline-variant)] hover:bg-[var(--color-surface-variant)]"
+                      }`}
+                    >
+                      {t}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Dynamic Fields */}
+                {c.type === "education" ? (
+                  <div className="space-y-3">
+                    <div className="flex flex-col gap-1">
+                      <label className="field-label text-[10px]">Degree / Major</label>
                       <input
                         type="text"
                         value={c.title}
@@ -223,9 +203,12 @@ export function CredentialsZone({
                           onChange(updated);
                         }}
                         disabled={disabled}
-                        placeholder="Degree/Major (e.g., BS in Computer Science)"
-                        className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
+                        placeholder="BS in Computer Science"
+                        className="input-drafting input-drafting-sm"
                       />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <label className="field-label text-[10px]">Institution</label>
                       <input
                         type="text"
                         value={c.institution}
@@ -236,40 +219,43 @@ export function CredentialsZone({
                         }}
                         disabled={disabled}
                         placeholder="Institution"
-                        className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
+                        className="input-drafting input-drafting-sm"
                       />
-                      <div className="grid grid-cols-2 gap-3">
-                        <div className="space-y-1 text-left">
-                          <label className="text-[10px] font-semibold text-(--color-text-muted) px-1 uppercase tracking-wider">Start Date</label>
-                          <input
-                            type="date"
-                            value={c.startDate}
-                            onChange={(e) => {
-                              const updated = [...credentials];
-                              updated[i] = { ...updated[i], startDate: e.target.value };
-                              onChange(updated);
-                            }}
-                            disabled={disabled}
-                            className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 text-xs text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
-                          />
-                        </div>
-                        <div className="space-y-1 text-left">
-                          <label className="text-[10px] font-semibold text-(--color-text-muted) px-1 uppercase tracking-wider">End Date</label>
-                          <input
-                            type="date"
-                            value={c.endDate}
-                            onChange={(e) => {
-                              const updated = [...credentials];
-                              updated[i] = { ...updated[i], endDate: e.target.value };
-                              onChange(updated);
-                            }}
-                            disabled={disabled}
-                            className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 text-xs text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
-                          />
-                        </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="flex flex-col gap-1">
+                        <label className="field-label text-[10px]">Start Date</label>
+                        <input
+                          type="date"
+                          value={c.startDate}
+                          onChange={(e) => {
+                            const updated = [...credentials];
+                            updated[i] = { ...updated[i], startDate: e.target.value };
+                            onChange(updated);
+                          }}
+                          disabled={disabled}
+                          className="input-drafting input-drafting-sm text-xs"
+                        />
                       </div>
-                    </>
-                  ) : (
+                      <div className="flex flex-col gap-1">
+                        <label className="field-label text-[10px]">End Date</label>
+                        <input
+                          type="date"
+                          value={c.endDate}
+                          onChange={(e) => {
+                            const updated = [...credentials];
+                            updated[i] = { ...updated[i], endDate: e.target.value };
+                            onChange(updated);
+                          }}
+                          disabled={disabled}
+                          className="input-drafting input-drafting-sm text-xs"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-1">
+                    <label className="field-label text-[10px]">Description</label>
                     <textarea
                       value={c.certification}
                       onChange={(e) => {
@@ -278,30 +264,32 @@ export function CredentialsZone({
                         onChange(updated);
                       }}
                       disabled={disabled}
-                      placeholder="Explain your certification (e.g., AWS Certified Solutions Architect - May 2024)"
+                      placeholder="Explain your certification"
                       rows={3}
-                      className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50 resize-none leading-relaxed"
+                      className="input-drafting input-drafting-sm resize-none leading-relaxed"
                     />
-                  )}
-                </div>
-              ))}
-              <button
-                type="button"
-                onClick={() =>
-                  onChange([
-                    ...credentials,
-                    { type: "education", title: "", institution: "", startDate: "", endDate: "", certification: "" },
-                  ])
-                }
-                disabled={disabled}
-                className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-(--color-border) bg-(--color-bg)/50 py-2.5 text-xs font-medium text-(--color-text-muted) transition-all hover:border-violet-400 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-violet-50/30 dark:hover:bg-violet-950/10 disabled:opacity-50 active:scale-[0.98]"
-              >
-                <Plus className="h-3.5 w-3.5" />
-                Add Credential
-              </button>
-            </div>
+                  </div>
+                )}
+              </div>
+            ))}
+
+            <button
+              type="button"
+              onClick={() =>
+                onChange([
+                  ...credentials,
+                  { type: "education", title: "", institution: "", startDate: "", endDate: "", certification: "" },
+                ])
+              }
+              disabled={disabled}
+              className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[var(--color-outline-variant)] bg-[var(--color-surface-container-lowest)]/30 py-3 font-mono text-xs font-medium text-[var(--color-outline-variant)] tracking-wider uppercase transition-all hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] disabled:opacity-50 active:scale-[0.98]"
+            >
+              <Plus className="h-3.5 w-3.5" />
+              Add Credential
+            </button>
           </div>
         </div>
       </div>
+    </section>
   );
 }

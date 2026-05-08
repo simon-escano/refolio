@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Refolio - Output Workspace</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary": "#493700",
+                        "secondary-container": "#c4e7de",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed-variant": "#23501e",
+                        "on-secondary-fixed-variant": "#2d4d46",
+                        "tertiary-fixed": "#ffdf96",
+                        "on-primary-fixed": "#002201",
+                        "primary-fixed": "#bcf0ae",
+                        "surface": "#f9faf2",
+                        "on-secondary-fixed": "#00201b",
+                        "tertiary-fixed-dim": "#e7c268",
+                        "surface-tint": "#3b6934",
+                        "background": "#f9faf2",
+                        "inverse-surface": "#2e312c",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#251a00",
+                        "on-surface": "#191c18",
+                        "surface-bright": "#f9faf2",
+                        "tertiary-container": "#654d00",
+                        "surface-container": "#edefe7",
+                        "on-error": "#ffffff",
+                        "error": "#ba1a1a",
+                        "primary-container": "#2d5a27",
+                        "outline": "#72796e",
+                        "on-primary": "#ffffff",
+                        "surface-container-low": "#f3f4ed",
+                        "surface-dim": "#d9dbd3",
+                        "primary-fixed-dim": "#a1d494",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#9dd090",
+                        "outline-variant": "#c2c9bb",
+                        "surface-container-high": "#e7e9e1",
+                        "primary": "#154212",
+                        "surface-container-highest": "#e2e3dc",
+                        "secondary": "#45645e",
+                        "secondary-fixed-dim": "#abcec5",
+                        "inverse-primary": "#a1d494",
+                        "on-surface-variant": "#42493e",
+                        "on-tertiary-container": "#e3bf65",
+                        "on-background": "#191c18",
+                        "inverse-on-surface": "#f0f1ea",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#e2e3dc",
+                        "on-secondary-container": "#496962",
+                        "on-tertiary-fixed-variant": "#5a4400",
+                        "secondary-fixed": "#c7eae1"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "card-gap": "32px",
+                        "gutter": "24px",
+                        "unit": "8px",
+                        "margin-desktop": "64px",
+                        "margin-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "label-caps": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "data-mono": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "label-caps": ["12px", {"lineHeight": "1.0", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .blueprint-bg {
+            background-color: #f9faf2;
+            background-image: linear-gradient(#c2c9bb 1px, transparent 1px), linear-gradient(90deg, #c2c9bb 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .texture-noise {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+            opacity: 0.05; pointer-events: none; mix-blend-mode: multiply;
+        }
+        .level-1 { box-shadow: 0 2px 4px rgba(21, 66, 18, 0.05); }
+        .level-2 { box-shadow: 0 12px 24px -4px rgba(21, 66, 18, 0.1); transform: rotate(-0.5deg); }
+        .level-3 { box-shadow: 0 32px 64px -12px rgba(21, 66, 18, 0.15), inset 0 1px 1px rgba(255,255,255,0.8); }
+        .plastic-overlay { background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.1) 100%); }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col blueprint-bg relative">
+<div class="texture-noise z-0"></div>
+<!-- TopAppBar -->
+<header class="bg-surface/90 backdrop-blur-md shadow-[0_4px_20px_-5px_rgba(25,28,24,0.1)] docked full-width top-0 z-50 shadow-md relative">
+<div class="flex justify-between items-center w-full px-margin-desktop max-w-[1440px] mx-auto h-[80px]">
+<div class="font-headline-md text-headline-md font-bold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">architecture</span>
+                Refolio
+            </div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary hover:opacity-80 transition-opacity duration-300" href="#">Drafts</a>
+<a class="font-label-caps text-label-caps text-primary border-b-2 border-primary pb-1 hover:opacity-80 transition-opacity duration-300" href="#">Templates</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary hover:opacity-80 transition-opacity duration-300" href="#">Analytics</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary hover:opacity-80 transition-opacity duration-300" href="#">Settings</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary hover:opacity-80 transition-opacity duration-300 active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined">light_mode</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary hover:opacity-80 transition-opacity duration-300 active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined">monitor</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary hover:opacity-80 transition-opacity duration-300 active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined">dark_mode</span>
+</button>
+<button class="font-label-caps text-label-caps bg-primary text-on-primary px-4 py-2 rounded hover:opacity-80 transition-opacity duration-300 active:scale-95 transition-transform duration-200">
+                    BETA
+                </button>
+<img alt="Architect Profile" class="w-10 h-10 rounded-full border-2 border-surface-variant object-cover" data-alt="A close-up portrait of a professional architect in a modern studio. Soft, natural light illuminates their face, set against a blurred background of architectural sketches and a clean, light-mode aesthetic workspace." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-69SEV5c0lZKXmbpAdKCtZSae-MhgSoPgdbvIKQytomjW14j9GEvjCpdU0b36ZhqdtHLsOs2TWIB0CNOmGSUIaFAdXQSiTMO14Bi26aLC9dvXpRdy5lshVNBBVenOISP8pnHLWlL-X_xau2yEFc6LpQOt9MRs7g0jZ7k4PFjD7p_tJVbO9MeaevOBm14PrVr7qXd1HvPJ2WO09SSdNMYGfy0hEnM40fWymWJuukhegQ8xqXsWk_x0jBCvAg33b6WtMzK_LFVxOw8D"/>
+</div>
+</div>
+</header>
+<main class="flex-grow flex w-full max-w-[1440px] mx-auto px-margin-desktop py-gutter gap-card-gap relative z-10">
+<!-- Left Column: Drafting Table Elements -->
+<aside class="w-1/4 flex flex-col gap-6">
+<!-- Mini ID Card -->
+<div class="bg-surface-container-lowest rounded-xl level-3 p-4 relative overflow-hidden flex flex-col gap-3">
+<div class="plastic-overlay absolute inset-0 z-10 pointer-events-none"></div>
+<div class="w-12 h-3 bg-surface-variant rounded-full mx-auto mb-2 shadow-inner"></div>
+<div class="flex items-center gap-4 relative z-20">
+<img alt="Avatar" class="w-16 h-16 rounded-lg object-cover border border-outline-variant" data-alt="A professional portrait of a senior software architect with a subtle smile. High-key lighting, soft white background, exuding competence and approachability within a modern professional setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxgYsUKRWF4ecJpRvSJumR5VSrx1rIZlIbI6Go0A57aRq2fxcwG3dUrH1vMUIsuyu8WyYBDQW7nRq0aB_6C7kdxtr1by_z_87Z5Bn-2mM_P98iDeOpPq7Y4QT9J72tei2yGmrDMz4NJza1Q0_9WEoqbJD9NBJxWyySCrYNOefci7h0cF_n_qYtWRIKlW49RbmZEwIp7j9T6HWPWSkvPLp8mDZttxTHQ22oTYzcF-c4DpgoWdL0w4NUl2NAaKVh9KFDBwBJfmRLOH74"/>
+<div>
+<h2 class="font-headline-md text-body-lg text-primary">Alex Mercer</h2>
+<p class="font-data-mono text-label-caps text-on-surface-variant">Senior Systems Architect</p>
+</div>
+</div>
+<div class="font-data-mono text-[10px] text-outline mt-2 text-center relative z-20">SN: 8492-AX-991</div>
+</div>
+<!-- Gitlore Queue -->
+<div class="relative h-32">
+<div class="bg-surface-container-lowest rounded-lg p-3 level-2 absolute w-full top-2 left-2 rotate-[2deg] opacity-60 flex justify-between">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Legacy Refactor</span>
+<span class="material-symbols-outlined text-secondary text-sm">commit</span>
+</div>
+<div class="bg-surface-container-lowest rounded-lg p-3 level-2 absolute w-full top-1 left-1 rotate-[1deg] opacity-80 flex justify-between">
+<span class="font-label-caps text-label-caps text-on-surface-variant">API Gateway V2</span>
+<span class="material-symbols-outlined text-secondary text-sm">commit</span>
+</div>
+<div class="bg-surface-container-lowest rounded-lg p-4 level-2 absolute w-full top-0 left-0 rotate-0 flex justify-between items-center z-10 border border-outline-variant/30">
+<div>
+<div class="font-data-mono text-label-caps text-primary mb-1">Queue: 3 Items</div>
+<div class="font-headline-md text-body-md text-on-surface">Microservices Migration</div>
+</div>
+<span class="material-symbols-outlined text-primary">layers</span>
+</div>
+</div>
+<!-- Sections List (Tape Headers) -->
+<div class="flex flex-col gap-2">
+<div class="bg-surface-variant/50 px-3 py-1 font-data-mono text-label-caps text-on-surface-variant inline-block w-max rounded-sm -rotate-1 shadow-sm backdrop-blur-sm">Experience</div>
+<div class="bg-surface-variant/50 px-3 py-1 font-data-mono text-label-caps text-on-surface-variant inline-block w-max rounded-sm rotate-1 shadow-sm backdrop-blur-sm">Skills</div>
+<div class="bg-surface-variant/50 px-3 py-1 font-data-mono text-label-caps text-on-surface-variant inline-block w-max rounded-sm -rotate-[0.5deg] shadow-sm backdrop-blur-sm">Achievements</div>
+</div>
+<!-- Generate CTA -->
+<button class="mt-4 bg-primary text-on-primary font-headline-md text-body-md py-4 rounded-xl level-2 hover:bg-primary-container transition-colors duration-300 flex items-center justify-center gap-2 group">
+<span class="material-symbols-outlined group-hover:rotate-180 transition-transform duration-500">sync</span>
+                Regenerate Output
+            </button>
+<!-- Progress Log -->
+<div class="bg-[#fffcdd] p-4 rounded-md level-1 font-body-md text-[13px] text-on-surface-variant relative mt-4 shadow-[2px_2px_5px_rgba(0,0,0,0.05)] border border-[#e6e4c8]">
+<div class="absolute -top-3 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-red-400 shadow-md"></div>
+<div class="font-data-mono text-label-caps text-tertiary mb-2 border-b border-[#e6e4c8] pb-1">Compilation Log</div>
+<ul class="space-y-1">
+<li class="flex gap-2 items-start"><span class="text-primary">✓</span> Parsed Gitlore blocks</li>
+<li class="flex gap-2 items-start"><span class="text-primary">✓</span> Structured Experience</li>
+<li class="flex gap-2 items-start"><span class="text-primary">✓</span> Rendered Mermaid SVGs</li>
+<li class="flex gap-2 items-start animate-pulse"><span class="text-secondary">⟳</span> Formatting final layout...</li>
+</ul>
+</div>
+</aside>
+<!-- Right Column: Final Output Preview -->
+<section class="w-3/4 flex flex-col h-[calc(100vh-160px)]">
+<!-- Output Tabs Bar -->
+<div class="bg-surface-container rounded-t-xl border-b border-outline-variant p-2 flex justify-between items-center level-1 relative z-20">
+<div class="flex gap-2">
+<button class="bg-surface-container-lowest text-primary px-4 py-2 rounded-lg font-data-mono text-label-caps flex items-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-[18px]">visibility</span> Preview
+                    </button>
+<button class="text-on-surface-variant hover:bg-surface-variant px-4 py-2 rounded-lg font-data-mono text-label-caps flex items-center gap-2 transition-colors">
+<span class="material-symbols-outlined text-[18px]">code</span> JSON
+                    </button>
+</div>
+<div class="flex gap-2">
+<button class="text-on-surface-variant hover:text-primary p-2 rounded transition-colors"><span class="material-symbols-outlined text-[20px]">download</span></button>
+<button class="text-on-surface-variant hover:text-primary p-2 rounded transition-colors"><span class="material-symbols-outlined text-[20px]">share</span></button>
+</div>
+</div>
+<!-- The Portfolio Canvas (White Paper) -->
+<div class="bg-surface-container-lowest flex-grow rounded-b-xl overflow-y-auto p-12 shadow-[0_20px_40px_-10px_rgba(21,66,18,0.1)] relative z-10 border-x border-b border-outline-variant/20">
+<!-- Profile Header -->
+<header class="flex flex-col items-center text-center mb-16">
+<div class="w-24 h-24 bg-surface-container rounded-full flex items-center justify-center font-headline-lg text-headline-lg text-primary mb-6 border-4 border-surface">
+                        A
+                    </div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-2">Alex Mercer</h1>
+<h2 class="font-data-mono text-body-lg text-primary tracking-widest uppercase mb-4">Senior Systems Architect</h2>
+<p class="font-body-md text-on-surface-variant italic max-w-2xl">"Designing resilient, distributed systems that scale gracefully while maintaining developer velocity and operational clarity."</p>
+</header>
+<!-- Featured Project -->
+<section class="mb-16">
+<div class="flex items-center gap-4 mb-8">
+<div class="h-px bg-outline-variant flex-grow"></div>
+<h3 class="font-headline-md text-headline-md text-primary">Key Architectures</h3>
+<div class="h-px bg-outline-variant flex-grow"></div>
+</div>
+<div class="border border-outline-variant rounded-xl p-8 bg-surface-bright shadow-sm hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-6">
+<div>
+<h4 class="font-headline-md text-body-lg text-on-surface font-bold mb-2">Global Payments Gateway Migration</h4>
+<div class="flex gap-2 mb-4">
+<span class="bg-secondary-container text-on-secondary-container font-data-mono text-[10px] px-2 py-1 rounded-sm uppercase">Distributed Systems</span>
+<span class="bg-surface-variant text-on-surface-variant font-data-mono text-[10px] px-2 py-1 rounded-sm uppercase">High Availability</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-secondary">account_tree</span>
+</div>
+<!-- Tech Stack categorization -->
+<div class="grid grid-cols-3 gap-6 mb-8 font-body-md text-[14px]">
+<div>
+<strong class="text-primary font-data-mono text-label-caps block mb-2 border-b border-outline-variant pb-1">Primary</strong>
+<span class="text-on-surface-variant">Go, gRPC, Kafka</span>
+</div>
+<div>
+<strong class="text-primary font-data-mono text-label-caps block mb-2 border-b border-outline-variant pb-1">Infrastructure</strong>
+<span class="text-on-surface-variant">Kubernetes, AWS EKS</span>
+</div>
+<div>
+<strong class="text-primary font-data-mono text-label-caps block mb-2 border-b border-outline-variant pb-1">Supporting</strong>
+<span class="text-on-surface-variant">Redis, PostgreSQL</span>
+</div>
+</div>
+<!-- Mock Mermaid Diagram Area -->
+<div class="bg-surface-container-low border border-outline-variant/50 rounded-lg h-48 flex items-center justify-center mb-8 relative overflow-hidden">
+<div class="font-data-mono text-on-surface-variant opacity-50 text-sm">[Mermaid Architecture Diagram Rendered Here]</div>
+<div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CjxyZWN0IHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgZmlsbD0ibm9uZSIvPgo8Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIxIiBmaWxsPSIjY2JkNWUxIi8+Cjwvc3ZnPg==')] opacity-30"></div>
+</div>
+<!-- Results Metrics -->
+<div class="flex gap-8 border-t border-outline-variant pt-6">
+<div>
+<div class="font-headline-lg text-primary mb-1">99.999%</div>
+<div class="font-data-mono text-label-caps text-on-surface-variant">Uptime (Scale)</div>
+</div>
+<div>
+<div class="font-headline-lg text-primary mb-1">12ms</div>
+<div class="font-data-mono text-label-caps text-on-surface-variant">P99 Latency (Perf)</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Experience & Skills Grid -->
+<div class="grid grid-cols-2 gap-12">
+<!-- Experience -->
+<section>
+<h3 class="font-headline-md text-body-lg text-primary mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined">work</span> Professional History
+                        </h3>
+<div class="relative border-l-2 border-surface-variant pl-6 pb-4">
+<div class="absolute w-3 h-3 bg-primary rounded-full -left-[7px] top-1.5 ring-4 ring-surface-container-lowest"></div>
+<h4 class="font-headline-md text-body-md font-bold text-on-surface">Staff Engineer</h4>
+<div class="font-data-mono text-label-caps text-on-surface-variant mb-3">FinTech Innovators · 2020 - Present</div>
+<ul class="list-disc list-inside font-body-md text-[14px] text-on-surface-variant space-y-2 marker:text-primary">
+<li>Architected event-driven microservices reducing coupling by 40%.</li>
+<li>Mentored 15+ engineers in distributed systems patterns.</li>
+</ul>
+</div>
+</section>
+<!-- Tech Proficiency Grid -->
+<section>
+<h3 class="font-headline-md text-body-lg text-primary mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined">terminal</span> Technical Proficiency
+                        </h3>
+<div class="space-y-4">
+<div>
+<div class="flex justify-between font-data-mono text-label-caps mb-1">
+<span class="text-on-surface">Backend Architecture</span>
+<span class="text-primary">9/10</span>
+</div>
+<div class="w-full bg-surface-variant rounded-full h-1.5">
+<div class="bg-primary h-1.5 rounded-full" style="width: 90%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between font-data-mono text-label-caps mb-1">
+<span class="text-on-surface">Cloud Infrastructure (AWS)</span>
+<span class="text-primary">8/10</span>
+</div>
+<div class="w-full bg-surface-variant rounded-full h-1.5">
+<div class="bg-primary h-1.5 rounded-full" style="width: 80%"></div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container full-width py-unit-8 border-t border-outline-variant flat mt-auto relative z-20">
+<div class="flex flex-col md:flex-row justify-between items-center w-full px-margin-desktop max-w-[1440px] mx-auto gap-4">
+<div class="font-label-caps text-label-caps text-on-surface-variant">© 2024 Refolio Studio. Built for Architects of the Digital Age.</div>
+<nav class="flex gap-4">
+<a class="font-data-mono text-data-mono uppercase text-on-surface-variant hover:text-primary transition-colors transition-all duration-300 ease-in-out" href="#">Terms</a>
+<a class="font-data-mono text-data-mono uppercase text-on-surface-variant hover:text-primary transition-colors transition-all duration-300 ease-in-out" href="#">Privacy</a>
+<a class="font-data-mono text-data-mono uppercase text-on-surface-variant hover:text-primary transition-colors transition-all duration-300 ease-in-out" href="#">License</a>
+<a class="font-data-mono text-data-mono uppercase text-on-surface-variant hover:text-primary transition-colors transition-all duration-300 ease-in-out" href="#">Documentation</a>
+</nav>
+</div>
+</footer>
+</body></html>

@@ -11,19 +11,18 @@ interface Props {
   portfolio: MasterPortfolio;
 }
 
-function RoleBadge({ role }: { role: string }) {
-  const colors: Record<string, string> = {
-    Primary: "bg-(--color-role-primary-subtle) text-(--color-role-primary)",
-    Supporting: "bg-(--color-role-supporting-subtle) text-(--color-role-supporting)",
-    Infrastructure: "bg-(--color-role-infra-subtle) text-(--color-role-infra)",
-  };
+/* ─── Section Divider with centered heading ─── */
+function SectionDivider({ title }: { title: string }) {
   return (
-    <span className={`rounded-md px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider ${colors[role] ?? "bg-(--color-bg-tertiary) text-(--color-text-muted)"}`}>
-      {role}
-    </span>
+    <div className="flex items-center gap-4 my-8">
+      <div className="h-px bg-[var(--color-outline-variant)] flex-grow" />
+      <h3 className="text-xl font-semibold text-[var(--color-primary)]">{title}</h3>
+      <div className="h-px bg-[var(--color-outline-variant)] flex-grow" />
+    </div>
   );
 }
 
+/* ─── Project Card ─── */
 function ProjectCard({ proj, index }: { proj: Project; index: number }) {
   return (
     <motion.div
@@ -32,29 +31,29 @@ function ProjectCard({ proj, index }: { proj: Project; index: number }) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.4, delay: index * 0.05, ease: "easeOut" }}
-      className="rounded-2xl border border-(--color-border) glass-card p-5 space-y-4 card-hover"
+      className="border border-[var(--color-outline-variant)] rounded-xl p-8 bg-[var(--color-surface-bright)] shadow-sm hover:shadow-md transition-shadow space-y-6"
     >
       {/* Header */}
-      <div className="flex items-start justify-between gap-3">
-        <div className="space-y-1 min-w-0 flex-1">
-          <div className="flex items-center gap-2">
-            <h4 className="text-sm font-semibold text-(--color-text) truncate">{proj.title}</h4>
-            <span className="shrink-0 rounded-full bg-teal-50 dark:bg-teal-950/40 px-2 py-0.5 text-[9px] font-medium text-teal-600 dark:text-teal-400">
+      <div className="flex justify-between items-start">
+        <div>
+          <h4 className="text-lg font-bold text-[var(--color-on-surface)] mb-2">{proj.title}</h4>
+          {proj.one_liner && (
+            <p className="text-sm text-[var(--color-on-surface-variant)] leading-relaxed mb-2">{proj.one_liner}</p>
+          )}
+          {proj.contributions && (
+            <p className="text-xs font-medium text-[var(--color-primary)] mt-1">{proj.contributions}</p>
+          )}
+          {/* Tags */}
+          <div className="flex gap-2 mt-3">
+            <span className="bg-[var(--color-secondary-container)] text-[var(--color-on-secondary-container)] font-mono text-[10px] px-2 py-1 rounded-sm uppercase tracking-wider">
               gitlore
             </span>
           </div>
-          <p className="text-xs text-(--color-text-secondary) line-clamp-2 leading-relaxed">
-            {proj.one_liner}
-          </p>
-          {proj.contributions && (
-            <p className="text-[11px] text-(--color-accent) font-medium mt-1">
-              {proj.contributions}
-            </p>
-          )}
         </div>
+        <LucideIcons.GitBranch className="h-5 w-5 text-[var(--color-secondary)] shrink-0" />
       </div>
 
-      {/* Tech Stack - Grouped by Category */}
+      {/* Tech Stack - 3 Column Grid */}
       {proj.tech_stack.length > 0 && (() => {
         const groupedTech = proj.tech_stack.reduce((acc, tech) => {
           const role = tech.role || "Supporting";
@@ -64,15 +63,17 @@ function ProjectCard({ proj, index }: { proj: Project; index: number }) {
         }, {} as Record<string, string[]>);
 
         return (
-          <div className="space-y-1.5 pt-1">
+          <div className="grid grid-cols-3 gap-6 text-sm">
             {(["Primary", "Infrastructure", "Supporting"] as const).map((role) => {
               const items = groupedTech[role];
               if (!items || items.length === 0) return null;
               return (
-                <div key={role} className="flex flex-wrap items-center gap-2 text-[10px]">
-                  <RoleBadge role={role} />
-                  <span className="text-(--color-text-secondary) font-medium">
-                    {items.join(" • ")}
+                <div key={role}>
+                  <strong className="text-[var(--color-primary)] font-mono text-xs font-bold tracking-[0.1em] uppercase block mb-2 border-b border-[var(--color-outline-variant)] pb-1">
+                    {role}
+                  </strong>
+                  <span className="text-sm text-[var(--color-on-surface-variant)]">
+                    {items.join(", ")}
                   </span>
                 </div>
               );
@@ -81,9 +82,16 @@ function ProjectCard({ proj, index }: { proj: Project; index: number }) {
         );
       })()}
 
-      {/* Results Row */}
+      {/* Mermaid Diagram */}
+      {proj.architecture_diagram_code && (
+        <div className="bg-[var(--color-surface-container-low)] border border-[var(--color-outline-variant)]/50 rounded-lg overflow-hidden relative">
+          <Mermaid chart={proj.architecture_diagram_code} />
+        </div>
+      )}
+
+      {/* Results Metrics */}
       {proj.results && (
-        <div className="grid grid-cols-3 gap-2">
+        <div className="flex gap-8 border-t border-[var(--color-outline-variant)] pt-6">
           {[
             { data: proj.results.performance, icon: Zap, label: "Perf" },
             { data: proj.results.scale, icon: Layers, label: "Scale" },
@@ -91,17 +99,14 @@ function ProjectCard({ proj, index }: { proj: Project; index: number }) {
           ].map(
             ({ data, icon: Icon, label }) =>
               data.text && (
-                <div
-                  key={label}
-                  className="rounded-xl bg-(--color-bg) border border-(--color-border)/50 p-2.5 space-y-1"
-                >
-                  <div className="flex items-center gap-1">
-                    <Icon className="h-3 w-3 text-(--color-text-muted)" />
-                    <span className="text-[9px] font-medium uppercase tracking-wider text-(--color-text-muted)">
+                <div key={label}>
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <Icon className="h-4 w-4 text-[var(--color-primary)]" />
+                    <span className="font-mono text-xs font-bold tracking-[0.1em] uppercase text-[var(--color-on-surface-variant)]">
                       {label}
                     </span>
                   </div>
-                  <p className="text-[10px] text-(--color-text-secondary) leading-relaxed line-clamp-2">
+                  <p className="text-sm text-[var(--color-on-surface-variant)] leading-relaxed">
                     {data.text}
                   </p>
                 </div>
@@ -110,28 +115,21 @@ function ProjectCard({ proj, index }: { proj: Project; index: number }) {
         </div>
       )}
 
-      {/* Links */}
-      {proj.architecture_diagram_code && (
-        <div className="pt-2">
-          <Mermaid chart={proj.architecture_diagram_code} />
-        </div>
-      )}
-
       {/* External Links */}
       {proj.links.length > 0 && (
-        <div className="flex flex-wrap gap-2 pt-1">
+        <div className="flex flex-wrap gap-2 pt-2">
           {proj.links.map((link, i) => (
             <a
               key={i}
               href={link.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-lg border border-(--color-border) px-2.5 py-1 text-[10px] font-medium text-(--color-text-secondary) transition-all hover:border-(--color-accent) hover:text-(--color-accent) hover:bg-(--color-accent-subtle)/30 active:scale-95"
+              className="inline-flex items-center gap-1.5 rounded-md border border-[var(--color-outline-variant)] px-3 py-1.5 font-mono text-xs text-[var(--color-on-surface-variant)] transition-all hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] active:scale-95"
             >
               {link.url.includes("github") ? (
-                <Github className="h-3 w-3" />
+                <Github className="h-3.5 w-3.5" />
               ) : (
-                <ExternalLink className="h-3 w-3" />
+                <ExternalLink className="h-3.5 w-3.5" />
               )}
               {link.label}
             </a>
@@ -142,79 +140,7 @@ function ProjectCard({ proj, index }: { proj: Project; index: number }) {
   );
 }
 
-function AchievementCard({ ach, index }: { ach: Achievement; index: number }) {
-  return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ duration: 0.4, delay: index * 0.05, ease: "easeOut" }}
-      className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 card-hover"
-    >
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-start gap-3 min-w-0 flex-1">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-950/30">
-            <Trophy className="h-4 w-4 text-amber-500" />
-          </div>
-          <div className="space-y-1 min-w-0">
-            <h4 className="text-sm font-medium text-(--color-text) truncate">{ach.title}</h4>
-            <p className="text-xs text-(--color-text-secondary) leading-relaxed line-clamp-3">
-              {ach.description}
-            </p>
-            {ach.date && (
-              <span className="text-[10px] text-(--color-text-muted)">{ach.date}</span>
-            )}
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
-function CredentialCard({ cred, index }: { cred: Credential; index: number }) {
-  return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ duration: 0.4, delay: index * 0.05, ease: "easeOut" }}
-      className="group rounded-2xl border border-(--color-border) bg-(--color-bg-secondary) p-4 space-y-2 card-hover relative overflow-hidden"
-    >
-      <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-(--color-accent)/10 to-transparent rounded-bl-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
-      <div className="flex items-start justify-between gap-3 relative">
-        <div className="flex gap-3 min-w-0">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-(--color-bg) border border-(--color-border) shadow-sm group-hover:border-(--color-accent)/30 transition-colors">
-            {cred.type === "education" ? (
-              <LucideIcons.GraduationCap className="h-5 w-5 text-indigo-500" />
-            ) : (
-              <LucideIcons.Award className="h-5 w-5 text-rose-500" />
-            )}
-          </div>
-          <div className="space-y-1 min-w-0">
-            <h4 className="text-sm font-semibold text-(--color-text) truncate">{cred.title}</h4>
-            <div className="flex items-center gap-2 text-xs text-(--color-text-secondary) truncate">
-              <span className="font-medium text-(--color-text)">{cred.institution}</span>
-              {cred.date && (
-                <>
-                  <span className="h-1 w-1 rounded-full bg-(--color-border)" />
-                  <span>{cred.date}</span>
-                </>
-              )}
-            </div>
-            {cred.description && (
-              <p className="text-xs text-(--color-text-muted) leading-relaxed mt-1 line-clamp-2 group-hover:line-clamp-none transition-all">
-                {cred.description}
-              </p>
-            )}
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
+/* ─── Experience Card (Timeline) ─── */
 function ExperienceCard({ exp, index }: { exp: Experience; index: number }) {
   return (
     <motion.div
@@ -223,33 +149,19 @@ function ExperienceCard({ exp, index }: { exp: Experience; index: number }) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.4, delay: index * 0.05, ease: "easeOut" }}
-      className="group rounded-2xl border border-(--color-border) bg-(--color-bg-secondary) p-5 space-y-4 card-hover relative overflow-hidden"
+      className="relative border-l-2 border-[var(--color-surface-variant)] pl-6 pb-6"
     >
-      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-500/5 to-transparent rounded-bl-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
-      <div className="flex items-start justify-between gap-3 relative">
-        <div className="flex gap-3 min-w-0">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-(--color-bg) border border-(--color-border) shadow-sm group-hover:border-blue-500/30 transition-colors">
-            <LucideIcons.Briefcase className="h-5 w-5 text-blue-500" />
-          </div>
-          <div className="space-y-1.5 min-w-0">
-            <h4 className="text-base font-semibold text-(--color-text) truncate">{exp.role}</h4>
-            <div className="flex flex-wrap items-center gap-2 text-xs text-(--color-text-secondary)">
-              <span className="font-medium text-(--color-text)">{exp.company}</span>
-              {(exp.location || exp.date_range) && <span className="h-1 w-1 rounded-full bg-(--color-border)" />}
-              {exp.location && <span>{exp.location}</span>}
-              {exp.location && exp.date_range && <span className="h-1 w-1 rounded-full bg-(--color-border)" />}
-              {exp.date_range && <span>{exp.date_range}</span>}
-            </div>
-          </div>
-        </div>
+      <div className="absolute w-3 h-3 bg-[var(--color-primary)] rounded-full -left-[7px] top-1.5 ring-4 ring-[var(--color-surface-container-lowest)]" />
+      <h4 className="text-base font-bold text-[var(--color-on-surface)]">{exp.role}</h4>
+      <div className="font-mono text-xs font-bold tracking-[0.1em] uppercase text-[var(--color-on-surface-variant)] mb-3">
+        {exp.company}
+        {exp.location && ` · ${exp.location}`}
+        {exp.date_range && ` · ${exp.date_range}`}
       </div>
       {exp.contributions.length > 0 && (
-        <ul className="space-y-2 mt-2 ml-14 relative z-10">
+        <ul className="list-disc list-inside text-sm text-[var(--color-on-surface-variant)] space-y-2 marker:text-[var(--color-primary)]">
           {exp.contributions.map((c, i) => (
-            <li key={i} className="text-xs text-(--color-text-muted) leading-relaxed flex items-start gap-2">
-              <span className="text-blue-500/50 mt-0.5 shrink-0">•</span>
-              <span>{c}</span>
-            </li>
+            <li key={i}>{c}</li>
           ))}
         </ul>
       )}
@@ -257,193 +169,250 @@ function ExperienceCard({ exp, index }: { exp: Experience; index: number }) {
   );
 }
 
+/* ─── Achievement Card ─── */
+function AchievementCard({ ach, index }: { ach: Achievement; index: number }) {
+  return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.4, delay: index * 0.05, ease: "easeOut" }}
+      className="flex items-start gap-3 py-3 border-b border-[var(--color-outline-variant)]/50 last:border-0"
+    >
+      <Trophy className="h-5 w-5 text-[var(--color-tertiary-fixed-dim)] shrink-0 mt-0.5" />
+      <div className="space-y-1 min-w-0">
+        <h4 className="text-sm font-semibold text-[var(--color-on-surface)]">{ach.title}</h4>
+        <p className="text-xs text-[var(--color-on-surface-variant)] leading-relaxed">{ach.description}</p>
+        {ach.date && (
+          <span className="font-mono text-[10px] text-[var(--color-outline)]">{ach.date}</span>
+        )}
+      </div>
+    </motion.div>
+  );
+}
+
+/* ─── Credential Card ─── */
+function CredentialCard({ cred, index }: { cred: Credential; index: number }) {
+  return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.4, delay: index * 0.05, ease: "easeOut" }}
+      className="flex items-start gap-3 py-3 border-b border-[var(--color-outline-variant)]/50 last:border-0"
+    >
+      {cred.type === "education" ? (
+        <LucideIcons.GraduationCap className="h-5 w-5 text-[var(--color-primary)] shrink-0 mt-0.5" />
+      ) : (
+        <LucideIcons.Award className="h-5 w-5 text-[var(--color-tertiary)] shrink-0 mt-0.5" />
+      )}
+      <div className="space-y-1 min-w-0">
+        <h4 className="text-sm font-semibold text-[var(--color-on-surface)]">{cred.title}</h4>
+        <div className="flex items-center gap-2 text-xs text-[var(--color-on-surface-variant)]">
+          <span className="font-medium">{cred.institution}</span>
+          {cred.date && (
+            <>
+              <span className="h-1 w-1 rounded-full bg-[var(--color-outline-variant)]" />
+              <span>{cred.date}</span>
+            </>
+          )}
+        </div>
+        {cred.description && (
+          <p className="text-xs text-[var(--color-outline)] leading-relaxed mt-1">{cred.description}</p>
+        )}
+      </div>
+    </motion.div>
+  );
+}
+
+/* ─── Dynamic Icon ─── */
 function DynamicIcon({ name, colorClass, size = "w-4 h-4", style }: { name: string; colorClass?: string; size?: string; style?: React.CSSProperties }) {
   // @ts-ignore
   const Icon = LucideIcons[name] || LucideIcons.Zap;
-  return <Icon className={`${size} ${colorClass || "text-(--color-text-muted)"}`} style={style} />;
+  return <Icon className={`${size} ${colorClass || "text-[var(--color-outline)]"}`} style={style} />;
 }
 
+/* ═══════════════════════════════════════════
+   MAIN LIVE PREVIEW — Architectural Portfolio Document
+   ═══════════════════════════════════════════ */
 export const LivePreview = memo(function LivePreview({ portfolio }: Props) {
   return (
-    <div className="space-y-6">
-      {/* Profile Header */}
-      <div className="rounded-2xl border border-(--color-border) glass-card p-6 space-y-3 animate-fade-up">
-        <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-500 via-rose-500 to-purple-500 text-white text-lg font-bold shadow-lg shadow-teal-500/15">
-            {portfolio.profile.name.charAt(0).toUpperCase()}
-          </div>
-          <div className="space-y-0.5">
-            <h2 className="text-xl font-semibold tracking-tight text-(--color-text)">
-              {portfolio.profile.name}
-            </h2>
-            <p className="text-sm text-(--color-text-secondary)">{portfolio.profile.role}</p>
-          </div>
+    <div className="bg-[var(--color-surface-container-lowest)] rounded-b-xl overflow-y-auto p-12 shadow-[0_20px_40px_-10px_rgba(21,66,18,0.1)] relative border-x border-b border-[var(--color-outline-variant)]/20">
+      {/* Profile Header — Centered */}
+      <header className="flex flex-col items-center text-center mb-16 animate-fade-up">
+        <div className="w-24 h-24 bg-[var(--color-surface-container)] rounded-full flex items-center justify-center text-4xl font-bold text-[var(--color-primary)] mb-6 border-4 border-[var(--color-surface)]">
+          {portfolio.profile.name.charAt(0).toUpperCase()}
         </div>
+        <h1 className="text-4xl font-bold tracking-tight text-[var(--color-on-surface)] mb-2" style={{ lineHeight: 1.2 }}>
+          {portfolio.profile.name}
+        </h1>
+        <h2 className="font-mono text-lg tracking-[0.15em] uppercase text-[var(--color-primary)] mb-4">
+          {portfolio.profile.role}
+        </h2>
         {portfolio.profile.philosophy && (
-          <p className="text-xs text-(--color-text-muted) italic leading-relaxed border-l-2 border-(--color-accent)/30 pl-3">
+          <p className="text-base italic text-[var(--color-on-surface-variant)] max-w-2xl leading-relaxed">
             "{portfolio.profile.philosophy}"
           </p>
         )}
-        {/* Quick stats and Links */}
-        <div className="flex flex-wrap items-center gap-4 pt-2">
+
+        {/* Contact Row */}
+        <div className="flex flex-wrap items-center justify-center gap-4 pt-4 text-sm text-[var(--color-on-surface-variant)]">
           {portfolio.profile.contact.email && (
             <div className="flex items-center gap-1.5">
-              <LucideIcons.Mail className="h-3 w-3 text-(--color-text-muted)" />
-              <span className="text-xs text-(--color-text-secondary)">{portfolio.profile.contact.email}</span>
+              <LucideIcons.Mail className="h-4 w-4 text-[var(--color-outline)]" />
+              <span>{portfolio.profile.contact.email}</span>
             </div>
           )}
           {portfolio.profile.mobile && (
             <div className="flex items-center gap-1.5">
-              <LucideIcons.Phone className="h-3 w-3 text-(--color-text-muted)" />
-              <span className="text-xs text-(--color-text-secondary)">{portfolio.profile.mobile}</span>
+              <LucideIcons.Phone className="h-4 w-4 text-[var(--color-outline)]" />
+              <span>{portfolio.profile.mobile}</span>
             </div>
           )}
-          <div className="flex items-center gap-1.5 ml-auto">
-            <LucideIcons.Star className="h-3 w-3 text-(--color-text-muted)" />
-            <span className="text-xs text-(--color-text-secondary)">
-              <span className="font-semibold tabular-nums">{portfolio.projects.length}</span> Projects
-            </span>
-          </div>
         </div>
 
         {/* Hobbies */}
         {portfolio.profile.hobbies && portfolio.profile.hobbies.length > 0 && (
-          <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-(--color-border)/50">
-            <span className="text-[10px] font-semibold uppercase text-(--color-text-muted) mr-1">Hobbies</span>
+          <div className="flex flex-wrap items-center justify-center gap-2 pt-4">
             {portfolio.profile.hobbies.map((hobby, i) => (
-              <div key={i} className="flex items-center gap-1.5 rounded-full bg-(--color-bg-tertiary) px-2.5 py-1 text-[10px] font-medium text-(--color-text-secondary) border border-(--color-border)/50">
-                <DynamicIcon name={hobby.icon} colorClass="text-current" size="w-3 h-3" style={{ color: hobby.color }} />
+              <div key={i} className="flex items-center gap-1.5 rounded-full bg-[var(--color-surface-container)] px-3 py-1 text-xs text-[var(--color-on-surface-variant)] border border-[var(--color-outline-variant)]/50">
+                <DynamicIcon name={hobby.icon} colorClass="text-current" size="w-3.5 h-3.5" style={{ color: hobby.color }} />
                 <span>{hobby.title}</span>
               </div>
             ))}
           </div>
         )}
-      </div>
+      </header>
 
       {/* Projects */}
       {portfolio.projects.length > 0 && (
-        <motion.div layout className="space-y-3">
-          <h3 className="text-[10px] font-bold uppercase tracking-[0.15em] text-(--color-text-muted) px-1">
-            Projects
-          </h3>
+        <section className="mb-16">
+          <SectionDivider title="Key Architectures" />
           <AnimatePresence mode="popLayout">
-            {portfolio.projects.map((proj, i) => (
-              <ProjectCard key={proj.id} proj={proj} index={i} />
-            ))}
+            <div className="space-y-6">
+              {portfolio.projects.map((proj, i) => (
+                <ProjectCard key={proj.id} proj={proj} index={i} />
+              ))}
+            </div>
           </AnimatePresence>
-        </motion.div>
+        </section>
       )}
 
-      {/* Experience */}
-      {portfolio.experience.length > 0 && (
-        <motion.div layout className="space-y-3">
-          <h3 className="text-[10px] font-bold uppercase tracking-[0.15em] text-(--color-text-muted) px-1">
-            Work Experience
-          </h3>
-          <AnimatePresence mode="popLayout">
-            {portfolio.experience.map((exp, i) => (
-              <ExperienceCard key={exp.id} exp={exp} index={i} />
-            ))}
-          </AnimatePresence>
-        </motion.div>
-      )}
+      {/* Experience + Tech Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+        {/* Experience */}
+        {portfolio.experience.length > 0 && (
+          <section>
+            <h3 className="text-lg font-semibold text-[var(--color-primary)] mb-6 flex items-center gap-2">
+              <LucideIcons.Briefcase className="h-5 w-5" />
+              Professional History
+            </h3>
+            <AnimatePresence mode="popLayout">
+              {portfolio.experience.map((exp, i) => (
+                <ExperienceCard key={exp.id} exp={exp} index={i} />
+              ))}
+            </AnimatePresence>
+          </section>
+        )}
 
-      {/* Tech Proficiency */}
-      {Object.keys(portfolio.tech).length > 0 && (
-        <motion.div layout className="space-y-3">
-          <h3 className="text-[10px] font-bold uppercase tracking-[0.15em] text-(--color-text-muted) px-1">
-            Tech Proficiency
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {Object.entries(portfolio.tech).map(([category, data]) => (
-              <div key={category} className="rounded-2xl border border-(--color-border) glass-card p-5 space-y-4">
-                <h4 className="text-xs font-semibold text-(--color-text) flex items-center gap-2">
-                  <DynamicIcon name={data.icon || "Code"} size="w-4 h-4 text-emerald-500" />
-                  {category}
-                </h4>
-                <div className="space-y-3">
-                  {[...data.items]
-                    .sort((a, b) => b.proficiency - a.proficiency)
-                    .map((skill, i) => (
-                      <div key={i} className="space-y-1.5">
-                        <div className="flex justify-between text-xs">
-                          <span className="text-(--color-text-secondary)">{skill.title}</span>
-                          <span className="text-[10px] text-(--color-text-muted) tabular-nums">{skill.proficiency}/10</span>
+        {/* Tech Proficiency */}
+        {Object.keys(portfolio.tech).length > 0 && (
+          <section>
+            <h3 className="text-lg font-semibold text-[var(--color-primary)] mb-6 flex items-center gap-2">
+              <LucideIcons.Terminal className="h-5 w-5" />
+              Technical Proficiency
+            </h3>
+            <div className="space-y-5">
+              {Object.entries(portfolio.tech).map(([category, data]) => (
+                <div key={category} className="space-y-3">
+                  <h4 className="text-xs font-semibold text-[var(--color-on-surface)] flex items-center gap-2">
+                    <DynamicIcon name={data.icon || "Code"} size="w-4 h-4" colorClass="text-[var(--color-primary)]" />
+                    {category}
+                  </h4>
+                  <div className="space-y-3">
+                    {[...data.items]
+                      .sort((a, b) => b.proficiency - a.proficiency)
+                      .map((skill, i) => (
+                        <div key={i}>
+                          <div className="flex justify-between font-mono text-xs font-bold tracking-[0.05em] mb-1">
+                            <span className="text-[var(--color-on-surface)]">{skill.title}</span>
+                            <span className="text-[var(--color-primary)]">{skill.proficiency}/10</span>
+                          </div>
+                          <div className="w-full bg-[var(--color-surface-variant)] rounded-full h-1.5">
+                            <motion.div
+                              initial={{ width: 0 }}
+                              animate={{ width: `${(skill.proficiency / 10) * 100}%` }}
+                              transition={{ duration: 1, ease: "easeOut" }}
+                              className="h-full bg-[var(--color-primary)] rounded-full"
+                            />
+                          </div>
                         </div>
-                        <div className="h-1.5 w-full bg-(--color-border) rounded-full overflow-hidden">
-                          <motion.div
-                            initial={{ width: 0 }}
-                            animate={{ width: `${(skill.proficiency / 10) * 100}%` }}
-                            transition={{ duration: 1, ease: "easeOut" }}
-                            className="h-full bg-emerald-500 rounded-full"
-                          />
-                        </div>
-                      </div>
-                    ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </motion.div>
-      )}
-
-      {/* Achievements */}
-      {portfolio.achievements.length > 0 && (
-        <motion.div layout className="space-y-3">
-          <h3 className="text-[10px] font-bold uppercase tracking-[0.15em] text-(--color-text-muted) px-1">
-            Achievements
-          </h3>
-          <AnimatePresence mode="popLayout">
-            {portfolio.achievements.map((ach, i) => (
-              <AchievementCard key={ach.id} ach={ach} index={i} />
-            ))}
-          </AnimatePresence>
-        </motion.div>
-      )}
-
-      {/* Credentials */}
-      {portfolio.credentials.length > 0 && (
-        <motion.div layout className="space-y-3">
-          <h3 className="text-[10px] font-bold uppercase tracking-[0.15em] text-(--color-text-muted) px-1">
-            Credentials
-          </h3>
-          <AnimatePresence mode="popLayout">
-            {portfolio.credentials.map((cred, i) => (
-              <CredentialCard key={cred.id} cred={cred} index={i} />
-            ))}
-          </AnimatePresence>
-        </motion.div>
-      )}
-
-      {/* Languages */}
-      {portfolio.languages.length > 0 && (
-        <motion.div layout className="space-y-3">
-          <h3 className="text-[10px] font-bold uppercase tracking-[0.15em] text-(--color-text-muted) px-1">
-            Language Proficiency
-          </h3>
-          <div className="rounded-2xl border border-(--color-border) glass-card p-5 space-y-4">
-            <h4 className="text-xs font-semibold text-(--color-text) flex items-center gap-2">
-              <LucideIcons.Globe className="h-4 w-4 text-orange-500" /> Languages
-            </h4>
-            <div className="space-y-3">
-              {[...portfolio.languages].sort((a, b) => b.proficiency - a.proficiency).map((lang, i) => (
-                <div key={i} className="space-y-1.5">
-                  <div className="flex justify-between text-xs">
-                    <span className="text-(--color-text-secondary)">{lang.title}</span>
-                  </div>
-                  <div className="h-1.5 w-full bg-(--color-border) rounded-full overflow-hidden">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: `${(lang.proficiency / 10) * 100}%` }}
-                      transition={{ duration: 1, ease: "easeOut" }}
-                      className="h-full bg-orange-500 rounded-full"
-                    />
+                      ))}
                   </div>
                 </div>
               ))}
             </div>
+          </section>
+        )}
+      </div>
+
+      {/* Achievements */}
+      {portfolio.achievements.length > 0 && (
+        <section className="mb-16">
+          <SectionDivider title="Achievements" />
+          <div className="space-y-0">
+            <AnimatePresence mode="popLayout">
+              {portfolio.achievements.map((ach, i) => (
+                <AchievementCard key={ach.id} ach={ach} index={i} />
+              ))}
+            </AnimatePresence>
           </div>
-        </motion.div>
+        </section>
+      )}
+
+      {/* Credentials */}
+      {portfolio.credentials.length > 0 && (
+        <section className="mb-16">
+          <SectionDivider title="Credentials" />
+          <div className="space-y-0">
+            <AnimatePresence mode="popLayout">
+              {portfolio.credentials.map((cred, i) => (
+                <CredentialCard key={cred.id} cred={cred} index={i} />
+              ))}
+            </AnimatePresence>
+          </div>
+        </section>
+      )}
+
+      {/* Languages */}
+      {portfolio.languages.length > 0 && (
+        <section>
+          <SectionDivider title="Language Proficiency" />
+          <div className="space-y-3">
+            <h4 className="text-xs font-semibold text-[var(--color-on-surface)] flex items-center gap-2">
+              <LucideIcons.Globe className="h-4 w-4 text-[var(--color-secondary)]" />
+              Languages
+            </h4>
+            {[...portfolio.languages].sort((a, b) => b.proficiency - a.proficiency).map((lang, i) => (
+              <div key={i}>
+                <div className="flex justify-between font-mono text-xs font-bold tracking-[0.05em] mb-1">
+                  <span className="text-[var(--color-on-surface)]">{lang.title}</span>
+                  <span className="text-[var(--color-secondary)]">{lang.proficiency}/10</span>
+                </div>
+                <div className="w-full bg-[var(--color-surface-variant)] rounded-full h-1.5">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${(lang.proficiency / 10) * 100}%` }}
+                    transition={{ duration: 1, ease: "easeOut" }}
+                    className="h-full bg-[var(--color-secondary)] rounded-full"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
       )}
     </div>
   );

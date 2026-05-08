@@ -38,14 +38,14 @@ export function Mermaid({ chart }: { chart: string }) {
   }, [chart, resolved]);
 
   return (
-    <div className="relative rounded-xl border border-(--color-border) bg-(--color-bg) p-4 flex items-center justify-center overflow-x-auto min-h-[120px]">
+    <div className="relative rounded-lg bg-[var(--color-surface-container-low)] border border-[var(--color-outline-variant)]/50 p-4 flex items-center justify-center overflow-x-auto min-h-[120px]">
       {loading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-(--color-bg)/50 backdrop-blur-sm z-10 rounded-xl">
-          <Loader2 className="h-5 w-5 animate-spin text-(--color-accent)" />
+        <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-surface-container-low)]/50 backdrop-blur-sm z-10 rounded-lg">
+          <Loader2 className="h-5 w-5 animate-spin text-[var(--color-primary)]" />
         </div>
       )}
       {error ? (
-        <div className="flex items-center text-[11px] font-medium text-(--color-error)">{error}</div>
+        <div className="flex items-center font-mono text-xs font-medium text-[var(--color-error)]">{error}</div>
       ) : (
         <div ref={containerRef} className="mermaid-container w-full flex justify-center" />
       )}

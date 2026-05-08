@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Briefcase, Plus, X, ChevronUp } from "lucide-react";
+import { Plus, X, ChevronUp } from "lucide-react";
 
 export interface ExperienceEntry {
-  company: string;
   role: string;
+  company: string;
   location: string;
   startDate: string;
   endDate: string;
@@ -12,155 +12,123 @@ export interface ExperienceEntry {
 
 interface Props {
   experience: ExperienceEntry[];
-  onChange: (data: ExperienceEntry[]) => void;
+  onChange: (experience: ExperienceEntry[]) => void;
   disabled?: boolean;
 }
+
+const emptyExperience: ExperienceEntry = {
+  role: "",
+  company: "",
+  location: "",
+  startDate: "",
+  endDate: "",
+  contributions: "",
+};
 
 export function ExperienceZone({ experience, onChange, disabled }: Props) {
   const [expanded, setExpanded] = useState(true);
 
-  const updateEntry = (index: number, field: keyof ExperienceEntry, value: string) => {
-    const next = [...experience];
-    next[index] = { ...next[index], [field]: value };
-    onChange(next);
-  };
-
-  const addEntry = () => {
-    onChange([
-      { company: "", role: "", location: "", startDate: "", endDate: "", contributions: "" },
-    ]);
-  };
-
-  const removeEntry = (index: number) => {
-    onChange(experience.filter((_, i) => i !== index));
+  const addExperience = () => onChange([...experience, { ...emptyExperience }]);
+  const removeExperience = (i: number) => onChange(experience.filter((_, idx) => idx !== i));
+  const update = (i: number, field: keyof ExperienceEntry, value: string) => {
+    const updated = [...experience];
+    updated[i] = { ...updated[i], [field]: value };
+    onChange(updated);
   };
 
   return (
-    <div className="rounded-2xl border border-(--color-border) glass-card overflow-hidden card-hover animate-fade-up stagger-3">
-      {/* Header */}
+    <section className="relative">
+      {/* Tape + Toggle Header */}
       <button
         type="button"
         onClick={() => setExpanded(!expanded)}
-        className="flex w-full items-center justify-between px-5 py-4 text-left transition-colors hover:bg-(--color-bg-secondary)/50"
+        className="flex items-center gap-3 mb-4 group"
       >
-        <div className="flex items-center gap-3 flex-1 min-w-0">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-rose-500 to-purple-500 text-white shadow-sm">
-            <Briefcase className="h-4 w-4" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="text-sm font-semibold text-(--color-text) tracking-tight">Work Experience</h3>
-            <p className="text-[11px] text-(--color-text-secondary)">Past roles & responsibilities</p>
-          </div>
+        <div className="drafting-tape -rotate-1">
+          Experience
+          {experience.length > 0 && (
+            <span className="ml-2 text-[var(--color-primary)]">{experience.length}</span>
+          )}
         </div>
-        
-        <div className="flex items-center gap-3 shrink-0">
-          <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-rose-50 dark:bg-rose-950/30 px-1.5 text-[10px] font-bold text-rose-600 dark:text-rose-400 tabular-nums">
-            {experience.length}
-          </span>
-          <div className={`text-(--color-text-muted) transition-transform duration-300 ${expanded ? "" : "-rotate-180"}`}>
-            <ChevronUp className="h-4 w-4" />
-          </div>
+        <div className={`text-[var(--color-outline)] transition-transform duration-300 ${expanded ? "" : "-rotate-180"}`}>
+          <ChevronUp className="h-4 w-4" />
         </div>
       </button>
 
-      {/* Content */}
-      <div
-        className={`grid transition-all duration-300 ease-out ${
-          expanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-        }`}
-      >
+      {/* Collapsible Content */}
+      <div className={`grid transition-all duration-300 ease-out ${expanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
         <div className="overflow-hidden">
-          <div className="space-y-3 px-5 pb-5 pt-1">
-          {experience.map((exp, i) => (
-            <div 
-              key={i} 
-              className={`group/proj relative rounded-xl border border-(--color-border) bg-(--color-bg) p-4 space-y-3 animate-scale-in transition-all hover:border-(--color-border-focus)`}
-              style={{ animationDelay: `${i * 60}ms` }}
-            >
-              {/* Offset Delete Button */}
-              <button
-                type="button"
-                onClick={() => removeEntry(i)}
-                disabled={disabled}
-                className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white shadow-sm hover:bg-red-600 transition-all opacity-0 group-hover/proj:opacity-100 disabled:opacity-0 active:scale-90"
+          <div className="space-y-4">
+            {experience.map((exp, i) => (
+              <div
+                key={i}
+                className="playing-card rounded-xl p-5 space-y-3 relative group/exp animate-fade-up card-hover"
+                style={{
+                  animationDelay: `${i * 60}ms`,
+                  transform: `rotate(${i % 2 === 0 ? -0.3 : 0.3}deg)`,
+                }}
               >
-                <X className="h-3 w-3" />
-              </button>
+                {/* Remove */}
+                <button
+                  type="button"
+                  onClick={() => removeExperience(i)}
+                  disabled={disabled}
+                  className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-[var(--color-error)] text-white shadow-md hover:bg-red-700 transition-all opacity-0 group-hover/exp:opacity-100 disabled:opacity-0 active:scale-90 z-20"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
 
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-(--color-text-muted)">
+                <div className="font-mono text-[10px] font-bold tracking-[0.15em] uppercase text-[var(--color-outline-variant)]">
                   Role {String(i + 1).padStart(2, "0")}
-                </span>
-              </div>
-
-              <input
-                value={exp.role}
-                onChange={(e) => updateEntry(i, "role", e.target.value)}
-                disabled={disabled}
-                placeholder="Role (e.g. Senior Backend Engineer)"
-                className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
-              />
-              <input
-                value={exp.company}
-                onChange={(e) => updateEntry(i, "company", e.target.value)}
-                disabled={disabled}
-                placeholder="Company (e.g. Acme Corp)"
-                className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
-              />
-              <input
-                value={exp.location}
-                onChange={(e) => updateEntry(i, "location", e.target.value)}
-                disabled={disabled}
-                placeholder="Location (e.g. San Francisco, Remote)"
-                className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
-              />
-
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1 text-left">
-                  <label className="text-[10px] font-semibold text-(--color-text-muted) px-1 uppercase tracking-wider">Start Date</label>
-                  <input
-                    type="date"
-                    value={exp.startDate}
-                    onChange={(e) => updateEntry(i, "startDate", e.target.value)}
-                    disabled={disabled}
-                    className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 text-xs text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
-                  />
                 </div>
-                <div className="space-y-1 text-left">
-                  <label className="text-[10px] font-semibold text-(--color-text-muted) px-1 uppercase tracking-wider">End Date</label>
-                  <input
-                    type="date"
-                    value={exp.endDate}
-                    onChange={(e) => updateEntry(i, "endDate", e.target.value)}
-                    disabled={disabled}
-                    className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 text-xs text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
-                  />
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="flex flex-col gap-1">
+                    <label className="field-label text-[10px]">Role</label>
+                    <input type="text" value={exp.role} onChange={(e) => update(i, "role", e.target.value)} disabled={disabled} placeholder="Senior Backend Engineer" className="input-drafting input-drafting-sm" />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="field-label text-[10px]">Company</label>
+                    <input type="text" value={exp.company} onChange={(e) => update(i, "company", e.target.value)} disabled={disabled} placeholder="Acme Corp" className="input-drafting input-drafting-sm" />
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="field-label text-[10px]">Location</label>
+                  <input type="text" value={exp.location} onChange={(e) => update(i, "location", e.target.value)} disabled={disabled} placeholder="San Francisco, Remote" className="input-drafting input-drafting-sm" />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="flex flex-col gap-1">
+                    <label className="field-label text-[10px]">Start Date</label>
+                    <input type="date" value={exp.startDate} onChange={(e) => update(i, "startDate", e.target.value)} disabled={disabled} className="input-drafting input-drafting-sm" />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="field-label text-[10px]">End Date</label>
+                    <input type="date" value={exp.endDate} onChange={(e) => update(i, "endDate", e.target.value)} disabled={disabled} className="input-drafting input-drafting-sm" />
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="field-label text-[10px]">Contributions</label>
+                  <textarea value={exp.contributions} onChange={(e) => update(i, "contributions", e.target.value)} disabled={disabled} placeholder="What did you contribute?" rows={3} className="input-drafting input-drafting-sm resize-none leading-relaxed" />
                 </div>
               </div>
+            ))}
 
-              <textarea
-                value={exp.contributions}
-                onChange={(e) => updateEntry(i, "contributions", e.target.value)}
-                disabled={disabled}
-                placeholder="What did you contribute?"
-                rows={3}
-                className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50 resize-none leading-relaxed"
-              />
-            </div>
-          ))}
-
-          <button
-            type="button"
-            onClick={addEntry}
-            disabled={disabled}
-            className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-(--color-border) bg-(--color-bg)/50 py-3 text-xs font-medium text-(--color-text-muted) transition-all hover:border-(--color-accent) hover:text-(--color-accent) hover:bg-(--color-accent-subtle)/30 disabled:opacity-50 active:scale-[0.98]"
-          >
-            <Plus className="h-3.5 w-3.5" />
-            Add Experience
-          </button>
+            {/* Add Experience */}
+            <button
+              type="button"
+              onClick={addExperience}
+              disabled={disabled}
+              className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[var(--color-outline-variant)] bg-[var(--color-surface-container-lowest)]/30 py-3.5 font-mono text-xs font-medium text-[var(--color-outline-variant)] tracking-wider uppercase transition-all hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] hover:bg-[var(--color-primary-fixed)]/10 disabled:opacity-50 active:scale-[0.98]"
+            >
+              <Plus className="h-3.5 w-3.5" />
+              Add Experience
+            </button>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

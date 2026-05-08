@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { User, Mail, Github, Linkedin, Globe, Phone, Heart, ChevronUp } from "lucide-react";
+import { User } from "lucide-react";
 
 interface ProfileData {
   name: string;
@@ -20,149 +19,157 @@ interface Props {
 }
 
 export function IdentityZone({ value, onChange, disabled }: Props) {
-  const [expanded, setExpanded] = useState(true);
-
   const update = (field: keyof ProfileData, val: string) => {
     onChange({ ...value, [field]: val });
   };
 
   return (
-    <div className="rounded-2xl border border-(--color-border) glass-card overflow-hidden card-hover animate-fade-up">
-      {/* Zone Header */}
-      <button
-        type="button"
-        onClick={() => setExpanded(!expanded)}
-        className="flex w-full items-center gap-3 px-5 py-4 text-left transition-colors hover:bg-(--color-bg-secondary)/50"
-      >
-        <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-fuchsia-500 to-pink-500 text-white shadow-sm">
-          <User className="h-4 w-4" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <h3 className="text-sm font-semibold text-(--color-text) tracking-tight">Identity</h3>
-          <p className="text-[11px] text-(--color-text-muted) truncate">
-            {value.name || "Name, role & contact details"}
-          </p>
-        </div>
-        <div className={`text-(--color-text-muted) transition-transform duration-300 ${expanded ? "" : "-rotate-180"}`}>
-          <ChevronUp className="h-4 w-4" />
-        </div>
-      </button>
+    <section className="relative z-10">
+      {/* Drafting Tape Label */}
+      <div className="drafting-tape mb-4 -rotate-2">
+        Identity
+      </div>
 
-      {/* Collapsible Content */}
-      <div
-        className={`grid transition-all duration-300 ease-out ${
-          expanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-        }`}
-      >
-        <div className="overflow-hidden">
-          <div className="space-y-3 px-5 pb-5 pt-1">
-            {/* Name + Role row */}
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1.5">
-                <label className="text-[11px] font-medium text-(--color-text-secondary) uppercase tracking-wider">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  value={value.name}
-                  onChange={(e) => update("name", e.target.value)}
-                  disabled={disabled}
-                  placeholder="Simon Escaño"
-                  className="w-full rounded-xl border border-(--color-border) bg-(--color-bg) px-3.5 py-2.5 text-sm text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <label className="text-[11px] font-medium text-(--color-text-secondary) uppercase tracking-wider">
-                  Title / Role
-                </label>
-                <input
-                  type="text"
-                  value={value.role}
-                  onChange={(e) => update("role", e.target.value)}
-                  disabled={disabled}
-                  placeholder="Full-Stack Engineer"
-                  className="w-full rounded-xl border border-(--color-border) bg-(--color-bg) px-3.5 py-2.5 text-sm text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
-                />
-              </div>
-            </div>
+      {/* ID Card */}
+      <div className="id-card rounded-xl p-6 flex flex-col items-center gap-5 relative overflow-hidden animate-fade-up">
+        {/* Plastic Overlay */}
+        <div className="plastic-overlay absolute inset-0 z-10 pointer-events-none rounded-xl" />
 
-            {/* Contact fields */}
-            <div className="space-y-2.5">
-              <InputRow icon={Mail} label="Email" value={value.email} onChange={(v) => update("email", v)} placeholder="hello@example.com" disabled={disabled} />
-              
-              {/* Custom Mobile Input with Area Code */}
-              <div className="relative group/input">
-                <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-(--color-text-muted) group-focus-within/input:text-(--color-accent) transition-colors z-10">
-                  <Phone className="h-3.5 w-3.5" />
-                </div>
-                <div className="flex">
-                  <select
-                    value={value.mobileAreaCode || "+63"}
-                    onChange={(e) => update("mobileAreaCode", e.target.value)}
-                    disabled={disabled}
-                    className="rounded-l-xl border border-r-0 border-(--color-border) bg-(--color-bg) pl-9 pr-2 py-2 text-sm text-(--color-text) input-focus disabled:opacity-50 appearance-none focus:z-10 relative bg-gradient-to-r from-transparent to-(--color-bg-secondary) focus:to-transparent"
-                  >
-                    <option value="+1">+1 (US)</option>
-                    <option value="+44">+44 (UK)</option>
-                    <option value="+61">+61 (AU)</option>
-                    <option value="+63">+63 (PH)</option>
-                    <option value="+65">+65 (SG)</option>
-                    <option value="+81">+81 (JP)</option>
-                    <option value="+86">+86 (CN)</option>
-                    <option value="+91">+91 (IN)</option>
-                  </select>
-                  <input
-                    type="text"
-                    value={value.mobile}
-                    onChange={(e) => update("mobile", e.target.value)}
-                    disabled={disabled}
-                    placeholder="912 345 6789"
-                    className="w-full rounded-r-xl border border-(--color-border) bg-(--color-bg) px-3.5 py-2 text-sm text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50 focus:z-10 relative"
-                  />
-                </div>
-              </div>
+        {/* Punch Hole */}
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 w-12 h-3 bg-[var(--color-surface-variant)] rounded-full shadow-inner z-20" />
 
-              <InputRow icon={Github} label="GitHub" value={value.github} onChange={(v) => update("github", v)} placeholder="https://github.com/username" disabled={disabled} />
-              <InputRow icon={Linkedin} label="LinkedIn" value={value.linkedin} onChange={(v) => update("linkedin", v)} placeholder="https://linkedin.com/in/username" disabled={disabled} />
-              <InputRow icon={Globe} label="Website" value={value.website} onChange={(v) => update("website", v)} placeholder="https://yoursite.dev" disabled={disabled} />
-              <InputRow icon={Heart} label="Hobbies" value={value.hobbies || ""} onChange={(v) => update("hobbies", v)} placeholder="Photography, Keyboards, Hiking" disabled={disabled} />
+        {/* Photo Placeholder */}
+        <div className="w-28 h-28 rounded-lg border-4 border-[var(--color-surface)] overflow-hidden shadow-md mt-8 z-10 relative bg-[var(--color-surface-container-low)] flex items-center justify-center">
+          {value.name ? (
+            <span className="text-3xl font-bold text-[var(--color-primary)]">
+              {value.name.charAt(0).toUpperCase()}
+            </span>
+          ) : (
+            <User className="h-8 w-8 text-[var(--color-outline)]" />
+          )}
+        </div>
+
+        {/* Form Fields */}
+        <div className="w-full space-y-4 z-10">
+          <div className="flex flex-col gap-1">
+            <label className="field-label">Name</label>
+            <input
+              type="text"
+              value={value.name}
+              onChange={(e) => update("name", e.target.value)}
+              disabled={disabled}
+              placeholder="Enter Full Name"
+              className="input-drafting text-lg font-semibold"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="field-label">Role</label>
+            <input
+              type="text"
+              value={value.role}
+              onChange={(e) => update("role", e.target.value)}
+              disabled={disabled}
+              placeholder="e.g. Senior Frontend Engineer"
+              className="input-drafting input-drafting-sm"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="field-label">Contact</label>
+            <div className="flex gap-2">
+              <select
+                value={value.mobileAreaCode || "+63"}
+                onChange={(e) => update("mobileAreaCode", e.target.value)}
+                disabled={disabled}
+                className="input-drafting input-drafting-sm w-20 bg-transparent appearance-none cursor-pointer"
+              >
+                <option value="+1">+1</option>
+                <option value="+44">+44</option>
+                <option value="+61">+61</option>
+                <option value="+63">+63</option>
+                <option value="+65">+65</option>
+                <option value="+81">+81</option>
+                <option value="+86">+86</option>
+                <option value="+91">+91</option>
+              </select>
+              <input
+                type="text"
+                value={value.mobile}
+                onChange={(e) => update("mobile", e.target.value)}
+                disabled={disabled}
+                placeholder="Phone Number"
+                className="input-drafting input-drafting-sm flex-1"
+              />
             </div>
           </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="field-label">Email</label>
+            <input
+              type="email"
+              value={value.email}
+              onChange={(e) => update("email", e.target.value)}
+              disabled={disabled}
+              placeholder="hello@example.com"
+              className="input-drafting input-drafting-sm"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="field-label">GitHub</label>
+            <input
+              type="text"
+              value={value.github}
+              onChange={(e) => update("github", e.target.value)}
+              disabled={disabled}
+              placeholder="https://github.com/username"
+              className="input-drafting input-drafting-sm font-mono"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="field-label">LinkedIn</label>
+            <input
+              type="text"
+              value={value.linkedin}
+              onChange={(e) => update("linkedin", e.target.value)}
+              disabled={disabled}
+              placeholder="https://linkedin.com/in/username"
+              className="input-drafting input-drafting-sm font-mono"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="field-label">Website</label>
+            <input
+              type="text"
+              value={value.website}
+              onChange={(e) => update("website", e.target.value)}
+              disabled={disabled}
+              placeholder="https://yoursite.dev"
+              className="input-drafting input-drafting-sm font-mono"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="field-label">Hobbies</label>
+            <input
+              type="text"
+              value={value.hobbies || ""}
+              onChange={(e) => update("hobbies", e.target.value)}
+              disabled={disabled}
+              placeholder="Photography, Keyboards, Hiking"
+              className="input-drafting input-drafting-sm"
+            />
+          </div>
+        </div>
+
+        {/* Serial Number */}
+        <div className="font-mono text-[10px] text-[var(--color-outline)] tracking-[0.15em] w-full text-center border-t border-[var(--color-outline-variant)] pt-3 mt-1 z-10">
+          SN: RF-0000-BETA
         </div>
       </div>
-    </div>
-  );
-}
-
-function InputRow({
-  icon: Icon,
-  label,
-  value,
-  onChange,
-  placeholder,
-  disabled,
-}: {
-  icon: React.ComponentType<{ className?: string }>;
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  placeholder: string;
-  disabled?: boolean;
-}) {
-  return (
-    <div className="relative group/input">
-      <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-(--color-text-muted) group-focus-within/input:text-(--color-accent) transition-colors">
-        <Icon className="h-3.5 w-3.5" />
-      </div>
-      <input
-        type="text"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        disabled={disabled}
-        placeholder={placeholder}
-        aria-label={label}
-        className="w-full rounded-xl border border-(--color-border) bg-(--color-bg) pl-9 pr-3.5 py-2 text-sm text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
-      />
-    </div>
+    </section>
   );
 }

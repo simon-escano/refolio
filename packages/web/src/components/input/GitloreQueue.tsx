@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { GitBranch, Plus, X, ChevronUp, Link2 } from "lucide-react";
+import { Plus, X, FolderOpen } from "lucide-react";
 
 export interface ProjectEntry {
   url: string;
@@ -26,8 +25,6 @@ const emptyProject: ProjectEntry = {
 };
 
 export function GitloreQueue({ projects, onChange, disabled }: Props) {
-  const [expanded, setExpanded] = useState(true);
-
   const addProject = () => {
     onChange([...projects, { ...emptyProject }]);
   };
@@ -43,122 +40,118 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
   };
 
   return (
-    <div className="rounded-2xl border border-(--color-border) glass-card overflow-hidden card-hover animate-fade-up stagger-1">
-      {/* Zone Header */}
-      <button
-        type="button"
-        onClick={() => setExpanded(!expanded)}
-        className="flex w-full items-center gap-3 px-5 py-4 text-left transition-colors hover:bg-(--color-bg-secondary)/50"
-      >
-        <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-rose-500 text-white shadow-sm">
-          <GitBranch className="h-4 w-4" />
-        </div>
-        <div className="flex-1 min-w-0 flex items-center gap-2">
-          <h3 className="text-sm font-semibold text-(--color-text) tracking-tight">Projects</h3>
-          <span className="text-[10px] uppercase tracking-wider font-medium text-(--color-text-muted) opacity-60">Powered by Gitlore</span>
-        </div>
-        {/* Count badge */}
-        <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-purple-50 dark:bg-purple-950/40 px-1.5 text-[10px] font-bold text-purple-600 dark:text-purple-400 tabular-nums">
-          {projects.length}
-        </span>
-        <div className={`text-(--color-text-muted) transition-transform duration-300 ${expanded ? "" : "-rotate-180"}`}>
-          <ChevronUp className="h-4 w-4" />
-        </div>
-      </button>
+    <section className="relative z-0">
+      {/* Drafting Tape Label */}
+      <div className="drafting-tape mb-4 rotate-1">
+        Gitlore Queue
+      </div>
 
-      {/* Collapsible Content */}
-      <div
-        className={`grid transition-all duration-300 ease-out ${
-          expanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-        }`}
-      >
-        <div className="overflow-hidden">
-          <div className="space-y-3 px-5 pb-5 pt-1">
-            {projects.map((project, i) => (
-              <div
-                key={i}
-                className={`group/proj relative rounded-xl border border-(--color-border) bg-(--color-bg) p-4 space-y-3 animate-scale-in transition-all hover:border-(--color-border-focus)`}
-                style={{ animationDelay: `${i * 60}ms` }}
+      {/* Card Carousel */}
+      <div className="flex gap-6 overflow-x-auto pb-6 pt-2 px-1 -mx-1 snap-x">
+        {projects.map((project, i) => (
+          <div
+            key={i}
+            className="playing-card min-w-[280px] max-w-[320px] rounded-xl p-5 flex flex-col gap-4 snap-center flex-shrink-0 relative group/proj card-hover animate-fade-up"
+            style={{
+              animationDelay: `${i * 80}ms`,
+              transform: `rotate(${i % 2 === 0 ? -0.5 : 0.8}deg)`,
+            }}
+          >
+            {/* Remove Button */}
+            {projects.length > 1 && (
+              <button
+                type="button"
+                onClick={() => removeProject(i)}
+                disabled={disabled}
+                className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-[var(--color-error)] text-white shadow-md hover:bg-red-700 transition-all opacity-0 group-hover/proj:opacity-100 disabled:opacity-0 active:scale-90 z-20"
               >
-                {/* Offset Delete Button */}
-                {projects.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => removeProject(i)}
-                    disabled={disabled}
-                    className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white shadow-sm hover:bg-red-600 transition-all opacity-0 group-hover/proj:opacity-100 disabled:opacity-0 active:scale-90"
-                  >
-                    <X className="h-3 w-3" />
-                  </button>
-                )}
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
 
-                {/* Project header with number */}
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-(--color-text-muted)">
-                    Project {String(i + 1).padStart(2, "0")}
-                  </span>
-                </div>
+            {/* Card Header */}
+            <div className="flex justify-between items-start">
+              <span className="font-mono text-sm font-medium text-[var(--color-outline-variant)]">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <FolderOpen className="h-5 w-5 text-[var(--color-outline-variant)]" />
+            </div>
 
-                {/* GitHub URL */}
-                <div className="relative group/url">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-(--color-text-muted) group-focus-within/url:text-(--color-accent) transition-colors">
-                    <Link2 className="h-3.5 w-3.5" />
-                  </div>
-                  <input
-                    type="text"
-                    value={project.url}
-                    onChange={(e) => updateProject(i, "url", e.target.value)}
-                    disabled={disabled}
-                    placeholder="https://github.com/owner/repo"
-                    className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) pl-8.5 pr-3 py-2 text-sm font-mono text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
-                  />
-                </div>
+            {/* Card Body */}
+            <div className="space-y-3 flex-1">
+              <div className="flex flex-col gap-1">
+                <label className="field-label text-[10px]">Repository</label>
+                <input
+                  type="text"
+                  value={project.url}
+                  onChange={(e) => updateProject(i, "url", e.target.value)}
+                  disabled={disabled}
+                  placeholder="https://github.com/owner/repo"
+                  className="input-drafting input-drafting-sm font-mono text-xs"
+                />
+              </div>
 
-                {/* Title */}
+              <div className="flex flex-col gap-1">
+                <label className="field-label text-[10px]">Title</label>
                 <input
                   type="text"
                   value={project.title}
                   onChange={(e) => updateProject(i, "title", e.target.value)}
                   disabled={disabled}
-                  placeholder="Project title (e.g., Gitlore)"
-                  className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
+                  placeholder="Project title"
+                  className="input-drafting font-semibold"
                 />
+              </div>
 
-                {/* Contributions */}
+              <div className="flex flex-col gap-1">
+                <label className="field-label text-[10px]">Contributions</label>
                 <textarea
                   value={project.contributions}
                   onChange={(e) => updateProject(i, "contributions", e.target.value)}
                   disabled={disabled}
                   placeholder="What did you contribute?"
-                  rows={3}
-                  className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50 resize-none leading-relaxed"
+                  rows={2}
+                  className="input-drafting input-drafting-sm resize-none leading-relaxed"
                 />
+              </div>
 
-                {/* Context (optional) */}
+              <div className="flex flex-col gap-1">
+                <label className="field-label text-[10px]">Context</label>
                 <textarea
                   value={project.context}
                   onChange={(e) => updateProject(i, "context", e.target.value)}
                   disabled={disabled}
                   placeholder="Additional context (optional)"
                   rows={1}
-                  className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-xs text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50 resize-none"
+                  className="input-drafting input-drafting-sm resize-none text-xs"
                 />
               </div>
-            ))}
+            </div>
 
-            {/* Add Project Button */}
-            <button
-              type="button"
-              onClick={addProject}
-              disabled={disabled}
-              className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-(--color-border) bg-(--color-bg)/50 py-3 text-xs font-medium text-(--color-text-muted) transition-all hover:border-purple-400 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50/30 dark:hover:bg-purple-950/10 disabled:opacity-50 active:scale-[0.98]"
-            >
-              <Plus className="h-3.5 w-3.5" />
-              Add Project
-            </button>
+            {/* Card Footer */}
+            <div className="font-mono text-[10px] text-[var(--color-outline-variant)] tracking-[0.15em] text-center uppercase border-t border-[var(--color-outline-variant)]/50 pt-2">
+              Repo Connection
+            </div>
+          </div>
+        ))}
+
+        {/* Add Project Card (empty slot) */}
+        <div
+          onClick={disabled ? undefined : addProject}
+          className={`min-w-[280px] max-w-[320px] h-auto rounded-xl p-5 flex flex-col justify-center items-center gap-4 snap-center flex-shrink-0 border-2 border-dashed border-[var(--color-outline-variant)] bg-[var(--color-surface-container-lowest)]/50 hover:bg-[var(--color-surface-container-lowest)] transition-colors cursor-pointer group animate-fade-up ${
+            disabled ? "opacity-50 pointer-events-none" : ""
+          }`}
+          style={{ animationDelay: `${projects.length * 80}ms` }}
+        >
+          <div className="flex flex-col items-center gap-3 text-[var(--color-outline-variant)] group-hover:text-[var(--color-primary)] transition-colors">
+            <Plus className="h-12 w-12 stroke-1" />
+            <span className="text-xl font-semibold">Add Project</span>
+          </div>
+          <div className="font-mono text-[10px] text-[var(--color-outline-variant)] tracking-[0.15em] uppercase">
+            Repo Connection
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
