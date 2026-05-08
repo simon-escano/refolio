@@ -1,7 +1,5 @@
 import { useState } from "react";
-import {
-  GitBranch, Plus, Trash2, ChevronUp, Loader2, Link2,
-} from "lucide-react";
+import { GitBranch, Plus, Trash2, ChevronUp, Link2 } from "lucide-react";
 
 export interface ProjectEntry {
   url: string;

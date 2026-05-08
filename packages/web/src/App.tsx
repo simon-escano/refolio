@@ -12,8 +12,8 @@ import { MonacoEditor } from "./components/editor/MonacoEditor";
 import { usePortfolioSync } from "./lib/sync";
 import { streamGenerate } from "./lib/api";
 import {
-  Sparkles, Rocket, Zap, Target, Brain,
-  ArrowRight, GitBranch, Eye,
+  Sparkles, Rocket, Target, Brain,
+  ArrowRight, GitBranch,
 } from "lucide-react";
 import type { ProgressEvent } from "./types/portfolio";
 

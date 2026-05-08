@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { User, Mail, Github, Linkedin, Globe, ChevronDown, ChevronUp } from "lucide-react";
+import { User, Mail, Github, Linkedin, Globe, ChevronUp } from "lucide-react";
 
 interface ProfileData {
   name: string;

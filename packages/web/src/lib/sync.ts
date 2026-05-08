@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from "react";
-import type { MasterPortfolio } from "../../types/portfolio";
+import type { MasterPortfolio } from "../types/portfolio";
 
 interface SyncState {
   portfolio: MasterPortfolio | null;
