@@ -54,24 +54,32 @@ function ProjectCard({ proj, index }: { proj: Project; index: number }) {
         </div>
       </div>
 
-      {/* Tech Stack Pills */}
-      {proj.tech_stack.length > 0 && (
-        <div className="flex flex-wrap gap-1.5">
-          {proj.tech_stack.slice(0, 8).map((tech, i) => (
-            <div key={i} className="flex items-center gap-1">
-              <RoleBadge role={tech.role} />
-              <span className="text-[10px] text-(--color-text-secondary) font-medium">
-                {tech.name}
-              </span>
-            </div>
-          ))}
-          {proj.tech_stack.length > 8 && (
-            <span className="text-[10px] text-(--color-text-muted)">
-              +{proj.tech_stack.length - 8} more
-            </span>
-          )}
-        </div>
-      )}
+      {/* Tech Stack - Grouped by Category */}
+      {proj.tech_stack.length > 0 && (() => {
+        const groupedTech = proj.tech_stack.reduce((acc, tech) => {
+          const role = tech.role || "Supporting";
+          if (!acc[role]) acc[role] = [];
+          acc[role].push(tech.name);
+          return acc;
+        }, {} as Record<string, string[]>);
+
+        return (
+          <div className="space-y-1.5 pt-1">
+            {(["Primary", "Infrastructure", "Supporting"] as const).map((role) => {
+              const items = groupedTech[role];
+              if (!items || items.length === 0) return null;
+              return (
+                <div key={role} className="flex flex-wrap items-center gap-2 text-[10px]">
+                  <RoleBadge role={role} />
+                  <span className="text-(--color-text-secondary) font-medium">
+                    {items.join(" • ")}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        );
+      })()}
 
       {/* Results Row */}
       {proj.results && (
