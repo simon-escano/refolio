@@ -5,7 +5,7 @@ import { IdentityZone } from "./components/input/IdentityZone";
 import { GitloreQueue, type ProjectEntry } from "./components/input/GitloreQueue";
 import { ExperienceZone, type ExperienceEntry } from "./components/input/ExperienceZone";
 import { SkillsZone, type SkillEntry, type LanguageEntry } from "./components/input/SkillsZone";
-import { HustleZone, type AchievementEntry, type CredentialEntry } from "./components/input/HustleZone";
+import { AchievementsZone, CredentialsZone, type AchievementEntry, type CredentialEntry } from "./components/input/HustleZone";
 import { ProgressFeed } from "./components/progress/ProgressFeed";
 import { OutputTabs } from "./components/output/OutputTabs";
 import { SortBar, type SortMode } from "./components/sort/SortBar";
@@ -182,13 +182,16 @@ export default function App() {
                   <SkillsZone tech={tech} languages={languages} onTechChange={setTech} onLanguagesChange={setLanguages} disabled={isGenerating} />
                 </div>
 
-                {/* Row 2: Achievements + Credentials side by side */}
+                {/* Row 3: Achievements + Credentials side by side */}
                 <div className="grid gap-4 md:grid-cols-2">
-                  <HustleZone
+                  <AchievementsZone
                     achievements={achievements}
+                    onChange={setAchievements}
+                    disabled={isGenerating}
+                  />
+                  <CredentialsZone
                     credentials={credentials}
-                    onAchievementsChange={setAchievements}
-                    onCredentialsChange={setCredentials}
+                    onChange={setCredentials}
                     disabled={isGenerating}
                   />
                 </div>
@@ -214,11 +217,14 @@ export default function App() {
                   <GitloreQueue projects={projects} onChange={setProjects} disabled={isGenerating} />
                   <ExperienceZone experience={experience} onChange={setExperience} disabled={isGenerating} />
                   <SkillsZone tech={tech} languages={languages} onTechChange={setTech} onLanguagesChange={setLanguages} disabled={isGenerating} />
-                  <HustleZone
+                  <AchievementsZone
                     achievements={achievements}
+                    onChange={setAchievements}
+                    disabled={isGenerating}
+                  />
+                  <CredentialsZone
                     credentials={credentials}
-                    onAchievementsChange={setAchievements}
-                    onCredentialsChange={setCredentials}
+                    onChange={setCredentials}
                     disabled={isGenerating}
                   />
                   <GenerateButton
