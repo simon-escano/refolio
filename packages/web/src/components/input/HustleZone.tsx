@@ -2,9 +2,7 @@ import { useState } from "react";
 import { Trophy, Plus, Trash2, ChevronUp, GraduationCap, Award } from "lucide-react";
 
 export interface AchievementEntry {
-  title: string;
-  description: string;
-  date: string;
+  accomplishment: string;
   evidence_url: string;
 }
 
@@ -43,7 +41,7 @@ export function HustleZone({
           onClick={() => setAchievementsExpanded(!achievementsExpanded)}
           className="flex w-full items-center gap-3 px-5 py-4 text-left transition-colors hover:bg-(--color-bg-secondary)/50"
         >
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-rose-500 to-pink-500 text-white shadow-sm shadow-rose-500/20">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-red-500 to-rose-500 text-white shadow-sm shadow-red-500/20">
             <Trophy className="h-4 w-4" />
           </div>
           <div className="flex-1 min-w-0">
@@ -82,63 +80,37 @@ export function HustleZone({
                       <Trash2 className="h-3.5 w-3.5" />
                     </button>
                   </div>
-                  <input
-                    type="text"
-                    value={a.title}
-                    onChange={(e) => {
-                      const updated = [...achievements];
-                      updated[i] = { ...updated[i], title: e.target.value };
-                      onAchievementsChange(updated);
-                    }}
-                    disabled={disabled}
-                    placeholder="e.g., Rank #1 in Batch"
-                    className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
-                  />
                   <textarea
-                    value={a.description}
+                    value={a.accomplishment}
                     onChange={(e) => {
                       const updated = [...achievements];
-                      updated[i] = { ...updated[i], description: e.target.value };
+                      updated[i] = { ...updated[i], accomplishment: e.target.value };
                       onAchievementsChange(updated);
                     }}
                     disabled={disabled}
-                    placeholder="What did you accomplish?"
+                    placeholder="What did you accomplish? (e.g. Rank #1 in Batch, Published an article on dev.to)"
                     rows={2}
                     className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50 resize-none"
                   />
-                  <div className="grid grid-cols-2 gap-2">
-                    <input
-                      type="text"
-                      value={a.date}
-                      onChange={(e) => {
-                        const updated = [...achievements];
-                        updated[i] = { ...updated[i], date: e.target.value };
-                        onAchievementsChange(updated);
-                      }}
-                      disabled={disabled}
-                      placeholder="Date (optional)"
-                      className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 text-xs text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
-                    />
-                    <input
-                      type="text"
-                      value={a.evidence_url}
-                      onChange={(e) => {
-                        const updated = [...achievements];
-                        updated[i] = { ...updated[i], evidence_url: e.target.value };
-                        onAchievementsChange(updated);
-                      }}
-                      disabled={disabled}
-                      placeholder="Evidence URL (optional)"
-                      className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 text-xs text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
-                    />
-                  </div>
+                  <input
+                    type="text"
+                    value={a.evidence_url}
+                    onChange={(e) => {
+                      const updated = [...achievements];
+                      updated[i] = { ...updated[i], evidence_url: e.target.value };
+                      onAchievementsChange(updated);
+                    }}
+                    disabled={disabled}
+                    placeholder="Evidence URL (optional)"
+                    className="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50"
+                  />
                 </div>
               ))}
               <button
                 type="button"
-                onClick={() => onAchievementsChange([...achievements, { title: "", description: "", date: "", evidence_url: "" }])}
+                onClick={() => onAchievementsChange([...achievements, { accomplishment: "", evidence_url: "" }])}
                 disabled={disabled}
-                className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-(--color-border) bg-(--color-bg)/50 py-2.5 text-xs font-medium text-(--color-text-muted) transition-all hover:border-rose-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50/30 dark:hover:bg-rose-950/10 disabled:opacity-50 active:scale-[0.98]"
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-(--color-border) bg-(--color-bg)/50 py-2.5 text-xs font-medium text-(--color-text-muted) transition-all hover:border-red-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50/30 dark:hover:bg-red-950/10 disabled:opacity-50 active:scale-[0.98]"
               >
                 <Plus className="h-3.5 w-3.5" />
                 Add Achievement

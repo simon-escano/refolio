@@ -39,9 +39,7 @@ export const GenerateRequestSchema = z.object({
   achievements: z
     .array(
       z.object({
-        title: z.string().min(1),
-        description: z.string().min(1),
-        date: z.string().optional(),
+        accomplishment: z.string().min(1),
         evidence_url: z.string().url().optional(),
       })
     )
@@ -82,7 +80,6 @@ export const GenerateRequestSchema = z.object({
     tech: z.array(
       z.object({
         title: z.string().min(1),
-        category: z.string().optional(),
         proficiency: z.number().min(1).max(10),
       })
     ).default([]),

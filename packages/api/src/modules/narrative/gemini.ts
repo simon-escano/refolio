@@ -14,9 +14,11 @@ export interface NarrativeOutput {
     relevance_score: number;
     enhanced_contributions?: string;
     enhanced_description?: string;
+    generated_title?: string;
+    generated_date?: string;
   }>;
   hobbies_enriched?: Array<{ title: string; icon: string; color: string }>;
-  tech_skills_enriched?: Array<{ title: string; icon: string }>;
+  tech_skills_enriched?: Array<{ title: string; icon: string; category: string }>;
   ordered_ids: string[];
 }
 

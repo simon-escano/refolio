@@ -34,7 +34,7 @@ export function IdentityZone({ value, onChange, disabled }: Props) {
         onClick={() => setExpanded(!expanded)}
         className="flex w-full items-center gap-3 px-5 py-4 text-left transition-colors hover:bg-(--color-bg-secondary)/50"
       >
-        <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500 to-cyan-500 text-white shadow-sm shadow-teal-500/20">
+        <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-fuchsia-500 to-pink-500 text-white shadow-sm">
           <User className="h-4 w-4" />
         </div>
         <div className="flex-1 min-w-0">

@@ -20,6 +20,32 @@ interface Props {
   disabled?: boolean;
 }
 
+function ProficiencyBars({
+  value,
+  onChange,
+  disabled
+}: {
+  value: number;
+  onChange: (v: number) => void;
+  disabled?: boolean;
+}) {
+  return (
+    <div className="flex gap-0.5 mt-1 cursor-pointer" onMouseLeave={() => {}}>
+      {Array.from({ length: 10 }).map((_, i) => (
+        <button
+          key={i}
+          type="button"
+          disabled={disabled}
+          onClick={() => onChange(i + 1)}
+          className={`h-4 w-2 rounded-[2px] transition-colors ${
+            i < value ? "bg-(--color-accent)" : "bg-(--color-border) hover:bg-(--color-border-focus)"
+          }`}
+        />
+      ))}
+    </div>
+  );
+}
+
 export function SkillsZone({ tech, languages, onTechChange, onLanguagesChange, disabled }: Props) {
   const [techExpanded, setTechExpanded] = useState(true);
   const [langExpanded, setLangExpanded] = useState(true);
@@ -30,7 +56,7 @@ export function SkillsZone({ tech, languages, onTechChange, onLanguagesChange, d
     next[index] = { ...next[index], [field]: value };
     onTechChange(next);
   };
-  const addTech = () => onTechChange([...tech, { title: "", category: "", proficiency: 5 }]);
+  const addTech = () => onTechChange([...tech, { title: "", proficiency: 5 }]);
   const removeTech = (index: number) => onTechChange(tech.filter((_, i) => i !== index));
 
   // -- Language Handlers --
@@ -52,7 +78,7 @@ export function SkillsZone({ tech, languages, onTechChange, onLanguagesChange, d
           className="flex w-full items-center justify-between px-5 py-4 text-left transition-colors hover:bg-(--color-bg-secondary)/50"
         >
           <div className="flex items-center gap-3 flex-1 min-w-0">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 text-white shadow-sm shadow-emerald-500/20">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-rose-500 to-purple-500 text-white shadow-sm">
               <Code className="h-4 w-4" />
             </div>
             <div className="flex-1 min-w-0">
@@ -62,7 +88,7 @@ export function SkillsZone({ tech, languages, onTechChange, onLanguagesChange, d
           </div>
           
           <div className="flex items-center gap-3 shrink-0">
-            <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-950/30 px-1.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
+            <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-rose-50 dark:bg-rose-950/30 px-1.5 text-[10px] font-bold text-rose-600 dark:text-rose-400 tabular-nums">
               {tech.length}
             </span>
             <div className={`text-(--color-text-muted) transition-transform duration-300 ${techExpanded ? "" : "-rotate-180"}`}>
@@ -74,40 +100,31 @@ export function SkillsZone({ tech, languages, onTechChange, onLanguagesChange, d
         <div className={`overflow-hidden transition-all duration-300 ${techExpanded ? "max-h-[800px] opacity-100" : "max-h-0 opacity-0"}`}>
           <div className="p-4 space-y-3 bg-(--color-bg)/30">
             {tech.map((t, i) => (
-              <div key={i} className="group relative flex items-center gap-3 rounded-xl border border-(--color-border) bg-(--color-bg) p-3 shadow-xs">
+              <div 
+                key={i} 
+                className="group/proj flex items-center gap-4 rounded-xl border border-(--color-border) bg-(--color-bg) p-4 shadow-xs transition-colors hover:border-(--color-border-focus) animate-scale-in"
+                style={{ animationDelay: `${i * 40}ms` }}
+              >
                 <button
                   type="button"
                   onClick={() => removeTech(i)}
                   disabled={disabled}
-                  className="rounded-md p-1.5 text-(--color-text-muted) hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/30 dark:hover:text-red-400 disabled:opacity-0"
+                  className="rounded-md p-1.5 text-(--color-text-muted) hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/30 dark:hover:text-red-400 opacity-0 group-hover/proj:opacity-100 transition-all disabled:opacity-0"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                 </button>
-                <input
-                  value={t.title}
-                  onChange={(e) => updateTech(i, "title", e.target.value)}
-                  disabled={disabled}
-                  placeholder="Skill (e.g. React)"
-                  className="input-field flex-1 min-w-[100px]"
-                />
-                <input
-                  value={t.category || ""}
-                  onChange={(e) => updateTech(i, "category", e.target.value)}
-                  disabled={disabled}
-                  placeholder="Category"
-                  className="input-field w-1/4 min-w-[70px]"
-                />
-                <div className="flex flex-col items-center gap-1 w-[60px]">
-                  <label className="text-[9px] font-bold uppercase text-(--color-text-muted)">{t.proficiency}/10</label>
+                <div className="flex-1 min-w-0">
                   <input
-                    type="range"
-                    min="1"
-                    max="10"
-                    value={t.proficiency}
-                    onChange={(e) => updateTech(i, "proficiency", parseInt(e.target.value, 10))}
+                    value={t.title}
+                    onChange={(e) => updateTech(i, "title", e.target.value)}
                     disabled={disabled}
-                    className="w-full h-1.5 bg-(--color-border) rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                    placeholder="Skill (e.g. React)"
+                    className="w-full bg-transparent text-sm font-medium text-(--color-text) placeholder:text-(--color-text-muted) outline-none"
                   />
+                </div>
+                <div className="flex flex-col items-center gap-1">
+                  <label className="text-[9px] font-bold uppercase text-(--color-text-muted)">{t.proficiency}/10</label>
+                  <ProficiencyBars value={t.proficiency} onChange={(v) => updateTech(i, "proficiency", v)} disabled={disabled} />
                 </div>
               </div>
             ))}
@@ -115,7 +132,7 @@ export function SkillsZone({ tech, languages, onTechChange, onLanguagesChange, d
               type="button"
               onClick={addTech}
               disabled={disabled}
-              className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-(--color-border) bg-(--color-bg)/50 py-2.5 text-xs font-medium text-(--color-text-muted) transition-all hover:border-emerald-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50/30 dark:hover:bg-emerald-950/10 disabled:opacity-50 active:scale-[0.98]"
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-(--color-border) bg-(--color-bg)/50 py-3 text-xs font-medium text-(--color-text-muted) transition-all hover:border-(--color-accent) hover:text-(--color-accent) hover:bg-(--color-accent-subtle)/30 disabled:opacity-50 active:scale-[0.98]"
             >
               <Plus className="h-3.5 w-3.5" /> Add Tech Skill
             </button>
@@ -131,7 +148,7 @@ export function SkillsZone({ tech, languages, onTechChange, onLanguagesChange, d
           className="flex w-full items-center justify-between px-5 py-4 text-left transition-colors hover:bg-(--color-bg-secondary)/50"
         >
           <div className="flex items-center gap-3 flex-1 min-w-0">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 text-white shadow-sm shadow-orange-500/20">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-sm">
               <Globe className="h-4 w-4" />
             </div>
             <div className="flex-1 min-w-0">
@@ -141,7 +158,7 @@ export function SkillsZone({ tech, languages, onTechChange, onLanguagesChange, d
           </div>
           
           <div className="flex items-center gap-3 shrink-0">
-            <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-orange-50 dark:bg-orange-950/30 px-1.5 text-[10px] font-bold text-orange-600 dark:text-orange-400 tabular-nums">
+            <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-purple-50 dark:bg-purple-950/30 px-1.5 text-[10px] font-bold text-purple-600 dark:text-purple-400 tabular-nums">
               {languages.length}
             </span>
             <div className={`text-(--color-text-muted) transition-transform duration-300 ${langExpanded ? "" : "-rotate-180"}`}>
@@ -153,33 +170,31 @@ export function SkillsZone({ tech, languages, onTechChange, onLanguagesChange, d
         <div className={`overflow-hidden transition-all duration-300 ${langExpanded ? "max-h-[800px] opacity-100" : "max-h-0 opacity-0"}`}>
           <div className="p-4 space-y-3 bg-(--color-bg)/30">
             {languages.map((l, i) => (
-              <div key={i} className="group relative flex items-center gap-3 rounded-xl border border-(--color-border) bg-(--color-bg) p-3 shadow-xs">
+              <div 
+                key={i} 
+                className="group/proj flex items-center gap-4 rounded-xl border border-(--color-border) bg-(--color-bg) p-4 shadow-xs transition-colors hover:border-(--color-border-focus) animate-scale-in"
+                style={{ animationDelay: `${i * 40}ms` }}
+              >
                 <button
                   type="button"
                   onClick={() => removeLang(i)}
                   disabled={disabled}
-                  className="rounded-md p-1.5 text-(--color-text-muted) hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/30 dark:hover:text-red-400 disabled:opacity-0"
+                  className="rounded-md p-1.5 text-(--color-text-muted) hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/30 dark:hover:text-red-400 opacity-0 group-hover/proj:opacity-100 transition-all disabled:opacity-0"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                 </button>
-                <input
-                  value={l.title}
-                  onChange={(e) => updateLang(i, "title", e.target.value)}
-                  disabled={disabled}
-                  placeholder="Language (e.g. Japanese)"
-                  className="input-field flex-1"
-                />
-                <div className="flex flex-col items-center gap-1 w-[60px]">
-                  <label className="text-[9px] font-bold uppercase text-(--color-text-muted)">{l.proficiency}/10</label>
+                <div className="flex-1 min-w-0">
                   <input
-                    type="range"
-                    min="1"
-                    max="10"
-                    value={l.proficiency}
-                    onChange={(e) => updateLang(i, "proficiency", parseInt(e.target.value, 10))}
+                    value={l.title}
+                    onChange={(e) => updateLang(i, "title", e.target.value)}
                     disabled={disabled}
-                    className="w-full h-1.5 bg-(--color-border) rounded-lg appearance-none cursor-pointer accent-orange-500"
+                    placeholder="Language (e.g. Japanese)"
+                    className="w-full bg-transparent text-sm font-medium text-(--color-text) placeholder:text-(--color-text-muted) outline-none"
                   />
+                </div>
+                <div className="flex flex-col items-center gap-1">
+                  <label className="text-[9px] font-bold uppercase text-(--color-text-muted)">{l.proficiency}/10</label>
+                  <ProficiencyBars value={l.proficiency} onChange={(v) => updateLang(i, "proficiency", v)} disabled={disabled} />
                 </div>
               </div>
             ))}
@@ -187,7 +202,7 @@ export function SkillsZone({ tech, languages, onTechChange, onLanguagesChange, d
               type="button"
               onClick={addLang}
               disabled={disabled}
-              className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-(--color-border) bg-(--color-bg)/50 py-2.5 text-xs font-medium text-(--color-text-muted) transition-all hover:border-orange-400 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-50/30 dark:hover:bg-orange-950/10 disabled:opacity-50 active:scale-[0.98]"
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-(--color-border) bg-(--color-bg)/50 py-3 text-xs font-medium text-(--color-text-muted) transition-all hover:border-(--color-accent) hover:text-(--color-accent) hover:bg-(--color-accent-subtle)/30 disabled:opacity-50 active:scale-[0.98]"
             >
               <Plus className="h-3.5 w-3.5" /> Add Language
             </button>

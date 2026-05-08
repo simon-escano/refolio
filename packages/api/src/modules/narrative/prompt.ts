@@ -28,7 +28,9 @@ The JSON MUST match this structure:
       "type": "solution" | "achievement" | "credential" | "experience",
       "relevance_score": number (0-100),
       "enhanced_contributions": "string — polished role titles (for solutions) or improved bullet points (for experiences)",
-      "enhanced_description": "string — polished professional description (for achievements/credentials)"
+      "enhanced_description": "string — polished professional description (for achievements/credentials)",
+      "generated_title": "string — (ONLY FOR ACHIEVEMENTS) A concise, professional title summarizing the accomplishment",
+      "generated_date": "string — (ONLY FOR ACHIEVEMENTS) Extracted or estimated date/timeframe if mentioned (e.g. '2023' or 'May 2024'), otherwise omit"
     }
   ],
   "hobbies_enriched": [
@@ -41,7 +43,8 @@ The JSON MUST match this structure:
   "tech_skills_enriched": [
     {
       "title": "string — the skill name",
-      "icon": "string — best matching Lucide react icon name (e.g. 'Code', 'Database')"
+      "icon": "string — best matching Lucide react icon name (e.g. 'Code', 'Database')",
+      "category": "string — best fitting professional category (e.g. 'Frontend', 'Backend', 'DevOps', 'Design')"
     }
   ],
   "ordered_ids": ["string — all item IDs sorted by relevance_score descending"]
@@ -92,9 +95,8 @@ Raw contributions: ${output.contributions}`;
   const achievementsList = request.achievements
     .map((a, i) => {
       const aid = `achievement-${i}`;
-      return `### Achievement [${aid}]: ${a.title}
-Description: ${a.description}
-${a.date ? `Date: ${a.date}` : ""}
+      return `### Achievement [${aid}]:
+Accomplishment: ${a.accomplishment}
 ${a.evidence_url ? `Evidence: ${a.evidence_url}` : ""}`;
     })
     .join("\n\n");

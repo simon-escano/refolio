@@ -68,9 +68,9 @@ export function stitchPortfolio(
       const enhancement = narrative.items.find((item) => item.id === aid);
       return {
         id: aid,
-        title: a.title,
-        description: enhancement?.enhanced_description ?? a.description,
-        date: a.date,
+        title: enhancement?.generated_title || a.accomplishment,
+        description: enhancement?.enhanced_description || a.accomplishment,
+        date: enhancement?.generated_date,
         verifiable: !!a.evidence_url,
         evidence_url: a.evidence_url,
         relevance_score: scoreMap.get(aid) ?? 50,
@@ -127,6 +127,7 @@ export function stitchPortfolio(
       const enrichment = narrative.tech_skills_enriched?.find(e => e.title.toLowerCase() === t.title.toLowerCase());
       return {
         ...t,
+        category: enrichment?.category || "Other",
         icon: enrichment?.icon || "Code", // fallback
       };
     }),

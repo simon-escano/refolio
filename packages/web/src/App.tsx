@@ -70,7 +70,7 @@ export default function App() {
           hobbies: profile.hobbies || undefined,
         },
         projects: projects.filter((p) => p.url.trim() && p.title.trim()),
-        achievements: achievements.filter((a) => a.title.trim()),
+        achievements: achievements.filter((a) => a.accomplishment?.trim()),
         credentials: credentials.filter((c) => c.title.trim()),
         experience: experience.filter((e) => e.company.trim() && e.role.trim()),
         skills: {
