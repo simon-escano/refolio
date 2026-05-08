@@ -1,5 +1,5 @@
-Requirements Specification: Monofolio
-Project Title: Monofolio
+Requirements Specification: Refolio
+Project Title: Refolio
 
 Tagline: The Headless Engineering Narrative Engine & Master Portfolio Orchestrator
 
@@ -8,7 +8,7 @@ Status: Architecture Phase (Antigrav-Ready)
 Target Environment: Cloudflare Workers (API) & Cloudflare Pages (Web)
 
 1. Project Overview
-Monofolio is a high-performance, AI-driven portfolio generation platform. It acts as a "Master Orchestrator" that synthesizes raw human experience (text) into a structured, hire-ready JSON schema. By utilizing a hybrid logic approach—combining the existing Gitlore API for code analysis and Gemini 2.5 Flash for narrative synthesis—it produces a high-fidelity engineering narrative without token wastage.
+Refolio is a high-performance, AI-driven portfolio generation platform. It acts as a "Master Orchestrator" that synthesizes raw human experience (text) into a structured, hire-ready JSON schema. By utilizing a hybrid logic approach—combining the existing Gitlore API for code analysis and Gemini 2.5 Flash for narrative synthesis—it produces a high-fidelity engineering narrative without token wastage.
 
 2. System Architecture (Monorepo)
 The project follows a standard monorepo structure with two primary directories:
@@ -54,10 +54,10 @@ Theme Provider logic (Dark, Light, System mode).
 
 Component patterns (Buttons, Inputs, Cards).
 
-Consistency: Monofolio must look like a "Pro" extension of Gitlore.
+Consistency: Refolio must look like a "Pro" extension of Gitlore.
 
 4.2. Hybrid Data Pipeline (The "Thrift" Strategy)
-Gitlore Pass-through: Projects are analyzed via the Gitlore API. The results (Mermaid diagrams, tech stats) are stitched into the Monofolio JSON via pure logic, bypassing the LLM to save tokens.
+Gitlore Pass-through: Projects are analyzed via the Gitlore API. The results (Mermaid diagrams, tech stats) are stitched into the Refolio JSON via pure logic, bypassing the LLM to save tokens.
 
 Narrative Extraction: Gemini 2.5 Flash processes raw text inputs to generate professional summaries and engineering narratives.
 
@@ -88,7 +88,7 @@ Scannable State: Displays Title, One-liner, and Role.
 
 Hover State (HoverCard): Reveals full description, role details, and architecture diagrams.
 
-Interactive JSON: A live-syncing Monaco editor showing the Monofolio JSON.
+Interactive JSON: A live-syncing Monaco editor showing the Refolio JSON.
 
 Two-Way Data Binding: Manual changes in the JSON editor must reflect instantly in the Live Preview and vice-versa.
 

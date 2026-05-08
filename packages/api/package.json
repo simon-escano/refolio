@@ -1,8 +1,8 @@
 {
-  "name": "@monofolio/api",
+  "name": "@refolio/api",
   "version": "1.0.0",
   "type": "module",
-  "description": "Monofolio — Hybrid Portfolio Orchestrator API (Cloudflare Workers + Gemini)",
+  "description": "Refolio — Hybrid Portfolio Orchestrator API (Cloudflare Workers + Gemini)",
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",

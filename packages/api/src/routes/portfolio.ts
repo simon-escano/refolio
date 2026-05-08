@@ -5,7 +5,7 @@ import { fetchGitloreOutput } from "../modules/gitlore/client";
 import { generateNarrative } from "../modules/narrative/gemini";
 import { stitchPortfolio } from "../modules/stitcher/merge";
 import { validatePortfolio } from "../modules/validation/schema";
-import { MonofolioError, Errors } from "../lib/errors";
+import { RefolioError, Errors } from "../lib/errors";
 import { getConfig, type Bindings } from "../lib/config";
 import { getCached, setCached } from "../lib/cache";
 import { noopProgress, type ProgressCallback } from "../lib/progress";
@@ -151,9 +151,9 @@ portfolioRoute.post("/portfolio/generate", async (c) => {
       const message =
         err instanceof Error ? err.message : "An unexpected error occurred";
       const code =
-        err instanceof MonofolioError ? err.code : "INTERNAL_ERROR";
+        err instanceof RefolioError ? err.code : "INTERNAL_ERROR";
       const details =
-        err instanceof MonofolioError
+        err instanceof RefolioError
           ? err.details
           : err instanceof Error
             ? err.stack

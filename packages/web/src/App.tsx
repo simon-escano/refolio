@@ -22,17 +22,17 @@ import type { ProgressEvent } from "./types/portfolio";
 
 export default function App() {
   // ─── Form State ───
-  const [profile, setProfile] = usePersistedState("monofolio_profile", {
+  const [profile, setProfile] = usePersistedState("refolio_profile", {
     name: "", role: "", email: "", mobileAreaCode: "+63", mobile: "", github: "", linkedin: "", website: "", hobbies: "",
   });
-  const [projects, setProjects] = usePersistedState<ProjectEntry[]>("monofolio_projects", [
+  const [projects, setProjects] = usePersistedState<ProjectEntry[]>("refolio_projects", [
     { url: "", title: "", contributions: "", context: "", gallery: [], links: [] },
   ]);
-  const [achievements, setAchievements] = usePersistedState<AchievementEntry[]>("monofolio_achievements", []);
-  const [credentials, setCredentials] = usePersistedState<CredentialEntry[]>("monofolio_credentials", []);
-  const [experience, setExperience] = usePersistedState<ExperienceEntry[]>("monofolio_experience", []);
-  const [tech, setTech] = usePersistedState<SkillEntry[]>("monofolio_tech", []);
-  const [languages, setLanguages] = usePersistedState<LanguageEntry[]>("monofolio_languages", []);
+  const [achievements, setAchievements] = usePersistedState<AchievementEntry[]>("refolio_achievements", []);
+  const [credentials, setCredentials] = usePersistedState<CredentialEntry[]>("refolio_credentials", []);
+  const [experience, setExperience] = usePersistedState<ExperienceEntry[]>("refolio_experience", []);
+  const [tech, setTech] = usePersistedState<SkillEntry[]>("refolio_tech", []);
+  const [languages, setLanguages] = usePersistedState<LanguageEntry[]>("refolio_languages", []);
 
   // ─── Pipeline State ───
   const [progress, setProgress] = useState<ProgressEvent[]>([]);

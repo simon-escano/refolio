@@ -30,14 +30,14 @@ function resolveTheme(theme: Theme): "light" | "dark" {
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<Theme>(() => {
     if (typeof window === "undefined") return "system";
-    return (localStorage.getItem("monofolio-theme") as Theme) ?? "system";
+    return (localStorage.getItem("refolio-theme") as Theme) ?? "system";
   });
 
   const [resolved, setResolved] = useState<"light" | "dark">(() => resolveTheme(theme));
 
   const setTheme = (t: Theme) => {
     setThemeState(t);
-    localStorage.setItem("monofolio-theme", t);
+    localStorage.setItem("refolio-theme", t);
   };
 
   useEffect(() => {

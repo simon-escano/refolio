@@ -6,7 +6,7 @@
   --font-sans: "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
-  /* ═══ MONOFOLIO COLOR SYSTEM ═══
+  /* ═══ REFOLIO COLOR SYSTEM ═══
      Shifted from Gitlore's violet primary to a
      teal → rose → purple spectrum */
 
@@ -143,7 +143,7 @@
 }
 
 /* ═══════════════════════════════════════════
-   MONOFOLIO VISUAL LANGUAGE
+   REFOLIO VISUAL LANGUAGE
    ═══════════════════════════════════════════ */
 
 /* ─── Crosshatch Grid (different from Gitlore's dots) ─── */
@@ -160,7 +160,7 @@
     linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
 }
 
-/* ─── Glass Card (Monofolio signature — frosted glass effect) ─── */
+/* ─── Glass Card (Refolio signature — frosted glass effect) ─── */
 .glass-card {
   background: rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(12px);

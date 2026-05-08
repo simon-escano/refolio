@@ -1,4 +1,4 @@
-# ARCHITECTURE_MANIFEST.md — Monofolio
+# ARCHITECTURE_MANIFEST.md — Refolio
 
 > **The Headless Engineering Narrative Engine & Master Portfolio Orchestrator**
 > Status: Architecture Phase (Antigrav-Ready) · Strictly No Code · Plan Only
@@ -7,10 +7,10 @@
 
 ## 1. Project Structure
 
-Monofolio is a **pnpm monorepo** mirroring Gitlore's proven layout with two packages.
+Refolio is a **pnpm monorepo** mirroring Gitlore's proven layout with two packages.
 
 ```
-monofolio/
+refolio/
 ├── package.json              # Root: scripts, pnpm workspace
 ├── pnpm-workspace.yaml       # packages: ["packages/*"]
 ├── packages/
@@ -33,7 +33,7 @@ monofolio/
 │   │   │   │       └── schema.ts     # MasterPortfolio Zod schema
 │   │   │   ├── lib/
 │   │   │   │   ├── config.ts         # Bindings type, getConfig()
-│   │   │   │   ├── errors.ts         # MonofolioError class + factory
+│   │   │   │   ├── errors.ts         # RefolioError class + factory
 │   │   │   │   ├── progress.ts       # SSE ProgressCallback type
 │   │   │   │   └── cache.ts          # Cloudflare KV caching layer
 │   │   │   └── schemas/
@@ -97,7 +97,7 @@ The following tokens were extracted from `gitlore/web/src/index.css`:
 ### 2.2 Extraction Strategy
 
 1. **Copy `index.css` verbatim** from Gitlore as the baseline design system
-2. **Extend** with Monofolio-specific semantic tokens (e.g., `--color-rank-high`, `--color-rank-low`)
+2. **Extend** with Refolio-specific semantic tokens (e.g., `--color-rank-high`, `--color-rank-low`)
 3. **Preserve** all existing utility classes: `.bg-grid-pattern`, `.animate-fade-up`, `.animate-fade-in`, JSON syntax highlighting classes
 4. **Typography**: `Inter` (sans), `JetBrains Mono` (mono) — identical to Gitlore
 5. **Radii**: `--radius-sm` through `--radius-2xl` (0.375rem → 1.25rem) — carried over
@@ -106,16 +106,16 @@ The following tokens were extracted from `gitlore/web/src/index.css`:
 ### 2.3 Theme Provider (Direct Port)
 
 Port `gitlore/web/src/lib/theme.tsx` with one change:
-- Replace `localStorage.getItem("gitlore-theme")` → `localStorage.getItem("monofolio-theme")`
+- Replace `localStorage.getItem("gitlore-theme")` → `localStorage.getItem("refolio-theme")`
 - Same `ThemeContext` pattern: `{ theme, resolved, setTheme }`
 - Same `@custom-variant dark (&:where(.dark, .dark *))` Tailwind v4 strategy
 - Same `.dark` class toggle on `document.documentElement`
 
 ### 2.4 Component Pattern Parity
 
-| Gitlore Pattern | Monofolio Equivalent |
+| Gitlore Pattern | Refolio Equivalent |
 |---|---|
-| `Header.tsx` — sticky blur header, theme dropdown | Identical structure, rebrand to "Monofolio" |
+| `Header.tsx` — sticky blur header, theme dropdown | Identical structure, rebrand to "Refolio" |
 | `OutputTabs.tsx` — tab bar with accent underline | Reuse pattern for Preview \| JSON tabs |
 | `ProgressFeed.tsx` — phased SSE log viewer | Extend with additional phases (narrative, ranking) |
 | `JsonView.tsx` — layered textarea + syntax highlight | Replace with `@monaco-editor/react` for full editing |
@@ -384,11 +384,11 @@ packages:
 // Root package.json scripts
 {
   "dev": "pnpm --parallel -r run dev",
-  "dev:api": "pnpm --filter @monofolio/api run dev",
-  "dev:web": "pnpm --filter @monofolio/web run dev",
+  "dev:api": "pnpm --filter @refolio/api run dev",
+  "dev:web": "pnpm --filter @refolio/web run dev",
   "deploy": "pnpm -r run deploy",
-  "deploy:api": "pnpm --filter @monofolio/api run deploy",
-  "deploy:web": "pnpm --filter @monofolio/web run deploy",
+  "deploy:api": "pnpm --filter @refolio/api run deploy",
+  "deploy:web": "pnpm --filter @refolio/web run deploy",
   "typecheck": "pnpm -r run typecheck"
 }
 ```
@@ -397,7 +397,7 @@ packages:
 
 ```toml
 # packages/api/wrangler.toml
-name = "monofolio-api"
+name = "refolio-api"
 main = "src/index.ts"
 compatibility_date = "2025-04-01"
 compatibility_flags = ["nodejs_compat"]
@@ -422,7 +422,7 @@ id = "<KV_NAMESPACE_ID>"
 
 ```toml
 # packages/web/wrangler.toml
-name = "monofolio-web"
+name = "refolio-web"
 compatibility_date = "2025-04-01"
 
 [assets]
@@ -440,7 +440,7 @@ not_found_handling = "single-page-application"
 | `GEMINI_API_KEY` | API secret | Gemini 2.5 Flash authentication |
 | `GITLORE_API_URL` | API var | Gitlore endpoint for deterministic pass-through |
 | `PORTFOLIO_CACHE` | API KV binding | Cloudflare KV namespace for caching |
-| `VITE_API_URL` | Web `.env` | Monofolio API endpoint URL |
+| `VITE_API_URL` | Web `.env` | Refolio API endpoint URL |
 
 ### 7.5 CI/CD Flow
 
@@ -456,7 +456,7 @@ not_found_handling = "single-page-application"
 
 The strategy is:
 
-1. **Gitlore handles all code-derived data** — architecture diagrams, tech stacks, features, results, problem/goal narratives. These are **already generated** by Cerebras/Llama via the existing Gitlore pipeline. Monofolio consumes them via HTTP, spending **zero additional LLM tokens**.
+1. **Gitlore handles all code-derived data** — architecture diagrams, tech stacks, features, results, problem/goal narratives. These are **already generated** by Cerebras/Llama via the existing Gitlore pipeline. Refolio consumes them via HTTP, spending **zero additional LLM tokens**.
 
 2. **Gemini handles only what Gitlore cannot** — human narrative synthesis (philosophy, achievement descriptions), cross-item relevance scoring, and contribution role polishing. This is the **minimal surface area** requiring probabilistic inference.
 

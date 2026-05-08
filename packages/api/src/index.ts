@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { portfolioRoute } from "./routes/portfolio";
-import { MonofolioError } from "./lib/errors";
+import { RefolioError } from "./lib/errors";
 import type { Bindings } from "./lib/config";
 
 type Env = { Bindings: Bindings };
@@ -21,7 +21,7 @@ app.use(
 // Health check / info endpoint
 app.get("/", (c) => {
   return c.json({
-    name: "monofolio",
+    name: "refolio",
     version: "1.0.0",
     status: "running",
     provider: "gemini",
@@ -34,7 +34,7 @@ app.route("/api", portfolioRoute);
 
 // Global error handler
 app.onError((err, c) => {
-  if (err instanceof MonofolioError) {
+  if (err instanceof RefolioError) {
     return c.json(
       {
         error: {

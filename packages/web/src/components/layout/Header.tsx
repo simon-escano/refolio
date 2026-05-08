@@ -34,7 +34,7 @@ export function Header() {
             <Hexagon className="h-3.5 w-3.5" />
           </div>
           <span className="text-base font-semibold tracking-tight text-(--color-text)">
-            Monofolio
+            Refolio
           </span>
           <span className="hidden sm:inline rounded-md bg-(--color-accent-subtle) px-1.5 py-0.5 text-[9px] font-semibold text-(--color-accent) uppercase tracking-wider">
             beta
