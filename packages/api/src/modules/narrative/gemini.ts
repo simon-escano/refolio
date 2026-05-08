@@ -10,11 +10,13 @@ export interface NarrativeOutput {
   philosophy: string;
   items: Array<{
     id: string;
-    type: "solution" | "achievement" | "credential";
+    type: "solution" | "achievement" | "credential" | "experience";
     relevance_score: number;
     enhanced_contributions?: string;
     enhanced_description?: string;
   }>;
+  hobbies_enriched?: Array<{ title: string; icon: string; color: string }>;
+  tech_skills_enriched?: Array<{ title: string; icon: string }>;
   ordered_ids: string[];
 }
 

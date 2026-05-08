@@ -25,9 +25,11 @@ export const GenerateRequestSchema = z.object({
     name: z.string().min(1, "Name is required"),
     role: z.string().min(1, "Role is required"),
     email: z.string().email().optional(),
+    mobile: z.string().optional(),
     github: z.string().url().optional(),
     linkedin: z.string().url().optional(),
     website: z.string().url().optional(),
+    hobbies: z.string().optional(),
   }),
 
   /** Hustle Zone — projects to analyze via Gitlore */
@@ -59,6 +61,38 @@ export const GenerateRequestSchema = z.object({
     )
     .optional()
     .default([]),
+
+  /** Work Experience Zone */
+  experience: z
+    .array(
+      z.object({
+        company: z.string().min(1),
+        role: z.string().min(1),
+        location: z.string().optional(),
+        startDate: z.string().optional(),
+        endDate: z.string().optional(),
+        contributions: z.array(z.string()).default([]),
+      })
+    )
+    .optional()
+    .default([]),
+
+  /** Skills Zone */
+  skills: z.object({
+    tech: z.array(
+      z.object({
+        title: z.string().min(1),
+        category: z.string().optional(),
+        proficiency: z.number().min(1).max(10),
+      })
+    ).default([]),
+    languages: z.array(
+      z.object({
+        title: z.string().min(1),
+        proficiency: z.number().min(1).max(10),
+      })
+    ).default([]),
+  }).default({ tech: [], languages: [] }),
 });
 
 export type GenerateRequest = z.infer<typeof GenerateRequestSchema>;

@@ -1,13 +1,15 @@
 import { useState } from "react";
-import { User, Mail, Github, Linkedin, Globe, ChevronUp } from "lucide-react";
+import { User, Mail, Github, Linkedin, Globe, Phone, Heart, ChevronUp } from "lucide-react";
 
 interface ProfileData {
   name: string;
   role: string;
   email: string;
+  mobile?: string;
   github: string;
   linkedin: string;
   website: string;
+  hobbies?: string;
 }
 
 interface Props {

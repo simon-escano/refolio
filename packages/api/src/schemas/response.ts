@@ -9,11 +9,19 @@ const ContactSchema = z.object({
   website: z.string().optional(),
 });
 
+const HobbySchema = z.object({
+  title: z.string(),
+  icon: z.string(),
+  color: z.string(),
+});
+
 const ProfileSchema = z.object({
   name: z.string(),
   role: z.string(),
   contact: ContactSchema,
+  mobile: z.string().optional(),
   philosophy: z.string().optional(),
+  hobbies: z.array(HobbySchema).default([]),
 });
 
 const RankingsSchema = z.object({
@@ -101,17 +109,42 @@ const CredentialSchema = z.object({
   relevance_score: z.number().min(0).max(100).default(50),
 });
 
+const ExperienceSchema = z.object({
+  id: z.string(),
+  company: z.string(),
+  role: z.string(),
+  location: z.string().optional(),
+  date_range: z.string().optional(),
+  contributions: z.array(z.string()).default([]),
+  relevance_score: z.number().min(0).max(100).default(50),
+});
+
+const SkillSchema = z.object({
+  title: z.string(),
+  category: z.string().optional(),
+  icon: z.string().optional(),
+  proficiency: z.number().min(1).max(10),
+});
+
 // --- Master Schema ---
 
 export const MasterPortfolioSchema = z.object({
   profile: ProfileSchema,
   rankings: RankingsSchema,
+  experience: z.array(ExperienceSchema).default([]),
   achievements: z.array(AchievementSchema).default([]),
   solutions: z.array(SolutionSchema).default([]),
   credentials: z.array(CredentialSchema).default([]),
+  skills: z.object({
+    tech: z.array(SkillSchema).default([]),
+    languages: z.array(SkillSchema).default([]),
+  }).default({ tech: [], languages: [] }),
 });
 
 export type MasterPortfolio = z.infer<typeof MasterPortfolioSchema>;
 export type Solution = z.infer<typeof SolutionSchema>;
 export type Achievement = z.infer<typeof AchievementSchema>;
 export type Credential = z.infer<typeof CredentialSchema>;
+export type Experience = z.infer<typeof ExperienceSchema>;
+export type Skill = z.infer<typeof SkillSchema>;
+export type Hobby = z.infer<typeof HobbySchema>;

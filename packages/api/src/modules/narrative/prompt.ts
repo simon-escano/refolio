@@ -25,10 +25,23 @@ The JSON MUST match this structure:
   "items": [
     {
       "id": "string — the item ID provided in the input",
-      "type": "solution" | "achievement" | "credential",
+      "type": "solution" | "achievement" | "credential" | "experience",
       "relevance_score": number (0-100),
-      "enhanced_contributions": "string — polished role titles (only for solutions, omit for others)",
-      "enhanced_description": "string — polished professional description (only for achievements/credentials, omit for solutions)"
+      "enhanced_contributions": "string — polished role titles (for solutions) or improved bullet points (for experiences)",
+      "enhanced_description": "string — polished professional description (for achievements/credentials)"
+    }
+  ],
+  "hobbies_enriched": [
+    {
+      "title": "string — the hobby name",
+      "icon": "string — best matching Lucide react icon name (e.g. 'Camera', 'Gamepad2')",
+      "color": "string — fitting tailwind hex color (e.g. '#3b82f6')"
+    }
+  ],
+  "tech_skills_enriched": [
+    {
+      "title": "string — the skill name",
+      "icon": "string — best matching Lucide react icon name (e.g. 'Code', 'Database')"
     }
   ],
   "ordered_ids": ["string — all item IDs sorted by relevance_score descending"]
@@ -47,7 +60,9 @@ CRITICAL RULES:
 3. For achievements: make descriptions concise, quantified where possible, and recruiter-compelling.
 4. Philosophy must reflect the engineer's actual work patterns, not generic platitudes.
 5. NO hallucinated data. If specifics aren't available, describe qualitative patterns instead.
-6. Write as if presenting to a hiring manager at a top-tier tech company.`;
+6. For Hobbies: parse the user's comma-separated hobbies and assign a highly relevant Lucide icon and aesthetically pleasing hex color.
+7. For Tech Skills: assign a highly relevant Lucide icon. Use generic icons (Code, Terminal, FileCode) if a specific logo icon isn't in Lucide.
+8. Write as if presenting to a hiring manager at a top-tier tech company.`;
 }
 
 /**
@@ -95,10 +110,31 @@ ${c.description ? `Description: ${c.description}` : ""}`;
     })
     .join("\n\n");
 
-  return `${identity}
+  const experienceList = request.experience
+    .map((e, i) => {
+      const eid = `experience-${i}`;
+      return `### Experience [${eid}]: ${e.role} at ${e.company}
+Location: ${e.location || "N/A"}
+Dates: ${e.startDate || ""} - ${e.endDate || ""}
+Contributions:
+${e.contributions.map(c => `- ${c}`).join("\n")}`;
+    })
+    .join("\n\n");
 
-## Projects (analyzed via Gitlore — deterministic data already extracted)
+  const techSkills = request.skills.tech.map(s => s.title).join(", ");
+  const hobbies = request.profile.hobbies || "";
+
+  return `${identity}
+Hobbies: ${hobbies}
+
+## Tech Skills
+${techSkills || "No tech skills provided."}
+
+## Projects (analyzed via Gitlore)
 ${projectSummaries || "No projects provided."}
+
+## Experience
+${experienceList || "No experience provided."}
 
 ## Achievements
 ${achievementsList || "No achievements provided."}

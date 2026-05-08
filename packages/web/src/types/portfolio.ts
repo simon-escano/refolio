@@ -9,11 +9,19 @@ export interface Contact {
   website?: string;
 }
 
+export interface Hobby {
+  title: string;
+  icon: string;
+  color: string;
+}
+
 export interface Profile {
   name: string;
   role: string;
   contact: Contact;
+  mobile?: string;
   philosophy?: string;
+  hobbies: Hobby[];
 }
 
 export interface Rankings {
@@ -87,12 +95,34 @@ export interface Credential {
   relevance_score: number;
 }
 
+export interface Experience {
+  id: string;
+  company: string;
+  role: string;
+  location?: string;
+  date_range?: string;
+  contributions: string[];
+  relevance_score: number;
+}
+
+export interface Skill {
+  title: string;
+  category?: string;
+  icon?: string;
+  proficiency: number;
+}
+
 export interface MasterPortfolio {
   profile: Profile;
   rankings: Rankings;
+  experience: Experience[];
   achievements: Achievement[];
   solutions: Solution[];
   credentials: Credential[];
+  skills: {
+    tech: Skill[];
+    languages: Skill[];
+  };
 }
 
 // ─── Progress Events ───

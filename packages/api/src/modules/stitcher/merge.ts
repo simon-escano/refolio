@@ -32,7 +32,9 @@ export function stitchPortfolio(
       linkedin: request.profile.linkedin,
       website: request.profile.website,
     },
+    mobile: request.profile.mobile,
     philosophy: narrative.philosophy,
+    hobbies: narrative.hobbies_enriched ?? [],
   };
 
   // --- Solutions (Gitlore deterministic + Gemini enhancements) ---
@@ -93,6 +95,44 @@ export function stitchPortfolio(
     }
   );
 
+  // --- Experience (raw input + Gemini polishing) ---
+  const experience: MasterPortfolio["experience"] = request.experience.map(
+    (e, i) => {
+      const eid = `experience-${i}`;
+      const enhancement = narrative.items.find((item) => item.id === eid);
+      
+      // Merge enhanced bullet points if provided
+      let finalContributions = e.contributions;
+      if (enhancement?.enhanced_contributions) {
+        // If Gemini returns a string instead of an array (per the prompt instruction), split by newlines
+        const enhancedStr = enhancement.enhanced_contributions;
+        finalContributions = enhancedStr.split("\n").map(s => s.replace(/^- /, "").trim()).filter(Boolean);
+      }
+
+      return {
+        id: eid,
+        company: e.company,
+        role: e.role,
+        location: e.location,
+        date_range: e.startDate && e.endDate ? `${e.startDate} - ${e.endDate}` : e.startDate || e.endDate,
+        contributions: finalContributions,
+        relevance_score: scoreMap.get(eid) ?? 50,
+      };
+    }
+  );
+
+  // --- Skills (merge user proficiencies with AI assigned icons) ---
+  const skills: MasterPortfolio["skills"] = {
+    tech: request.skills.tech.map(t => {
+      const enrichment = narrative.tech_skills_enriched?.find(e => e.title.toLowerCase() === t.title.toLowerCase());
+      return {
+        ...t,
+        icon: enrichment?.icon || "Code", // fallback
+      };
+    }),
+    languages: request.skills.languages,
+  };
+
   // --- Rankings ---
   const rankings: MasterPortfolio["rankings"] = {
     generated_at: new Date().toISOString(),
@@ -103,14 +143,16 @@ export function stitchPortfolio(
   const portfolio: MasterPortfolio = {
     profile,
     rankings,
+    experience,
     achievements,
     solutions,
     credentials,
+    skills,
   };
 
   onProgress({
     phase: "stitching",
-    message: `Portfolio assembled: ${solutions.length} solutions, ${achievements.length} achievements, ${credentials.length} credentials`,
+    message: `Portfolio assembled: ${solutions.length} solutions, ${experience.length} experiences, ${achievements.length} achievements`,
   });
 
   return portfolio;
