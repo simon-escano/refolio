@@ -5,9 +5,14 @@ import { IdentityZone } from "./components/input/IdentityZone";
 import { GitloreQueue, type ProjectEntry } from "./components/input/GitloreQueue";
 import { HustleZone, type AchievementEntry, type CredentialEntry } from "./components/input/HustleZone";
 import { ProgressFeed } from "./components/progress/ProgressFeed";
+import { OutputTabs } from "./components/output/OutputTabs";
+import { SortBar, type SortMode } from "./components/sort/SortBar";
+import { LivePreview } from "./components/preview/LivePreview";
+import { MonacoEditor } from "./components/editor/MonacoEditor";
+import { usePortfolioSync } from "./lib/sync";
 import { streamGenerate } from "./lib/api";
 import { Sparkles, Rocket, ArrowDown, Zap, Target, Brain } from "lucide-react";
-import type { MasterPortfolio, ProgressEvent } from "./types/portfolio";
+import type { ProgressEvent } from "./types/portfolio";
 
 export default function App() {
   // ─── Form State ───
@@ -28,9 +33,13 @@ export default function App() {
   // ─── Pipeline State ───
   const [progress, setProgress] = useState<ProgressEvent[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [result, setResult] = useState<MasterPortfolio | null>(null);
   const [error, setError] = useState<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
+
+  // ─── Output State ───
+  const sync = usePortfolioSync();
+  const [activeTab, setActiveTab] = useState<"preview" | "json">("preview");
+  const [sortMode, setSortMode] = useState<SortMode>("rank");
 
   const canGenerate =
     profile.name.trim() !== "" &&
@@ -39,9 +48,10 @@ export default function App() {
 
   const handleGenerate = () => {
     setProgress([]);
-    setResult(null);
+    sync.reset();
     setError(null);
     setIsGenerating(true);
+    setActiveTab("preview");
 
     document.getElementById("pipeline")?.scrollIntoView({ behavior: "smooth" });
 
@@ -62,7 +72,7 @@ export default function App() {
       {
         onProgress: (event) => setProgress((prev) => [...prev, event]),
         onResult: (data) => {
-          setResult(data);
+          sync.setFromPipeline(data);
           setIsGenerating(false);
           abortRef.current = null;
         },
@@ -89,7 +99,7 @@ export default function App() {
     ]);
   };
 
-  const hasOutput = (result || error) && !isGenerating;
+  const hasOutput = (sync.portfolio || error) && !isGenerating;
 
   return (
     <div className="flex min-h-screen flex-col bg-grid-pattern bg-(--color-bg)">
@@ -102,7 +112,6 @@ export default function App() {
         {/* Hero Section */}
         <section className="relative overflow-hidden pt-16 pb-12 sm:pt-20 sm:pb-16">
           <div className="mx-auto max-w-5xl px-6 text-center space-y-6">
-            {/* Animated Badge */}
             <div className="inline-flex items-center gap-2 rounded-full border border-zinc-200 dark:border-zinc-800 bg-white/60 dark:bg-zinc-950/40 px-3.5 py-1.5 text-xs text-zinc-500 backdrop-blur-md animate-fade-up">
               <Sparkles className="h-3.5 w-3.5 text-indigo-500 animate-pulse" />
               <span className="font-medium uppercase tracking-wider text-[10px]">
@@ -179,7 +188,6 @@ export default function App() {
                       : "bg-gradient-to-r from-violet-600 via-indigo-600 to-emerald-600 hover:shadow-lg hover:shadow-indigo-500/20"
                   }`}
                 >
-                  {/* Shimmer overlay on hover */}
                   {!isGenerating && (
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
                   )}
@@ -189,15 +197,16 @@ export default function App() {
                   </span>
                 </button>
 
-                {/* Docked progress feed when not active */}
+                {/* Docked progress log */}
                 {!isGenerating && progress.length > 0 && (
                   <ProgressFeed events={progress} isActive={false} />
                 )}
               </div>
 
-              {/* Right Pane — Output */}
+              {/* Right Pane — Interactive Output */}
               {hasOutput && (
                 <div className="space-y-4 animate-slide-in-right min-w-0">
+                  {/* Error Display */}
                   {error && (
                     <div className="rounded-2xl border border-red-200 dark:border-red-900/20 bg-red-50/30 dark:bg-red-950/10 p-5 space-y-2 animate-fade-in">
                       <p className="text-sm font-semibold text-red-600 dark:text-red-400">
@@ -209,80 +218,27 @@ export default function App() {
                     </div>
                   )}
 
-                  {result && (
-                    <div className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-6 space-y-4 animate-fade-up">
-                      <div className="space-y-2">
-                        <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50/80 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/30 px-2.5 py-0.5 text-xs font-medium text-emerald-600 dark:text-emerald-400">
-                          Portfolio Ready
-                        </span>
-                        <h2 className="text-2xl font-light tracking-tight text-(--color-text)">
-                          {result.profile.name}
-                        </h2>
-                        <p className="text-sm text-(--color-text-secondary)">
-                          {result.profile.role}
-                        </p>
-                        {result.profile.philosophy && (
-                          <p className="text-xs text-(--color-text-muted) italic leading-relaxed border-l-2 border-(--color-accent)/30 pl-3 mt-2">
-                            {result.profile.philosophy}
-                          </p>
+                  {/* Output Controls */}
+                  {sync.portfolio && (
+                    <>
+                      <div className="flex items-center justify-between gap-4">
+                        <OutputTabs active={activeTab} onChange={setActiveTab} />
+                        {activeTab === "preview" && (
+                          <SortBar active={sortMode} onChange={setSortMode} />
                         )}
                       </div>
 
-                      {/* Solutions summary */}
-                      <div className="space-y-3">
-                        <span className="text-[10px] font-medium uppercase tracking-widest text-(--color-text-muted)">
-                          Solutions ({result.solutions.length})
-                        </span>
-                        {result.solutions.map((sol, i) => (
-                          <div
-                            key={sol.id}
-                            className="rounded-xl border border-(--color-border) bg-(--color-bg) p-4 card-hover animate-fade-up"
-                            style={{ animationDelay: `${i * 80}ms` }}
-                          >
-                            <div className="flex items-start justify-between gap-3">
-                              <div className="space-y-1 min-w-0">
-                                <h4 className="text-sm font-medium text-(--color-text) truncate">
-                                  {sol.title}
-                                </h4>
-                                <p className="text-xs text-(--color-text-secondary) line-clamp-2">
-                                  {sol.one_liner}
-                                </p>
-                              </div>
-                              {/* Score badge */}
-                              <div className={`shrink-0 flex h-9 w-9 items-center justify-center rounded-xl text-xs font-bold tabular-nums ${
-                                sol.relevance_score >= 70
-                                  ? "bg-(--color-rank-high-subtle) text-(--color-rank-high)"
-                                  : sol.relevance_score >= 40
-                                    ? "bg-(--color-rank-mid-subtle) text-(--color-rank-mid)"
-                                    : "bg-(--color-rank-low-subtle) text-(--color-rank-low)"
-                              }`}>
-                                {sol.relevance_score}
-                              </div>
-                            </div>
-                            {/* Score bar */}
-                            <div className="mt-3 h-1 w-full rounded-full bg-(--color-border) overflow-hidden">
-                              <div
-                                className={`h-full rounded-full animate-score-fill ${
-                                  sol.relevance_score >= 70
-                                    ? "bg-(--color-rank-high)"
-                                    : sol.relevance_score >= 40
-                                      ? "bg-(--color-rank-mid)"
-                                      : "bg-(--color-rank-low)"
-                                }`}
-                                style={{ "--score-width": `${sol.relevance_score}%` } as React.CSSProperties}
-                              />
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* JSON Preview */}
-                      <div className="rounded-xl border border-(--color-border) bg-zinc-950 p-4 overflow-auto max-h-[300px]">
-                        <pre className="text-[10px] font-mono text-zinc-300 leading-relaxed whitespace-pre-wrap break-all">
-                          {JSON.stringify(result, null, 2)}
-                        </pre>
-                      </div>
-                    </div>
+                      {/* Tab Content */}
+                      {activeTab === "preview" ? (
+                        <LivePreview portfolio={sync.portfolio} sortMode={sortMode} />
+                      ) : (
+                        <MonacoEditor
+                          value={sync.jsonString}
+                          onChange={sync.setFromEditor}
+                          error={sync.jsonError}
+                        />
+                      )}
+                    </>
                   )}
                 </div>
               )}
