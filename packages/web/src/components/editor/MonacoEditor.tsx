@@ -51,7 +51,7 @@ export const MonacoEditor = memo(function MonacoEditor({
   );
 
   return (
-    <div className="rounded-2xl border border-(--color-border) bg-(--color-surface) overflow-hidden flex flex-col">
+    <div className="rounded-2xl border border-(--color-border) bg-(--color-surface) overflow-hidden flex flex-col h-[650px]">
       {/* Editor Header */}
       <div className="flex items-center justify-between border-b border-(--color-border) px-4 py-2.5">
         <div className="flex items-center gap-2">
