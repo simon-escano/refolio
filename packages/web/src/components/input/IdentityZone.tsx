@@ -5,11 +5,12 @@ interface ProfileData {
   name: string;
   role: string;
   email: string;
-  mobile?: string;
+  mobileAreaCode: string;
+  mobile: string;
   github: string;
   linkedin: string;
   website: string;
-  hobbies?: string;
+  hobbies: string;
 }
 
 interface Props {
@@ -88,7 +89,39 @@ export function IdentityZone({ value, onChange, disabled }: Props) {
             {/* Contact fields */}
             <div className="space-y-2.5">
               <InputRow icon={Mail} label="Email" value={value.email} onChange={(v) => update("email", v)} placeholder="hello@example.com" disabled={disabled} />
-              <InputRow icon={Phone} label="Mobile" value={value.mobile || ""} onChange={(v) => update("mobile", v)} placeholder="+1 234 567 890" disabled={disabled} />
+              
+              {/* Custom Mobile Input with Area Code */}
+              <div className="relative group/input">
+                <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-(--color-text-muted) group-focus-within/input:text-(--color-accent) transition-colors z-10">
+                  <Phone className="h-3.5 w-3.5" />
+                </div>
+                <div className="flex">
+                  <select
+                    value={value.mobileAreaCode || "+63"}
+                    onChange={(e) => update("mobileAreaCode", e.target.value)}
+                    disabled={disabled}
+                    className="rounded-l-xl border border-r-0 border-(--color-border) bg-(--color-bg) pl-9 pr-2 py-2 text-sm text-(--color-text) input-focus disabled:opacity-50 appearance-none focus:z-10 relative bg-gradient-to-r from-transparent to-(--color-bg-secondary) focus:to-transparent"
+                  >
+                    <option value="+1">+1 (US)</option>
+                    <option value="+44">+44 (UK)</option>
+                    <option value="+61">+61 (AU)</option>
+                    <option value="+63">+63 (PH)</option>
+                    <option value="+65">+65 (SG)</option>
+                    <option value="+81">+81 (JP)</option>
+                    <option value="+86">+86 (CN)</option>
+                    <option value="+91">+91 (IN)</option>
+                  </select>
+                  <input
+                    type="text"
+                    value={value.mobile}
+                    onChange={(e) => update("mobile", e.target.value)}
+                    disabled={disabled}
+                    placeholder="912 345 6789"
+                    className="w-full rounded-r-xl border border-(--color-border) bg-(--color-bg) px-3.5 py-2 text-sm text-(--color-text) placeholder:text-(--color-text-muted) input-focus disabled:opacity-50 focus:z-10 relative"
+                  />
+                </div>
+              </div>
+
               <InputRow icon={Github} label="GitHub" value={value.github} onChange={(v) => update("github", v)} placeholder="https://github.com/username" disabled={disabled} />
               <InputRow icon={Linkedin} label="LinkedIn" value={value.linkedin} onChange={(v) => update("linkedin", v)} placeholder="https://linkedin.com/in/username" disabled={disabled} />
               <InputRow icon={Globe} label="Website" value={value.website} onChange={(v) => update("website", v)} placeholder="https://yoursite.dev" disabled={disabled} />

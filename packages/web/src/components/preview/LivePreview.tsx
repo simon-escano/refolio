@@ -1,6 +1,10 @@
+import { memo, useMemo } from "react";
 import * as LucideIcons from "lucide-react";
+import {
+  ExternalLink, Github, Zap, Layers, Shield, Trophy
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import type { MasterPortfolio, Solution, Achievement, Credential, Experience, Skill, Hobby } from "../../types/portfolio";
+import type { MasterPortfolio, Solution, Achievement, Credential, Experience } from "../../types/portfolio";
 import type { SortMode } from "../sort/SortBar";
 import { Mermaid } from "./Mermaid";
 

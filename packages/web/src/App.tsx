@@ -24,7 +24,7 @@ import type { ProgressEvent } from "./types/portfolio";
 export default function App() {
   // ─── Form State ───
   const [profile, setProfile] = usePersistedState("monofolio_profile", {
-    name: "", role: "", email: "", mobile: "", github: "", linkedin: "", website: "", hobbies: "",
+    name: "", role: "", email: "", mobileAreaCode: "+63", mobile: "", github: "", linkedin: "", website: "", hobbies: "",
   });
   const [projects, setProjects] = usePersistedState<ProjectEntry[]>("monofolio_projects", [
     { url: "", title: "", contributions: "", context: "", gallery: [], links: [] },
@@ -63,7 +63,7 @@ export default function App() {
         profile: {
           name: profile.name, role: profile.role,
           email: profile.email || undefined,
-          mobile: profile.mobile || undefined,
+          mobile: profile.mobile ? `${profile.mobileAreaCode || "+63"} ${profile.mobile}` : undefined,
           github: profile.github || undefined,
           linkedin: profile.linkedin || undefined,
           website: profile.website || undefined,

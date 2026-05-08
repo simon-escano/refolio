@@ -49,16 +49,19 @@ export function SkillsZone({ tech, languages, onTechChange, onLanguagesChange, d
         <button
           type="button"
           onClick={() => setTechExpanded(!techExpanded)}
-          className="flex w-full items-center justify-between bg-gradient-to-r from-emerald-500/10 to-transparent p-4 transition-colors hover:bg-emerald-500/15"
+          className="flex w-full items-center justify-between px-5 py-4 text-left transition-colors hover:bg-(--color-bg-secondary)/50"
         >
-          <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 text-white shadow-sm shadow-emerald-500/20">
+          <div className="flex items-center gap-3 flex-1 min-w-0">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 text-white shadow-sm shadow-emerald-500/20">
               <Code className="h-4 w-4" />
             </div>
-            <div className="flex-1 min-w-0 text-left">
-              <h2 className="text-sm font-semibold text-(--color-text)">Tech Proficiency</h2>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-sm font-semibold text-(--color-text) tracking-tight">Tech Proficiency</h3>
               <p className="text-[11px] text-(--color-text-secondary)">Languages, tools, software</p>
             </div>
+          </div>
+          
+          <div className="flex items-center gap-3 shrink-0">
             <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-950/30 px-1.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
               {tech.length}
             </span>
@@ -125,16 +128,19 @@ export function SkillsZone({ tech, languages, onTechChange, onLanguagesChange, d
         <button
           type="button"
           onClick={() => setLangExpanded(!langExpanded)}
-          className="flex w-full items-center justify-between bg-gradient-to-r from-orange-500/10 to-transparent p-4 transition-colors hover:bg-orange-500/15"
+          className="flex w-full items-center justify-between px-5 py-4 text-left transition-colors hover:bg-(--color-bg-secondary)/50"
         >
-          <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 text-white shadow-sm shadow-orange-500/20">
+          <div className="flex items-center gap-3 flex-1 min-w-0">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 text-white shadow-sm shadow-orange-500/20">
               <Globe className="h-4 w-4" />
             </div>
-            <div className="flex-1 min-w-0 text-left">
-              <h2 className="text-sm font-semibold text-(--color-text)">Languages</h2>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-sm font-semibold text-(--color-text) tracking-tight">Languages</h3>
               <p className="text-[11px] text-(--color-text-secondary)">Spoken & written</p>
             </div>
+          </div>
+          
+          <div className="flex items-center gap-3 shrink-0">
             <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-orange-50 dark:bg-orange-950/30 px-1.5 text-[10px] font-bold text-orange-600 dark:text-orange-400 tabular-nums">
               {languages.length}
             </span>

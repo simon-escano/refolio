@@ -42,16 +42,19 @@ export function ExperienceZone({ experience, onChange, disabled }: Props) {
       <button
         type="button"
         onClick={() => setExpanded(!expanded)}
-        className="flex w-full items-center justify-between bg-gradient-to-r from-blue-500/10 to-transparent p-4 transition-colors hover:bg-blue-500/15"
+        className="flex w-full items-center justify-between px-5 py-4 text-left transition-colors hover:bg-(--color-bg-secondary)/50"
       >
-        <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 text-white shadow-sm shadow-blue-500/20">
+        <div className="flex items-center gap-3 flex-1 min-w-0">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 text-white shadow-sm shadow-blue-500/20">
             <Briefcase className="h-4 w-4" />
           </div>
-          <div className="flex-1 min-w-0 text-left">
-            <h2 className="text-sm font-semibold text-(--color-text)">Work Experience</h2>
+          <div className="flex-1 min-w-0">
+            <h3 className="text-sm font-semibold text-(--color-text) tracking-tight">Work Experience</h3>
             <p className="text-[11px] text-(--color-text-secondary)">Past roles & responsibilities</p>
           </div>
+        </div>
+        
+        <div className="flex items-center gap-3 shrink-0">
           <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-950/30 px-1.5 text-[10px] font-bold text-blue-600 dark:text-blue-400 tabular-nums">
             {experience.length}
           </span>
