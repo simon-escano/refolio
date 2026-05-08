@@ -98,16 +98,19 @@ export interface Experience {
 
 export interface Skill {
   title: string;
-  category?: string;
-  icon?: string;
   proficiency: number;
+}
+
+export interface TechCategory {
+  icon?: string;
+  items: Skill[];
 }
 
 export interface MasterPortfolio {
   profile: Profile;
   projects: Project[];
   experience: Experience[];
-  tech: Skill[];
+  tech: Record<string, TechCategory>;
   achievements: Achievement[];
   credentials: Credential[];
   languages: Skill[];

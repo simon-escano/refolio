@@ -18,7 +18,7 @@ export interface NarrativeOutput {
     generated_date?: string;
   }>;
   hobbies_enriched?: Array<{ title: string; icon: string; color: string }>;
-  tech_skills_enriched?: Array<{ title: string; icon: string; category: string }>;
+  tech_skills_enriched?: Array<{ title: string; category: string; category_icon: string }>;
 }
 
 /**

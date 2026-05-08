@@ -129,15 +129,28 @@ export function stitchPortfolio(
     }
   );
 
-  // --- Skills (merge user proficiencies with AI assigned icons) ---
-  const tech: MasterPortfolio["tech"] = request.skills.tech.map(t => {
-    const enrichment = narrative.tech_skills_enriched?.find(e => e.title.toLowerCase() === t.title.toLowerCase());
-    return {
-      ...t,
-      category: enrichment?.category || "Other",
-      icon: enrichment?.icon || "Code", // fallback
-    };
-  });
+  // --- Skills (group by AI assigned categories and category-level icons) ---
+  const tech: MasterPortfolio["tech"] = {};
+  
+  for (const t of request.skills.tech) {
+    const enrichment = narrative.tech_skills_enriched?.find(
+      (e) => e.title.toLowerCase() === t.title.toLowerCase()
+    );
+    const category = enrichment?.category || "Other";
+    const categoryIcon = enrichment?.category_icon || "Code";
+    
+    if (!tech[category]) {
+      tech[category] = {
+        icon: categoryIcon,
+        items: [],
+      };
+    }
+    
+    tech[category].items.push({
+      title: t.title,
+      proficiency: t.proficiency,
+    });
+  }
   
   const languages: MasterPortfolio["languages"] = request.skills.languages;
 

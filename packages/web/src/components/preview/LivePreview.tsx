@@ -341,35 +341,40 @@ export const LivePreview = memo(function LivePreview({ portfolio }: Props) {
       )}
 
       {/* Tech Proficiency */}
-      {portfolio.tech.length > 0 && (
+      {Object.keys(portfolio.tech).length > 0 && (
         <motion.div layout className="space-y-3">
           <h3 className="text-[10px] font-bold uppercase tracking-[0.15em] text-(--color-text-muted) px-1">
             Tech Proficiency
           </h3>
-          <div className="rounded-2xl border border-(--color-border) glass-card p-5 space-y-4">
-            <h4 className="text-xs font-semibold text-(--color-text) flex items-center gap-2">
-              <LucideIcons.Code className="h-4 w-4 text-emerald-500" /> Technical
-            </h4>
-            <div className="space-y-3">
-              {[...portfolio.tech].sort((a, b) => b.proficiency - a.proficiency).map((skill, i) => (
-                <div key={i} className="space-y-1.5">
-                  <div className="flex justify-between text-xs">
-                    <span className="text-(--color-text-secondary) flex items-center gap-1.5">
-                      <DynamicIcon name={skill.icon || "Code"} size="w-3 h-3 text-(--color-text-muted)" />
-                      {skill.title}
-                    </span>
-                  </div>
-                  <div className="h-1.5 w-full bg-(--color-border) rounded-full overflow-hidden">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: `${(skill.proficiency / 10) * 100}%` }}
-                      transition={{ duration: 1, ease: "easeOut" }}
-                      className="h-full bg-emerald-500 rounded-full"
-                    />
-                  </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {Object.entries(portfolio.tech).map(([category, data]) => (
+              <div key={category} className="rounded-2xl border border-(--color-border) glass-card p-5 space-y-4">
+                <h4 className="text-xs font-semibold text-(--color-text) flex items-center gap-2">
+                  <DynamicIcon name={data.icon || "Code"} size="w-4 h-4 text-emerald-500" />
+                  {category}
+                </h4>
+                <div className="space-y-3">
+                  {[...data.items]
+                    .sort((a, b) => b.proficiency - a.proficiency)
+                    .map((skill, i) => (
+                      <div key={i} className="space-y-1.5">
+                        <div className="flex justify-between text-xs">
+                          <span className="text-(--color-text-secondary)">{skill.title}</span>
+                          <span className="text-[10px] text-(--color-text-muted) tabular-nums">{skill.proficiency}/10</span>
+                        </div>
+                        <div className="h-1.5 w-full bg-(--color-border) rounded-full overflow-hidden">
+                          <motion.div
+                            initial={{ width: 0 }}
+                            animate={{ width: `${(skill.proficiency / 10) * 100}%` }}
+                            transition={{ duration: 1, ease: "easeOut" }}
+                            className="h-full bg-emerald-500 rounded-full"
+                          />
+                        </div>
+                      </div>
+                    ))}
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </motion.div>
       )}

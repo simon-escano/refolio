@@ -113,9 +113,12 @@ const ExperienceSchema = z.object({
 
 const SkillSchema = z.object({
   title: z.string(),
-  category: optionalString,
-  icon: optionalString,
   proficiency: z.number().min(1).max(10),
+});
+
+const TechCategorySchema = z.object({
+  icon: optionalString,
+  items: z.array(SkillSchema).default([]),
 });
 
 // --- Master Schema ---
@@ -124,7 +127,7 @@ export const MasterPortfolioSchema = z.object({
   profile: ProfileSchema,
   projects: z.array(ProjectSchema).default([]),
   experience: z.array(ExperienceSchema).default([]),
-  tech: z.array(SkillSchema).default([]),
+  tech: z.record(TechCategorySchema).default({}),
   achievements: z.array(AchievementSchema).default([]),
   credentials: z.array(CredentialSchema).default([]),
   languages: z.array(SkillSchema).default([]),

@@ -41,10 +41,8 @@ The JSON MUST match this structure:
   "tech_skills_enriched": [
     {
       "title": "string — the skill name",
-      "icon": "string — best matching Lucide react icon name (e.g. 'Code', 'Database')",
-      "category": "string — best fitting professional category (e.g. 'Frontend', 'Backend', 'DevOps', 'Design')"
-    }
-  ],
+      "category": "string — best fitting professional category (e.g. 'Frontend', 'Backend', 'DevOps', 'Design')",
+      "category_icon": "string — best matching Lucide react icon name for that category (e.g. 'Layout', 'Server', 'Terminal', 'Palette')"
     }
   ]
 }
@@ -55,7 +53,7 @@ CRITICAL RULES:
 3. Philosophy must reflect the engineer's actual work patterns, not generic platitudes.
 4. NO hallucinated data. If specifics aren't available, describe qualitative patterns instead.
 5. For Hobbies: parse the user's comma-separated hobbies and assign a highly relevant Lucide icon and aesthetically pleasing hex color.
-6. For Tech Skills: assign a highly relevant Lucide icon. Use generic icons (Code, Terminal, FileCode) if a specific logo icon isn't in Lucide.
+6. For Tech Skills: group them into a logical professional category, and select a fitting category-level Lucide icon (e.g. 'Layout' for Frontend, 'Server' or 'Database' for Backend, 'Terminal' for DevOps, 'Palette' for Design).
 7. Write as if presenting to a hiring manager at a top-tier tech company.`;
 }
 
