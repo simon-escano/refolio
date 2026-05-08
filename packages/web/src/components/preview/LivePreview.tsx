@@ -3,6 +3,7 @@ import {
   ExternalLink, Github, Zap, Layers, Shield,
   GraduationCap, Award, Trophy, Star,
 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import type { MasterPortfolio, Solution, Achievement, Credential } from "../../types/portfolio";
 import type { SortMode } from "../sort/SortBar";
 import { Mermaid } from "./Mermaid";
@@ -56,9 +57,13 @@ function RoleBadge({ role }: { role: string }) {
 
 function SolutionCard({ sol, index }: { sol: Solution; index: number }) {
   return (
-    <div
-      className="rounded-2xl border border-(--color-border) glass-card p-5 space-y-4 card-hover animate-fade-up"
-      style={{ animationDelay: `${index * 70}ms` }}
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.4, delay: index * 0.05, ease: "easeOut" }}
+      className="rounded-2xl border border-(--color-border) glass-card p-5 space-y-4 card-hover"
     >
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
@@ -157,15 +162,19 @@ function SolutionCard({ sol, index }: { sol: Solution; index: number }) {
           ))}
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
 
 function AchievementCard({ ach, index }: { ach: Achievement; index: number }) {
   return (
-    <div
-      className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 card-hover animate-fade-up"
-      style={{ animationDelay: `${index * 70}ms` }}
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.4, delay: index * 0.05, ease: "easeOut" }}
+      className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 card-hover"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-3 min-w-0 flex-1">
@@ -184,15 +193,19 @@ function AchievementCard({ ach, index }: { ach: Achievement; index: number }) {
         </div>
         <ScoreBadge score={ach.relevance_score} />
       </div>
-    </div>
+    </motion.div>
   );
 }
 
 function CredentialCard({ cred, index }: { cred: Credential; index: number }) {
   return (
-    <div
-      className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 card-hover animate-fade-up"
-      style={{ animationDelay: `${index * 70}ms` }}
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.4, delay: index * 0.05, ease: "easeOut" }}
+      className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 card-hover"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-3 min-w-0 flex-1">
@@ -215,7 +228,7 @@ function CredentialCard({ cred, index }: { cred: Credential; index: number }) {
         </div>
         <ScoreBadge score={cred.relevance_score} />
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -285,38 +298,44 @@ export const LivePreview = memo(function LivePreview({ portfolio, sortMode }: Pr
 
       {/* Solutions */}
       {sortedSolutions.length > 0 && (
-        <div className="space-y-3">
+        <motion.div layout className="space-y-3">
           <h3 className="text-[10px] font-bold uppercase tracking-[0.15em] text-(--color-text-muted) px-1">
             Solutions
           </h3>
-          {sortedSolutions.map((sol, i) => (
-            <SolutionCard key={sol.id} sol={sol} index={i} />
-          ))}
-        </div>
+          <AnimatePresence mode="popLayout">
+            {sortedSolutions.map((sol, i) => (
+              <SolutionCard key={sol.id} sol={sol} index={i} />
+            ))}
+          </AnimatePresence>
+        </motion.div>
       )}
 
       {/* Achievements */}
       {sortedAchievements.length > 0 && (
-        <div className="space-y-3">
+        <motion.div layout className="space-y-3">
           <h3 className="text-[10px] font-bold uppercase tracking-[0.15em] text-(--color-text-muted) px-1">
             Achievements
           </h3>
-          {sortedAchievements.map((ach, i) => (
-            <AchievementCard key={ach.id} ach={ach} index={i} />
-          ))}
-        </div>
+          <AnimatePresence mode="popLayout">
+            {sortedAchievements.map((ach, i) => (
+              <AchievementCard key={ach.id} ach={ach} index={i} />
+            ))}
+          </AnimatePresence>
+        </motion.div>
       )}
 
       {/* Credentials */}
       {sortedCredentials.length > 0 && (
-        <div className="space-y-3">
+        <motion.div layout className="space-y-3">
           <h3 className="text-[10px] font-bold uppercase tracking-[0.15em] text-(--color-text-muted) px-1">
             Credentials
           </h3>
-          {sortedCredentials.map((cred, i) => (
-            <CredentialCard key={cred.id} cred={cred} index={i} />
-          ))}
-        </div>
+          <AnimatePresence mode="popLayout">
+            {sortedCredentials.map((cred, i) => (
+              <CredentialCard key={cred.id} cred={cred} index={i} />
+            ))}
+          </AnimatePresence>
+        </motion.div>
       )}
     </div>
   );
