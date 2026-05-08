@@ -10,6 +10,7 @@ import { SortBar, type SortMode } from "./components/sort/SortBar";
 import { LivePreview } from "./components/preview/LivePreview";
 import { MonacoEditor } from "./components/editor/MonacoEditor";
 import { usePortfolioSync } from "./lib/sync";
+import { usePersistedState } from "./lib/hooks";
 import { streamGenerate } from "./lib/api";
 import {
   Sparkles, Rocket, Target, Brain,
@@ -19,14 +20,14 @@ import type { ProgressEvent } from "./types/portfolio";
 
 export default function App() {
   // ─── Form State ───
-  const [profile, setProfile] = useState({
+  const [profile, setProfile] = usePersistedState("monofolio_profile", {
     name: "", role: "", email: "", github: "", linkedin: "", website: "",
   });
-  const [projects, setProjects] = useState<ProjectEntry[]>([
+  const [projects, setProjects] = usePersistedState<ProjectEntry[]>("monofolio_projects", [
     { url: "", title: "", contributions: "", context: "", gallery: [], links: [] },
   ]);
-  const [achievements, setAchievements] = useState<AchievementEntry[]>([]);
-  const [credentials, setCredentials] = useState<CredentialEntry[]>([]);
+  const [achievements, setAchievements] = usePersistedState<AchievementEntry[]>("monofolio_achievements", []);
+  const [credentials, setCredentials] = usePersistedState<CredentialEntry[]>("monofolio_credentials", []);
 
   // ─── Pipeline State ───
   const [progress, setProgress] = useState<ProgressEvent[]>([]);

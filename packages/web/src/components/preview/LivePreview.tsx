@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import type { MasterPortfolio, Solution, Achievement, Credential } from "../../types/portfolio";
 import type { SortMode } from "../sort/SortBar";
+import { Mermaid } from "./Mermaid";
 
 interface Props {
   portfolio: MasterPortfolio;
@@ -129,6 +130,13 @@ function SolutionCard({ sol, index }: { sol: Solution; index: number }) {
       )}
 
       {/* Links */}
+      {sol.architecture_diagram_code && (
+        <div className="pt-2">
+          <Mermaid chart={sol.architecture_diagram_code} />
+        </div>
+      )}
+
+      {/* External Links */}
       {sol.links.length > 0 && (
         <div className="flex flex-wrap gap-2 pt-1">
           {sol.links.map((link, i) => (
