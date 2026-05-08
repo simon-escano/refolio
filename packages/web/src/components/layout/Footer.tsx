@@ -5,17 +5,6 @@ export function Footer() {
         <div className="font-mono text-xs font-bold tracking-[0.1em] uppercase text-[var(--color-on-surface-variant)]">
           © 2024 Refolio Studio. Built for Architects of the Digital Age.
         </div>
-        <nav className="flex gap-6">
-          {["Terms", "Privacy", "License", "Documentation"].map((link) => (
-            <a
-              key={link}
-              href="#"
-              className="font-mono text-sm tracking-[0.05em] uppercase text-[var(--color-on-surface-variant)] hover:text-[var(--color-primary)] transition-colors duration-300"
-            >
-              {link}
-            </a>
-          ))}
-        </nav>
       </div>
     </footer>
   );

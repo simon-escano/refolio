@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { Eye, Code2, Download, Share2 } from "lucide-react";
+import { Eye, Code2 } from "lucide-react";
 
 type TabKey = "preview" | "json";
 
@@ -35,14 +35,6 @@ export const OutputTabs = memo(function OutputTabs({ active, onChange }: Props) 
             </button>
           );
         })}
-      </div>
-      <div className="flex gap-1">
-        <button className="text-[var(--color-on-surface-variant)] hover:text-[var(--color-primary)] p-2 rounded-lg transition-colors">
-          <Download className="h-[18px] w-[18px]" />
-        </button>
-        <button className="text-[var(--color-on-surface-variant)] hover:text-[var(--color-primary)] p-2 rounded-lg transition-colors">
-          <Share2 className="h-[18px] w-[18px]" />
-        </button>
       </div>
     </div>
   );

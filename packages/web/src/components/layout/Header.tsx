@@ -7,13 +7,6 @@ const themeOptions = [
   { value: "dark" as const, icon: Moon },
 ];
 
-const navLinks = [
-  { label: "Drafts", href: "#", active: false },
-  { label: "Templates", href: "#", active: false },
-  { label: "Analytics", href: "#", active: false },
-  { label: "Settings", href: "#", active: true },
-];
-
 export function Header() {
   const { theme, setTheme } = useTheme();
 
@@ -30,23 +23,6 @@ export function Header() {
             BETA
           </span>
         </div>
-
-        {/* Navigation */}
-        <nav className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className={`font-mono text-xs font-bold tracking-[0.1em] uppercase transition-opacity duration-300 hover:opacity-80 active:scale-95 ${
-                link.active
-                  ? "text-[var(--color-primary)] border-b-2 border-[var(--color-primary)] pb-1"
-                  : "text-[var(--color-on-surface-variant)] hover:text-[var(--color-primary)]"
-              }`}
-            >
-              {link.label}
-            </a>
-          ))}
-        </nav>
 
         {/* Right Controls */}
         <div className="flex items-center gap-3">
@@ -68,12 +44,6 @@ export function Header() {
               </button>
             );
           })}
-          {/* Avatar Placeholder */}
-          <div className="w-9 h-9 rounded-full border-2 border-[var(--color-surface-variant)] bg-[var(--color-surface-container)] flex items-center justify-center ml-1">
-            <span className="text-xs font-bold text-[var(--color-on-surface-variant)]">
-              ✦
-            </span>
-          </div>
         </div>
       </div>
     </header>
