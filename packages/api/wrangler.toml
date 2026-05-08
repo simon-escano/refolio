@@ -1,0 +1,17 @@
+name = "monofolio-api"
+main = "src/index.ts"
+compatibility_date = "2025-04-01"
+compatibility_flags = ["nodejs_compat"]
+
+[observability]
+enabled = true
+
+[vars]
+GITLORE_API_URL = "https://api.gitlore.workers.dev"
+
+# Secrets (set via `wrangler secret put GEMINI_API_KEY`):
+# GEMINI_API_KEY
+
+# [[kv_namespaces]]
+# binding = "PORTFOLIO_CACHE"
+# id = "<create via `wrangler kv namespace create PORTFOLIO_CACHE`>"

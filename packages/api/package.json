@@ -1,0 +1,22 @@
+{
+  "name": "@monofolio/api",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Monofolio — Hybrid Portfolio Orchestrator API (Cloudflare Workers + Gemini)",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc --noEmit",
+    "health": "curl -sf http://localhost:8787/ && echo ' ✓ OK' || echo ' ✗ Down'"
+  },
+  "dependencies": {
+    "hono": "^4",
+    "zod": "^3",
+    "zod-to-json-schema": "^3"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4",
+    "typescript": "^5",
+    "wrangler": "^4"
+  }
+}

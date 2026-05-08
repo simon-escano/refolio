@@ -1,0 +1,13 @@
+{
+  "name": "monofolio",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --parallel -r run dev",
+    "dev:api": "pnpm --filter @monofolio/api run dev",
+    "dev:web": "pnpm --filter @monofolio/web run dev",
+    "deploy": "pnpm -r run deploy",
+    "deploy:api": "pnpm --filter @monofolio/api run deploy",
+    "deploy:web": "pnpm --filter @monofolio/web run deploy",
+    "typecheck": "pnpm -r run typecheck"
+  }
+}
