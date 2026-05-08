@@ -114,27 +114,75 @@ export default function App() {
         <div className="w-full">
           <section id="workspace" className="mx-auto max-w-[1440px] px-5 md:px-16 py-8">
             {!hasOutput ? (
-              /* ─── BENTO INPUT LAYOUT (Drafting Table — no output yet) ─── */
-              <div className="space-y-8">
-                {/* Row 1: Identity + Gitlore Queue */}
-                <div className="grid gap-8 lg:grid-cols-[1fr_2fr]">
+              /* ─── VERTICAL STEP-BY-STEP WORKSPACE LAYOUT ─── */
+              <div className="max-w-3xl mx-auto flex flex-col gap-12">
+                {/* Step 1: Profile & Identity */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <span className="bg-[var(--color-primary)] text-white font-mono text-xs font-bold px-3 py-1 rounded-sm shadow-sm tracking-wider">
+                      STEP 01 / PROFILE
+                    </span>
+                    <div className="h-px bg-[var(--color-outline-variant)]/60 flex-1" />
+                  </div>
                   <IdentityZone value={profile} onChange={setProfile} disabled={isGenerating} />
+                </div>
+
+                {/* Step 2: Key Architectures (Projects) */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <span className="bg-[var(--color-primary)] text-white font-mono text-xs font-bold px-3 py-1 rounded-sm shadow-sm tracking-wider">
+                      STEP 02 / PROJECTS
+                    </span>
+                    <div className="h-px bg-[var(--color-outline-variant)]/60 flex-1" />
+                  </div>
                   <GitloreQueue projects={projects} onChange={setProjects} disabled={isGenerating} />
                 </div>
 
-                {/* Row 2: Experience + Skills */}
-                <div className="grid gap-8 md:grid-cols-[1.4fr_1fr]">
+                {/* Step 3: Professional History */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <span className="bg-[var(--color-primary)] text-white font-mono text-xs font-bold px-3 py-1 rounded-sm shadow-sm tracking-wider">
+                      STEP 03 / EXPERIENCE
+                    </span>
+                    <div className="h-px bg-[var(--color-outline-variant)]/60 flex-1" />
+                  </div>
                   <ExperienceZone experience={experience} onChange={setExperience} disabled={isGenerating} />
+                </div>
+
+                {/* Step 4: Technical & Languages */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <span className="bg-[var(--color-primary)] text-white font-mono text-xs font-bold px-3 py-1 rounded-sm shadow-sm tracking-wider">
+                      STEP 04 / SKILLS
+                    </span>
+                    <div className="h-px bg-[var(--color-outline-variant)]/60 flex-1" />
+                  </div>
                   <SkillsZone tech={tech} languages={languages} onTechChange={setTech} onLanguagesChange={setLanguages} disabled={isGenerating} />
                 </div>
 
-                {/* Row 3: Achievements + Credentials */}
-                <div className="grid gap-8 md:grid-cols-2">
+                {/* Step 5: Achievements */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <span className="bg-[var(--color-primary)] text-white font-mono text-xs font-bold px-3 py-1 rounded-sm shadow-sm tracking-wider">
+                      STEP 05 / ACHIEVEMENTS
+                    </span>
+                    <div className="h-px bg-[var(--color-outline-variant)]/60 flex-1" />
+                  </div>
                   <AchievementsZone
                     achievements={achievements}
                     onChange={setAchievements}
                     disabled={isGenerating}
                   />
+                </div>
+
+                {/* Step 6: Credentials */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <span className="bg-[var(--color-primary)] text-white font-mono text-xs font-bold px-3 py-1 rounded-sm shadow-sm tracking-wider">
+                      STEP 06 / CREDENTIALS
+                    </span>
+                    <div className="h-px bg-[var(--color-outline-variant)]/60 flex-1" />
+                  </div>
                   <CredentialsZone
                     credentials={credentials}
                     onChange={setCredentials}
@@ -143,11 +191,13 @@ export default function App() {
                 </div>
 
                 {/* Generate CTA */}
-                <GenerateButton
-                  canGenerate={canGenerate}
-                  isGenerating={isGenerating}
-                  onGenerate={handleGenerate}
-                />
+                <div className="pt-4 border-t border-[var(--color-outline-variant)]/40">
+                  <GenerateButton
+                    canGenerate={canGenerate}
+                    isGenerating={isGenerating}
+                    onGenerate={handleGenerate}
+                  />
+                </div>
 
                 {/* Docked progress */}
                 {!isGenerating && progress.length > 0 && (
