@@ -122,9 +122,9 @@ export default function App() {
                   <div className="bg-[var(--color-primary)]/10 text-[var(--color-primary)] border border-[var(--color-primary)]/30 font-mono text-[10px] font-semibold px-3 py-1 rounded-full tracking-[0.2em] uppercase shadow-sm">
                     ENGINE: BUILD r1
                   </div>
-                  
+
                   <div className="space-y-4">
-                    <h1 className="text-4xl md:text-6xl font-semibold tracking-tight text-[var(--color-on-background)] max-w-3xl leading-[1.08]">
+                    <h1 className="text-4xl md:text-6xl font-medium tracking-tight text-[var(--color-on-background)] max-w-3xl leading-[1.08]">
                       Translate Raw Repositories Into <span className="text-[var(--color-primary)]">Living Blueprints</span>
                     </h1>
                     <p className="text-base md:text-lg text-[var(--color-on-surface-variant)] max-w-2xl mx-auto leading-relaxed">
@@ -154,82 +154,82 @@ export default function App() {
                     <IdentityZone value={profile} onChange={setProfile} disabled={isGenerating} />
                   </div>
 
-                {/* Step 2: Key Architectures (Projects) */}
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <span className="bg-[var(--color-primary)] text-white font-mono text-xs font-semibold px-3 py-1 rounded-sm shadow-sm tracking-wider">
-                      STEP 02 / PROJECTS
-                    </span>
-                    <div className="h-px bg-[var(--color-outline-variant)]/60 flex-1" />
+                  {/* Step 2: Key Architectures (Projects) */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3">
+                      <span className="bg-[var(--color-primary)] text-white font-mono text-xs font-semibold px-3 py-1 rounded-sm shadow-sm tracking-wider">
+                        STEP 02 / PROJECTS
+                      </span>
+                      <div className="h-px bg-[var(--color-outline-variant)]/60 flex-1" />
+                    </div>
+                    <GitloreQueue projects={projects} onChange={setProjects} disabled={isGenerating} />
                   </div>
-                  <GitloreQueue projects={projects} onChange={setProjects} disabled={isGenerating} />
-                </div>
 
-                {/* Step 3: Professional History */}
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <span className="bg-[var(--color-primary)] text-white font-mono text-xs font-semibold px-3 py-1 rounded-sm shadow-sm tracking-wider">
-                      STEP 03 / EXPERIENCE
-                    </span>
-                    <div className="h-px bg-[var(--color-outline-variant)]/60 flex-1" />
+                  {/* Step 3: Professional History */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3">
+                      <span className="bg-[var(--color-primary)] text-white font-mono text-xs font-semibold px-3 py-1 rounded-sm shadow-sm tracking-wider">
+                        STEP 03 / EXPERIENCE
+                      </span>
+                      <div className="h-px bg-[var(--color-outline-variant)]/60 flex-1" />
+                    </div>
+                    <ExperienceZone experience={experience} onChange={setExperience} disabled={isGenerating} />
                   </div>
-                  <ExperienceZone experience={experience} onChange={setExperience} disabled={isGenerating} />
-                </div>
 
-                {/* Step 4: Technical & Languages */}
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <span className="bg-[var(--color-primary)] text-white font-mono text-xs font-semibold px-3 py-1 rounded-sm shadow-sm tracking-wider">
-                      STEP 04 / SKILLS
-                    </span>
-                    <div className="h-px bg-[var(--color-outline-variant)]/60 flex-1" />
+                  {/* Step 4: Technical & Languages */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3">
+                      <span className="bg-[var(--color-primary)] text-white font-mono text-xs font-semibold px-3 py-1 rounded-sm shadow-sm tracking-wider">
+                        STEP 04 / SKILLS
+                      </span>
+                      <div className="h-px bg-[var(--color-outline-variant)]/60 flex-1" />
+                    </div>
+                    <SkillsZone tech={tech} languages={languages} onTechChange={setTech} onLanguagesChange={setLanguages} disabled={isGenerating} />
                   </div>
-                  <SkillsZone tech={tech} languages={languages} onTechChange={setTech} onLanguagesChange={setLanguages} disabled={isGenerating} />
-                </div>
 
-                {/* Step 5: Achievements */}
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <span className="bg-[var(--color-primary)] text-white font-mono text-xs font-semibold px-3 py-1 rounded-sm shadow-sm tracking-wider">
-                      STEP 05 / ACHIEVEMENTS
-                    </span>
-                    <div className="h-px bg-[var(--color-outline-variant)]/60 flex-1" />
+                  {/* Step 5: Achievements */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3">
+                      <span className="bg-[var(--color-primary)] text-white font-mono text-xs font-semibold px-3 py-1 rounded-sm shadow-sm tracking-wider">
+                        STEP 05 / ACHIEVEMENTS
+                      </span>
+                      <div className="h-px bg-[var(--color-outline-variant)]/60 flex-1" />
+                    </div>
+                    <AchievementsZone
+                      achievements={achievements}
+                      onChange={setAchievements}
+                      disabled={isGenerating}
+                    />
                   </div>
-                  <AchievementsZone
-                    achievements={achievements}
-                    onChange={setAchievements}
-                    disabled={isGenerating}
-                  />
-                </div>
 
-                {/* Step 6: Credentials */}
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <span className="bg-[var(--color-primary)] text-white font-mono text-xs font-semibold px-3 py-1 rounded-sm shadow-sm tracking-wider">
-                      STEP 06 / CREDENTIALS
-                    </span>
-                    <div className="h-px bg-[var(--color-outline-variant)]/60 flex-1" />
+                  {/* Step 6: Credentials */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3">
+                      <span className="bg-[var(--color-primary)] text-white font-mono text-xs font-semibold px-3 py-1 rounded-sm shadow-sm tracking-wider">
+                        STEP 06 / CREDENTIALS
+                      </span>
+                      <div className="h-px bg-[var(--color-outline-variant)]/60 flex-1" />
+                    </div>
+                    <CredentialsZone
+                      credentials={credentials}
+                      onChange={setCredentials}
+                      disabled={isGenerating}
+                    />
                   </div>
-                  <CredentialsZone
-                    credentials={credentials}
-                    onChange={setCredentials}
-                    disabled={isGenerating}
-                  />
-                </div>
 
-                {/* Generate CTA */}
-                <div className="pt-4 border-t border-[var(--color-outline-variant)]/40">
-                  <GenerateButton
-                    canGenerate={canGenerate}
-                    isGenerating={isGenerating}
-                    onGenerate={handleGenerate}
-                  />
-                </div>
+                  {/* Generate CTA */}
+                  <div className="pt-4 border-t border-[var(--color-outline-variant)]/40">
+                    <GenerateButton
+                      canGenerate={canGenerate}
+                      isGenerating={isGenerating}
+                      onGenerate={handleGenerate}
+                    />
+                  </div>
 
-                {/* Docked progress */}
-                {!isGenerating && progress.length > 0 && (
-                  <ProgressFeed events={progress} isActive={false} />
-                )}
+                  {/* Docked progress */}
+                  {!isGenerating && progress.length > 0 && (
+                    <ProgressFeed events={progress} isActive={false} />
+                  )}
                 </div>
               </div>
             ) : (
@@ -395,11 +395,10 @@ function GenerateButton({
       type="button"
       onClick={onGenerate}
       disabled={!canGenerate || isGenerating}
-      className={`group relative w-full overflow-hidden rounded-xl px-6 py-4 text-sm font-semibold text-white transition-all active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed level-2 ${
-        isGenerating
+      className={`group relative w-full overflow-hidden rounded-xl px-6 py-4 text-sm font-semibold text-white transition-all active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed level-2 ${isGenerating
           ? "bg-[var(--color-on-surface-variant)] cursor-wait"
           : "bg-[var(--color-primary)] hover:bg-[var(--color-primary-container)] hover:text-[var(--color-on-primary-container)]"
-      }`}
+        }`}
     >
       <span className="relative flex items-center justify-center gap-2.5">
         <Rocket className={`h-4 w-4 ${isGenerating ? "animate-pulse" : "group-hover:animate-bounce"}`} />

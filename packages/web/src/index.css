@@ -464,3 +464,23 @@
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--color-outline-variant); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-outline); }
+
+/* ─── Blowout Playing Cards Stack ─── */
+.blowout-card {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              z-index 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, z-index, box-shadow;
+}
+
+.blowout-card:hover {
+  box-shadow:
+    0 24px 48px rgba(21, 66, 18, 0.25),
+    0 8px 16px rgba(0, 0, 0, 0.12) !important;
+}
+.dark .blowout-card:hover {
+  box-shadow:
+    0 24px 48px rgba(0, 0, 0, 0.6),
+    0 8px 16px rgba(0, 0, 0, 0.3) !important;
+}
+
