@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Briefcase, Plus, Trash2, ChevronUp } from "lucide-react";
+import { Briefcase, Plus, X, ChevronUp } from "lucide-react";
 
 export interface ExperienceEntry {
   company: string;
@@ -54,7 +54,7 @@ export function ExperienceZone({ experience, onChange, disabled }: Props) {
         </div>
         
         <div className="flex items-center gap-3 shrink-0">
-          <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-950/30 px-1.5 text-[10px] font-bold text-blue-600 dark:text-blue-400 tabular-nums">
+          <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-rose-50 dark:bg-rose-950/30 px-1.5 text-[10px] font-bold text-rose-600 dark:text-rose-400 tabular-nums">
             {experience.length}
           </span>
           <div className={`text-(--color-text-muted) transition-transform duration-300 ${expanded ? "" : "-rotate-180"}`}>
@@ -74,21 +74,23 @@ export function ExperienceZone({ experience, onChange, disabled }: Props) {
           {experience.map((exp, i) => (
             <div 
               key={i} 
-              className={`group/proj rounded-xl border border-(--color-border) bg-(--color-bg) p-4 space-y-3 animate-scale-in transition-all hover:border-(--color-border-focus)`}
+              className={`group/proj relative rounded-xl border border-(--color-border) bg-(--color-bg) p-4 space-y-3 animate-scale-in transition-all hover:border-(--color-border-focus)`}
               style={{ animationDelay: `${i * 60}ms` }}
             >
+              {/* Offset Delete Button */}
+              <button
+                type="button"
+                onClick={() => removeEntry(i)}
+                disabled={disabled}
+                className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white shadow-sm hover:bg-red-600 transition-all opacity-0 group-hover/proj:opacity-100 disabled:opacity-0 active:scale-90"
+              >
+                <X className="h-3 w-3" />
+              </button>
+
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-bold uppercase tracking-widest text-(--color-text-muted)">
                   Role {String(i + 1).padStart(2, "0")}
                 </span>
-                <button
-                  type="button"
-                  onClick={() => removeEntry(i)}
-                  disabled={disabled}
-                  className="flex h-6 w-6 items-center justify-center rounded-lg text-(--color-text-muted) hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-950/20 dark:hover:text-red-400 transition-all opacity-0 group-hover/proj:opacity-100"
-                >
-                  <Trash2 className="h-3.5 w-3.5" />
-                </button>
               </div>
 
               <input

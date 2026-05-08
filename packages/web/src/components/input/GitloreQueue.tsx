@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { GitBranch, Plus, Trash2, ChevronUp, Link2 } from "lucide-react";
+import { GitBranch, Plus, X, ChevronUp, Link2 } from "lucide-react";
 
 export interface ProjectEntry {
   url: string;
@@ -77,24 +77,26 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
             {projects.map((project, i) => (
               <div
                 key={i}
-                className={`group/proj rounded-xl border border-(--color-border) bg-(--color-bg) p-4 space-y-3 animate-scale-in transition-all hover:border-(--color-border-focus)`}
+                className={`group/proj relative rounded-xl border border-(--color-border) bg-(--color-bg) p-4 space-y-3 animate-scale-in transition-all hover:border-(--color-border-focus)`}
                 style={{ animationDelay: `${i * 60}ms` }}
               >
-                {/* Project header with number + delete */}
+                {/* Offset Delete Button */}
+                {projects.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeProject(i)}
+                    disabled={disabled}
+                    className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white shadow-sm hover:bg-red-600 transition-all opacity-0 group-hover/proj:opacity-100 disabled:opacity-0 active:scale-90"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                )}
+
+                {/* Project header with number */}
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-bold uppercase tracking-widest text-(--color-text-muted)">
                     Project {String(i + 1).padStart(2, "0")}
                   </span>
-                  {projects.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removeProject(i)}
-                      disabled={disabled}
-                      className="flex h-6 w-6 items-center justify-center rounded-lg text-(--color-text-muted) hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-950/20 dark:hover:text-red-400 transition-all opacity-0 group-hover/proj:opacity-100"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </button>
-                  )}
                 </div>
 
                 {/* GitHub URL */}

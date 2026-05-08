@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Code, Globe, Plus, Trash2, ChevronUp } from "lucide-react";
+import { Code, Globe, Plus, X, ChevronUp } from "lucide-react";
 
 export interface SkillEntry {
   title: string;
@@ -30,14 +30,14 @@ function ProficiencyBars({
   disabled?: boolean;
 }) {
   return (
-    <div className="flex gap-1 mt-1 cursor-pointer w-24" onMouseLeave={() => {}}>
+    <div className="flex gap-1 mt-1.5 cursor-pointer w-full" onMouseLeave={() => {}}>
       {Array.from({ length: 10 }).map((_, i) => (
         <button
           key={i}
           type="button"
           disabled={disabled}
           onClick={() => onChange(i + 1)}
-          className={`h-1.5 flex-1 rounded-full transition-colors ${
+          className={`h-1.5 flex-1 rounded-sm transition-colors ${
             i < value ? "bg-(--color-accent)" : "bg-(--color-border) hover:bg-(--color-border-focus)"
           }`}
         />
@@ -107,28 +107,28 @@ export function SkillsZone({ tech, languages, onTechChange, onLanguagesChange, d
             {tech.map((t, i) => (
               <div 
                 key={i} 
-                className="group/proj flex items-center gap-4 rounded-xl border border-(--color-border) bg-(--color-bg) p-4 shadow-xs transition-colors hover:border-(--color-border-focus) animate-scale-in"
+                className="group/proj relative flex flex-col gap-2 rounded-xl border border-(--color-border) bg-(--color-bg) p-4 shadow-xs transition-colors hover:border-(--color-border-focus) animate-scale-in"
                 style={{ animationDelay: `${i * 40}ms` }}
               >
+                {/* Offset Delete Button */}
                 <button
                   type="button"
                   onClick={() => removeTech(i)}
                   disabled={disabled}
-                  className="rounded-md p-1.5 text-(--color-text-muted) hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/30 dark:hover:text-red-400 opacity-0 group-hover/proj:opacity-100 transition-all disabled:opacity-0"
+                  className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white shadow-sm hover:bg-red-600 transition-all opacity-0 group-hover/proj:opacity-100 disabled:opacity-0 active:scale-90"
                 >
-                  <Trash2 className="h-3.5 w-3.5" />
+                  <X className="h-3 w-3" />
                 </button>
-                <div className="flex-1 min-w-0">
+
+                {/* Left Area (Spans full available space) */}
+                <div className="w-full space-y-2">
                   <input
                     value={t.title}
                     onChange={(e) => updateTech(i, "title", e.target.value)}
                     disabled={disabled}
                     placeholder="Skill (e.g. React)"
-                    className="w-full bg-transparent text-sm font-medium text-(--color-text) placeholder:text-(--color-text-muted) outline-none"
+                    className="w-full bg-transparent text-sm font-semibold text-(--color-text) placeholder:text-(--color-text-muted) outline-none"
                   />
-                </div>
-                <div className="flex flex-col items-center gap-1">
-                  <label className="text-[9px] font-bold uppercase text-(--color-text-muted)">{t.proficiency}/10</label>
                   <ProficiencyBars value={t.proficiency} onChange={(v) => updateTech(i, "proficiency", v)} disabled={disabled} />
                 </div>
               </div>
@@ -183,28 +183,28 @@ export function SkillsZone({ tech, languages, onTechChange, onLanguagesChange, d
             {languages.map((l, i) => (
               <div 
                 key={i} 
-                className="group/proj flex items-center gap-4 rounded-xl border border-(--color-border) bg-(--color-bg) p-4 shadow-xs transition-colors hover:border-(--color-border-focus) animate-scale-in"
+                className="group/proj relative flex flex-col gap-2 rounded-xl border border-(--color-border) bg-(--color-bg) p-4 shadow-xs transition-colors hover:border-(--color-border-focus) animate-scale-in"
                 style={{ animationDelay: `${i * 40}ms` }}
               >
+                {/* Offset Delete Button */}
                 <button
                   type="button"
                   onClick={() => removeLang(i)}
                   disabled={disabled}
-                  className="rounded-md p-1.5 text-(--color-text-muted) hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/30 dark:hover:text-red-400 opacity-0 group-hover/proj:opacity-100 transition-all disabled:opacity-0"
+                  className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white shadow-sm hover:bg-red-600 transition-all opacity-0 group-hover/proj:opacity-100 disabled:opacity-0 active:scale-90"
                 >
-                  <Trash2 className="h-3.5 w-3.5" />
+                  <X className="h-3 w-3" />
                 </button>
-                <div className="flex-1 min-w-0">
+
+                {/* Left Area (Spans full available space) */}
+                <div className="w-full space-y-2">
                   <input
                     value={l.title}
                     onChange={(e) => updateLang(i, "title", e.target.value)}
                     disabled={disabled}
                     placeholder="Language (e.g. Japanese)"
-                    className="w-full bg-transparent text-sm font-medium text-(--color-text) placeholder:text-(--color-text-muted) outline-none"
+                    className="w-full bg-transparent text-sm font-semibold text-(--color-text) placeholder:text-(--color-text-muted) outline-none"
                   />
-                </div>
-                <div className="flex flex-col items-center gap-1">
-                  <label className="text-[9px] font-bold uppercase text-(--color-text-muted)">{l.proficiency}/10</label>
                   <ProficiencyBars value={l.proficiency} onChange={(v) => updateLang(i, "proficiency", v)} disabled={disabled} />
                 </div>
               </div>

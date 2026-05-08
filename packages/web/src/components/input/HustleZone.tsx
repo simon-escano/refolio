@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Trophy, Plus, Trash2, ChevronUp, GraduationCap, Award } from "lucide-react";
+import { Trophy, Plus, X, ChevronUp, GraduationCap, Award } from "lucide-react";
 
 export interface AchievementEntry {
   accomplishment: string;
@@ -67,21 +67,23 @@ export function HustleZone({
               {achievements.map((a, i) => (
                 <div
                   key={i}
-                  className="group/ach rounded-xl border border-(--color-border) bg-(--color-bg) p-3.5 space-y-2.5 animate-scale-in hover:border-(--color-border-focus) transition-all"
+                  className="group/ach relative rounded-xl border border-(--color-border) bg-(--color-bg) p-3.5 space-y-2.5 animate-scale-in hover:border-(--color-border-focus) transition-all"
                   style={{ animationDelay: `${i * 60}ms` }}
                 >
+                  {/* Offset Delete Button */}
+                  <button
+                    type="button"
+                    onClick={() => onAchievementsChange(achievements.filter((_, j) => j !== i))}
+                    disabled={disabled}
+                    className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white shadow-sm hover:bg-red-600 transition-all opacity-0 group-hover/ach:opacity-100 disabled:opacity-0 active:scale-90"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-bold uppercase tracking-widest text-(--color-text-muted)">
                       Achievement {String(i + 1).padStart(2, "0")}
                     </span>
-                    <button
-                      type="button"
-                      onClick={() => onAchievementsChange(achievements.filter((_, j) => j !== i))}
-                      disabled={disabled}
-                      className="flex h-6 w-6 items-center justify-center rounded-lg text-(--color-text-muted) hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-950/20 dark:hover:text-red-400 transition-all opacity-0 group-hover/ach:opacity-100"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </button>
                   </div>
                   <textarea
                     value={a.accomplishment}
@@ -153,9 +155,19 @@ export function HustleZone({
               {credentials.map((c, i) => (
                 <div
                   key={i}
-                  className="group/cred rounded-xl border border-(--color-border) bg-(--color-bg) p-3.5 space-y-2.5 animate-scale-in hover:border-(--color-border-focus) transition-all"
+                  className="group/cred relative rounded-xl border border-(--color-border) bg-(--color-bg) p-3.5 space-y-2.5 animate-scale-in hover:border-(--color-border-focus) transition-all"
                   style={{ animationDelay: `${i * 60}ms` }}
                 >
+                  {/* Offset Delete Button */}
+                  <button
+                    type="button"
+                    onClick={() => onCredentialsChange(credentials.filter((_, j) => j !== i))}
+                    disabled={disabled}
+                    className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white shadow-sm hover:bg-red-600 transition-all opacity-0 group-hover/cred:opacity-100 disabled:opacity-0 active:scale-90"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       {c.type === "education" ? (
@@ -167,14 +179,6 @@ export function HustleZone({
                         {c.type}
                       </span>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => onCredentialsChange(credentials.filter((_, j) => j !== i))}
-                      disabled={disabled}
-                      className="flex h-6 w-6 items-center justify-center rounded-lg text-(--color-text-muted) hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-950/20 dark:hover:text-red-400 transition-all opacity-0 group-hover/cred:opacity-100"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </button>
                   </div>
 
                   {/* Type toggle */}

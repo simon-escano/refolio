@@ -115,11 +115,13 @@ export function stitchPortfolio(
       const enhancement = narrative.items.find((item) => item.id === eid);
       
       // Merge enhanced bullet points if provided
-      let finalContributions = e.contributions;
+      let finalContributions: string[] = [];
       if (enhancement?.enhanced_contributions) {
         // If Gemini returns a string instead of an array (per the prompt instruction), split by newlines
         const enhancedStr = enhancement.enhanced_contributions;
         finalContributions = enhancedStr.split("\n").map(s => s.replace(/^- /, "").trim()).filter(Boolean);
+      } else if (e.contributions) {
+        finalContributions = e.contributions.split("\n").map(s => s.trim()).filter(Boolean);
       }
 
       return {
