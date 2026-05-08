@@ -72,11 +72,16 @@ ${request.profile.linkedin ? `LinkedIn: ${request.profile.linkedin}` : ""}`;
 
   const projectSummaries = gitloreOutputs
     .map(({ id, output }) => {
+      const stackItems = [
+        ...(output.tech_stack?.Primary || []),
+        ...(output.tech_stack?.Supporting || []),
+        ...(output.tech_stack?.Infrastructure || []),
+      ];
       return `### Project [${id}]: ${output.title}
 One-liner: ${output.one_liner}
 Problem: ${output.problem}
 Goal: ${output.goal}
-Stack: ${output.tech_stack.map((s) => s.name).join(", ")}
+Stack: ${stackItems.map((s) => s.name).join(", ")}
 Raw contributions: ${output.contributions}`;
     })
     .join("\n\n");

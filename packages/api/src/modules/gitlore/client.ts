@@ -13,7 +13,11 @@ export interface GitloreOutput {
   gallery: string[];
   key_features: Array<{ icon: string; text: string }>;
   architecture_diagram_code: string;
-  tech_stack: Array<{ name: string; role: string }>;
+  tech_stack: {
+    Primary: Array<{ name: string }>;
+    Supporting: Array<{ name: string }>;
+    Infrastructure: Array<{ name: string }>;
+  };
   stack_reason: string;
   results: {
     performance: { icon: string; text: string };
@@ -73,10 +77,15 @@ export async function fetchGitloreOutput(
 
   const body = (await res.json()) as { data: GitloreOutput };
 
+  const totalStackLength =
+    (body.data.tech_stack?.Primary?.length ?? 0) +
+    (body.data.tech_stack?.Supporting?.length ?? 0) +
+    (body.data.tech_stack?.Infrastructure?.length ?? 0);
+
   onProgress({
     phase: "gitlore",
     message: `Gitlore analysis complete for ${request.title}`,
-    detail: `${body.data.tech_stack?.length ?? 0} stack items, diagram: ${body.data.architecture_diagram_code ? "✓" : "✗"}`,
+    detail: `${totalStackLength} stack items, diagram: ${body.data.architecture_diagram_code ? "✓" : "✗"}`,
   });
 
   return body.data;

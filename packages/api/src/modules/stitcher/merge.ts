@@ -48,7 +48,11 @@ export function stitchPortfolio(
         goal: output.goal,
         key_features: output.key_features,
         architecture_diagram_code: output.architecture_diagram_code,
-        tech_stack: output.tech_stack,
+        tech_stack: [
+          ...(output.tech_stack?.Primary || []).map((t) => ({ name: t.name, role: "Primary" })),
+          ...(output.tech_stack?.Supporting || []).map((t) => ({ name: t.name, role: "Supporting" })),
+          ...(output.tech_stack?.Infrastructure || []).map((t) => ({ name: t.name, role: "Infrastructure" })),
+        ],
         stack_reason: output.stack_reason,
         results: output.results,
         links: output.links,
