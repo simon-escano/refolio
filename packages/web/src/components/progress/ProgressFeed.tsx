@@ -80,7 +80,7 @@ export function ProgressFeed({ events, isActive, onCancel }: Props) {
   const currentPhase = events[events.length - 1]?.phase || "cache";
 
   return (
-    <div className="rounded-2xl border border-(--color-border) bg-(--color-surface) overflow-hidden shadow-lg animate-scale-in">
+    <div className="rounded-2xl border border-(--color-border) glass-card overflow-hidden shadow-xl animate-scale-in">
       {/* Header */}
       <div className="flex items-center gap-2.5 border-b border-(--color-border) px-5 py-4">
         {isActive && <Loader2 className="h-4 w-4 animate-spin text-(--color-accent) shrink-0" />}

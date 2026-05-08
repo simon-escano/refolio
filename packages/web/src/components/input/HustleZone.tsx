@@ -37,13 +37,13 @@ export function HustleZone({
   return (
     <div className="space-y-3">
       {/* Achievements Section */}
-      <div className="rounded-2xl border border-(--color-border) bg-(--color-surface) overflow-hidden card-hover animate-fade-up stagger-2">
+      <div className="rounded-2xl border border-(--color-border) glass-card overflow-hidden card-hover animate-fade-up stagger-2">
         <button
           type="button"
           onClick={() => setAchievementsExpanded(!achievementsExpanded)}
           className="flex w-full items-center gap-3 px-5 py-4 text-left transition-colors hover:bg-(--color-bg-secondary)/50"
         >
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-sm">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-rose-500 to-pink-500 text-white shadow-sm shadow-rose-500/20">
             <Trophy className="h-4 w-4" />
           </div>
           <div className="flex-1 min-w-0">
@@ -52,7 +52,7 @@ export function HustleZone({
               Milestones, awards & notable accomplishments
             </p>
           </div>
-          <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-50 dark:bg-amber-950/30 px-1.5 text-[10px] font-bold text-amber-600 dark:text-amber-400 tabular-nums">
+          <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-rose-50 dark:bg-rose-950/30 px-1.5 text-[10px] font-bold text-rose-600 dark:text-rose-400 tabular-nums">
             {achievements.length}
           </span>
           <div className={`text-(--color-text-muted) transition-transform duration-300 ${achievementsExpanded ? "" : "-rotate-180"}`}>
@@ -138,7 +138,7 @@ export function HustleZone({
                 type="button"
                 onClick={() => onAchievementsChange([...achievements, { title: "", description: "", date: "", evidence_url: "" }])}
                 disabled={disabled}
-                className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-(--color-border) bg-(--color-bg)/50 py-2.5 text-xs font-medium text-(--color-text-muted) transition-all hover:border-amber-400 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-amber-50/30 dark:hover:bg-amber-950/10 disabled:opacity-50 active:scale-[0.98]"
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-(--color-border) bg-(--color-bg)/50 py-2.5 text-xs font-medium text-(--color-text-muted) transition-all hover:border-rose-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50/30 dark:hover:bg-rose-950/10 disabled:opacity-50 active:scale-[0.98]"
               >
                 <Plus className="h-3.5 w-3.5" />
                 Add Achievement
@@ -149,13 +149,13 @@ export function HustleZone({
       </div>
 
       {/* Credentials Section */}
-      <div className="rounded-2xl border border-(--color-border) bg-(--color-surface) overflow-hidden card-hover animate-fade-up stagger-3">
+      <div className="rounded-2xl border border-(--color-border) glass-card overflow-hidden card-hover animate-fade-up stagger-3">
         <button
           type="button"
           onClick={() => setCredentialsExpanded(!credentialsExpanded)}
           className="flex w-full items-center gap-3 px-5 py-4 text-left transition-colors hover:bg-(--color-bg-secondary)/50"
         >
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 text-white shadow-sm">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-violet-500 text-white shadow-sm shadow-purple-500/20">
             <GraduationCap className="h-4 w-4" />
           </div>
           <div className="flex-1 min-w-0">

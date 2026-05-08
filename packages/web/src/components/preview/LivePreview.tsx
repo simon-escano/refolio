@@ -56,7 +56,7 @@ function RoleBadge({ role }: { role: string }) {
 function SolutionCard({ sol, index }: { sol: Solution; index: number }) {
   return (
     <div
-      className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-5 space-y-4 card-hover animate-fade-up"
+      className="rounded-2xl border border-(--color-border) glass-card p-5 space-y-4 card-hover animate-fade-up"
       style={{ animationDelay: `${index * 70}ms` }}
     >
       {/* Header */}
@@ -64,7 +64,7 @@ function SolutionCard({ sol, index }: { sol: Solution; index: number }) {
         <div className="space-y-1 min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <h4 className="text-sm font-semibold text-(--color-text) truncate">{sol.title}</h4>
-            <span className="shrink-0 rounded-full bg-(--color-accent-subtle) px-2 py-0.5 text-[9px] font-medium text-(--color-accent)">
+            <span className="shrink-0 rounded-full bg-teal-50 dark:bg-teal-950/40 px-2 py-0.5 text-[9px] font-medium text-teal-600 dark:text-teal-400">
               gitlore
             </span>
           </div>
@@ -241,9 +241,9 @@ export const LivePreview = memo(function LivePreview({ portfolio, sortMode }: Pr
   return (
     <div className="space-y-6">
       {/* Profile Header */}
-      <div className="rounded-2xl border border-(--color-border) bg-(--color-surface) p-6 space-y-3 animate-fade-up">
+      <div className="rounded-2xl border border-(--color-border) glass-card p-6 space-y-3 animate-fade-up">
         <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 via-indigo-500 to-emerald-500 text-white text-lg font-bold shadow-lg">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-500 via-rose-500 to-purple-500 text-white text-lg font-bold shadow-lg shadow-teal-500/15">
             {portfolio.profile.name.charAt(0).toUpperCase()}
           </div>
           <div className="space-y-0.5">

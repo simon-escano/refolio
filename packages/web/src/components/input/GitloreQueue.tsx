@@ -45,7 +45,7 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
   };
 
   return (
-    <div className="rounded-2xl border border-(--color-border) bg-(--color-surface) overflow-hidden card-hover animate-fade-up stagger-1">
+    <div className="rounded-2xl border border-(--color-border) glass-card overflow-hidden card-hover animate-fade-up stagger-1">
       {/* Zone Header */}
       <button
         type="button"
@@ -62,7 +62,7 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
           </p>
         </div>
         {/* Count badge */}
-        <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-(--color-accent-subtle) px-1.5 text-[10px] font-bold text-(--color-accent) tabular-nums">
+        <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-teal-50 dark:bg-teal-950/40 px-1.5 text-[10px] font-bold text-teal-600 dark:text-teal-400 tabular-nums">
           {projects.length}
         </span>
         <div className={`text-(--color-text-muted) transition-transform duration-300 ${expanded ? "" : "-rotate-180"}`}>

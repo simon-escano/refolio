@@ -11,18 +11,16 @@ import { LivePreview } from "./components/preview/LivePreview";
 import { MonacoEditor } from "./components/editor/MonacoEditor";
 import { usePortfolioSync } from "./lib/sync";
 import { streamGenerate } from "./lib/api";
-import { Sparkles, Rocket, ArrowDown, Zap, Target, Brain } from "lucide-react";
+import {
+  Sparkles, Rocket, Zap, Target, Brain,
+  ArrowRight, GitBranch, Eye,
+} from "lucide-react";
 import type { ProgressEvent } from "./types/portfolio";
 
 export default function App() {
   // ─── Form State ───
   const [profile, setProfile] = useState({
-    name: "",
-    role: "",
-    email: "",
-    github: "",
-    linkedin: "",
-    website: "",
+    name: "", role: "", email: "", github: "", linkedin: "", website: "",
   });
   const [projects, setProjects] = useState<ProjectEntry[]>([
     { url: "", title: "", contributions: "", context: "", gallery: [], links: [] },
@@ -53,13 +51,10 @@ export default function App() {
     setIsGenerating(true);
     setActiveTab("preview");
 
-    document.getElementById("pipeline")?.scrollIntoView({ behavior: "smooth" });
-
     const controller = streamGenerate(
       {
         profile: {
-          name: profile.name,
-          role: profile.role,
+          name: profile.name, role: profile.role,
           email: profile.email || undefined,
           github: profile.github || undefined,
           linkedin: profile.linkedin || undefined,
@@ -83,152 +78,152 @@ export default function App() {
         },
       }
     );
-
     abortRef.current = controller;
   };
 
   const handleCancel = () => {
-    if (abortRef.current) {
-      abortRef.current.abort();
-      abortRef.current = null;
-    }
+    abortRef.current?.abort();
+    abortRef.current = null;
     setIsGenerating(false);
-    setProgress((prev) => [
-      ...prev,
-      { phase: "validation", message: "Generation cancelled by user" },
-    ]);
+    setProgress((prev) => [...prev, { phase: "validation", message: "Cancelled by user" }]);
   };
 
   const hasOutput = (sync.portfolio || error) && !isGenerating;
 
   return (
-    <div className="flex min-h-screen flex-col bg-grid-pattern bg-(--color-bg)">
+    <div className="flex min-h-screen flex-col bg-(--color-bg) relative">
+      {/* Background grid (separate layer for opacity control) */}
+      <div className="fixed inset-0 bg-grid-pattern pointer-events-none" />
+
       <Header />
 
-      <main className="flex-1 relative">
-        {/* Ambient Hero Glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 -z-10 h-[600px] w-full max-w-7xl rounded-full bg-indigo-500/[0.03] dark:bg-indigo-500/[0.015] blur-[120px] pointer-events-none" />
+      <main className="flex-1 relative z-10">
+        {/* ═══ HERO ═══ */}
+        <section className="relative overflow-hidden pt-14 pb-10 sm:pt-18 sm:pb-14">
+          {/* Ambient glow orbs — teal + rose */}
+          <div className="absolute top-0 left-1/4 -z-10 h-[400px] w-[400px] rounded-full bg-teal-400/[0.04] dark:bg-teal-400/[0.02] blur-[100px] pointer-events-none" />
+          <div className="absolute top-10 right-1/4 -z-10 h-[350px] w-[350px] rounded-full bg-rose-400/[0.04] dark:bg-rose-400/[0.02] blur-[100px] pointer-events-none" />
 
-        {/* Hero Section */}
-        <section className="relative overflow-hidden pt-16 pb-12 sm:pt-20 sm:pb-16">
-          <div className="mx-auto max-w-5xl px-6 text-center space-y-6">
-            <div className="inline-flex items-center gap-2 rounded-full border border-zinc-200 dark:border-zinc-800 bg-white/60 dark:bg-zinc-950/40 px-3.5 py-1.5 text-xs text-zinc-500 backdrop-blur-md animate-fade-up">
-              <Sparkles className="h-3.5 w-3.5 text-indigo-500 animate-pulse" />
-              <span className="font-medium uppercase tracking-wider text-[10px]">
-                Master Portfolio Orchestrator
+          <div className="mx-auto max-w-5xl px-6 text-center space-y-5">
+            <div className="inline-flex items-center gap-2 rounded-full border border-(--color-border) bg-(--color-surface)/60 backdrop-blur-md px-3.5 py-1.5 animate-fade-up">
+              <Sparkles className="h-3.5 w-3.5 text-(--color-accent) animate-pulse" />
+              <span className="font-semibold uppercase tracking-[0.15em] text-[9px] text-(--color-text-muted)">
+                Portfolio Orchestrator
               </span>
             </div>
 
-            <h1 className="max-w-3xl mx-auto text-5xl sm:text-6xl font-light tracking-tight text-(--color-text) leading-[1.1] animate-fade-up stagger-1">
+            <h1 className="max-w-3xl mx-auto text-4xl sm:text-5xl lg:text-6xl font-light tracking-tight text-(--color-text) leading-[1.1] animate-fade-up stagger-1">
               Synthesize your career into{" "}
               <br className="hidden sm:inline" />
-              <span className="font-normal text-transparent bg-clip-text bg-gradient-to-r from-violet-600 via-indigo-500 to-emerald-500 dark:from-violet-400 dark:via-indigo-400 dark:to-emerald-400">
+              <span className="font-medium text-transparent bg-clip-text bg-gradient-to-r from-teal-500 via-rose-500 to-purple-500 dark:from-teal-400 dark:via-rose-400 dark:to-purple-400">
                 hire-ready intelligence
               </span>
             </h1>
 
-            <p className="max-w-xl mx-auto text-base sm:text-lg text-(--color-text-secondary) font-light leading-relaxed animate-fade-up stagger-2">
-              Transform code repositories, achievements, and credentials into a
-              ranked, structured portfolio.
+            <p className="max-w-lg mx-auto text-sm sm:text-base text-(--color-text-secondary) font-light leading-relaxed animate-fade-up stagger-2">
+              Code analysis meets narrative synthesis.
+              Repositories → structured, ranked portfolios.
             </p>
 
-            {/* Feature Pills */}
-            <div className="flex flex-wrap items-center justify-center gap-2 pt-2 animate-fade-up stagger-3">
+            {/* Feature Chips */}
+            <div className="flex flex-wrap items-center justify-center gap-2.5 pt-1 animate-fade-up stagger-3">
               {[
-                { icon: Zap, label: "Gitlore Analysis", color: "text-blue-500" },
-                { icon: Brain, label: "Gemini Narrative", color: "text-violet-500" },
-                { icon: Target, label: "Hirer Ranking", color: "text-emerald-500" },
+                { icon: GitBranch, label: "Gitlore", desc: "Code Analysis", color: "text-teal-500" },
+                { icon: Brain, label: "Gemini", desc: "Narrative AI", color: "text-rose-500" },
+                { icon: Target, label: "Ranking", desc: "Hirer Signal", color: "text-purple-500" },
               ].map((f) => (
                 <div
                   key={f.label}
-                  className="inline-flex items-center gap-1.5 rounded-full bg-zinc-100/80 dark:bg-zinc-800/40 border border-zinc-200/50 dark:border-zinc-700/30 px-3 py-1 text-[11px] font-medium text-(--color-text-secondary)"
+                  className="group flex items-center gap-2 rounded-2xl glass-card px-3.5 py-2 cursor-default transition-all hover:shadow-md"
                 >
-                  <f.icon className={`h-3 w-3 ${f.color}`} />
-                  {f.label}
+                  <f.icon className={`h-4 w-4 ${f.color} group-hover:scale-110 transition-transform`} />
+                  <div className="text-left">
+                    <span className="block text-[11px] font-semibold text-(--color-text) leading-none">{f.label}</span>
+                    <span className="block text-[9px] text-(--color-text-muted) leading-none mt-0.5">{f.desc}</span>
+                  </div>
                 </div>
               ))}
-            </div>
-
-            <div className="pt-4 animate-fade-up stagger-4">
-              <a
-                href="#workspace"
-                className="inline-flex items-center gap-2 rounded-full bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:hover:bg-zinc-200 px-6 py-3 text-sm font-medium text-white dark:text-zinc-900 shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
-              >
-                Start Building
-                <ArrowDown className="h-4 w-4 text-zinc-400 dark:text-zinc-500" />
-              </a>
             </div>
           </div>
         </section>
 
-        {/* Workspace */}
-        <div className="w-full border-t border-(--color-border)/60">
-          <section id="workspace" className="mx-auto max-w-7xl px-6 py-10">
-            <div className={`grid gap-6 transition-all duration-500 ${hasOutput ? "lg:grid-cols-[420px_1fr]" : "max-w-lg mx-auto"}`}>
-              {/* Left Pane — Input Command Center */}
-              <div className="space-y-3">
-                <IdentityZone value={profile} onChange={setProfile} disabled={isGenerating} />
-                <GitloreQueue projects={projects} onChange={setProjects} disabled={isGenerating} />
-                <HustleZone
-                  achievements={achievements}
-                  credentials={credentials}
-                  onAchievementsChange={setAchievements}
-                  onCredentialsChange={setCredentials}
-                  disabled={isGenerating}
+        {/* ═══ WORKSPACE ═══ */}
+        <div className="w-full">
+          <section id="workspace" className="mx-auto max-w-7xl px-4 sm:px-6 pb-12">
+            {!hasOutput ? (
+              /* ─── BENTO INPUT LAYOUT (no output yet) ─── */
+              <div className="space-y-4">
+                {/* Row 1: Identity + Gitlore Queue */}
+                <div className="grid gap-4 md:grid-cols-[1fr_1.4fr]">
+                  <IdentityZone value={profile} onChange={setProfile} disabled={isGenerating} />
+                  <GitloreQueue projects={projects} onChange={setProjects} disabled={isGenerating} />
+                </div>
+
+                {/* Row 2: Achievements + Credentials side by side */}
+                <div className="grid gap-4 md:grid-cols-2">
+                  <HustleZone
+                    achievements={achievements}
+                    credentials={credentials}
+                    onAchievementsChange={setAchievements}
+                    onCredentialsChange={setCredentials}
+                    disabled={isGenerating}
+                  />
+                </div>
+
+                {/* Row 3: Generate CTA */}
+                <GenerateButton
+                  canGenerate={canGenerate}
+                  isGenerating={isGenerating}
+                  onGenerate={handleGenerate}
                 />
 
-                {/* Generate Button */}
-                <button
-                  type="button"
-                  onClick={handleGenerate}
-                  disabled={!canGenerate || isGenerating}
-                  className={`group relative w-full overflow-hidden rounded-2xl px-6 py-4 text-sm font-semibold text-white shadow-md transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed ${
-                    isGenerating
-                      ? "bg-zinc-700 cursor-wait"
-                      : "bg-gradient-to-r from-violet-600 via-indigo-600 to-emerald-600 hover:shadow-lg hover:shadow-indigo-500/20"
-                  }`}
-                >
-                  {!isGenerating && (
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
-                  )}
-                  <span className="relative flex items-center justify-center gap-2">
-                    <Rocket className={`h-4 w-4 ${isGenerating ? "animate-pulse" : "group-hover:animate-float"}`} />
-                    {isGenerating ? "Generating Portfolio..." : "Generate Portfolio"}
-                  </span>
-                </button>
-
-                {/* Docked progress log */}
+                {/* Docked progress */}
                 {!isGenerating && progress.length > 0 && (
                   <ProgressFeed events={progress} isActive={false} />
                 )}
               </div>
+            ) : (
+              /* ─── SPLIT LAYOUT (output visible) ─── */
+              <div className="grid gap-5 lg:grid-cols-[380px_1fr] xl:grid-cols-[420px_1fr]">
+                {/* Left sidebar — compact input stack */}
+                <div className="space-y-3 lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto lg:pr-2 lg:sticky lg:top-20">
+                  <IdentityZone value={profile} onChange={setProfile} disabled={isGenerating} />
+                  <GitloreQueue projects={projects} onChange={setProjects} disabled={isGenerating} />
+                  <HustleZone
+                    achievements={achievements}
+                    credentials={credentials}
+                    onAchievementsChange={setAchievements}
+                    onCredentialsChange={setCredentials}
+                    disabled={isGenerating}
+                  />
+                  <GenerateButton
+                    canGenerate={canGenerate}
+                    isGenerating={isGenerating}
+                    onGenerate={handleGenerate}
+                  />
+                  {!isGenerating && progress.length > 0 && (
+                    <ProgressFeed events={progress} isActive={false} />
+                  )}
+                </div>
 
-              {/* Right Pane — Interactive Output */}
-              {hasOutput && (
+                {/* Right pane — output */}
                 <div className="space-y-4 animate-slide-in-right min-w-0">
-                  {/* Error Display */}
                   {error && (
-                    <div className="rounded-2xl border border-red-200 dark:border-red-900/20 bg-red-50/30 dark:bg-red-950/10 p-5 space-y-2 animate-fade-in">
-                      <p className="text-sm font-semibold text-red-600 dark:text-red-400">
-                        Pipeline Error
-                      </p>
-                      <p className="text-xs text-red-500/90 dark:text-red-400/80 font-mono leading-relaxed">
-                        {error}
-                      </p>
+                    <div className="rounded-2xl border border-red-200 dark:border-red-900/30 bg-(--color-error-subtle) p-5 space-y-2 animate-scale-in">
+                      <p className="text-sm font-semibold text-(--color-error)">Pipeline Error</p>
+                      <p className="text-xs text-(--color-error)/80 font-mono leading-relaxed">{error}</p>
                     </div>
                   )}
 
-                  {/* Output Controls */}
                   {sync.portfolio && (
                     <>
-                      <div className="flex items-center justify-between gap-4">
+                      <div className="flex items-center justify-between gap-4 sticky top-16 z-30 bg-(--color-bg)/80 backdrop-blur-md py-2 -mx-1 px-1 rounded-2xl">
                         <OutputTabs active={activeTab} onChange={setActiveTab} />
                         {activeTab === "preview" && (
                           <SortBar active={sortMode} onChange={setSortMode} />
                         )}
                       </div>
 
-                      {/* Tab Content */}
                       {activeTab === "preview" ? (
                         <LivePreview portfolio={sync.portfolio} sortMode={sortMode} />
                       ) : (
@@ -241,14 +236,14 @@ export default function App() {
                     </>
                   )}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </section>
         </div>
 
-        {/* Active Generation Modal */}
+        {/* Pipeline Modal */}
         {isGenerating && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/60 backdrop-blur-sm animate-fade-in">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
             <div className="w-full max-w-lg animate-scale-in">
               <ProgressFeed events={progress} isActive={true} onCancel={handleCancel} />
             </div>
@@ -258,5 +253,39 @@ export default function App() {
 
       <Footer />
     </div>
+  );
+}
+
+/* ─── Generate CTA Button ─── */
+function GenerateButton({
+  canGenerate,
+  isGenerating,
+  onGenerate,
+}: {
+  canGenerate: boolean;
+  isGenerating: boolean;
+  onGenerate: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onGenerate}
+      disabled={!canGenerate || isGenerating}
+      className={`group relative w-full overflow-hidden rounded-2xl px-6 py-4 text-sm font-semibold text-white shadow-lg transition-all active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed ${
+        isGenerating
+          ? "bg-zinc-700 cursor-wait"
+          : "bg-gradient-to-r from-teal-500 via-rose-500 to-purple-500 hover:shadow-xl hover:shadow-teal-500/15 dark:hover:shadow-teal-400/10"
+      }`}
+    >
+      {/* Shimmer sweep */}
+      {!isGenerating && (
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out" />
+      )}
+      <span className="relative flex items-center justify-center gap-2.5">
+        <Rocket className={`h-4 w-4 ${isGenerating ? "animate-pulse" : "group-hover:animate-float"}`} />
+        {isGenerating ? "Generating..." : "Generate Portfolio"}
+        {!isGenerating && <ArrowRight className="h-4 w-4 opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />}
+      </span>
+    </button>
   );
 }
