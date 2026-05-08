@@ -8,7 +8,6 @@ import { SkillsZone, type SkillEntry, type LanguageEntry } from "./components/in
 import { AchievementsZone, CredentialsZone, type AchievementEntry, type CredentialEntry } from "./components/input/HustleZone";
 import { ProgressFeed } from "./components/progress/ProgressFeed";
 import { OutputTabs } from "./components/output/OutputTabs";
-import { SortBar, type SortMode } from "./components/sort/SortBar";
 import { LivePreview } from "./components/preview/LivePreview";
 import { MonacoEditor } from "./components/editor/MonacoEditor";
 import { ErrorBoundary } from "./components/layout/ErrorBoundary";
@@ -44,8 +43,6 @@ export default function App() {
   // ─── Output State ───
   const sync = usePortfolioSync();
   const [activeTab, setActiveTab] = useState<"preview" | "json">("preview");
-  const [sortMode, setSortMode] = useState<SortMode>("rank");
-
   const canGenerate =
     profile.name.trim() !== "" &&
     profile.role.trim() !== "" &&
@@ -146,8 +143,7 @@ export default function App() {
             <div className="flex flex-wrap items-center justify-center gap-2.5 pt-1 animate-fade-up stagger-3">
               {[
                 { icon: GitBranch, label: "Gitlore", desc: "Code Analysis", color: "text-teal-500" },
-                { icon: Brain, label: "Gemini", desc: "Narrative AI", color: "text-rose-500" },
-                { icon: Target, label: "Ranking", desc: "Hirer Signal", color: "text-purple-500" },
+                { icon: Brain, label: "AI Processed", desc: "Hallucination Free", color: "text-rose-500" },
               ].map((f) => (
                 <div
                   key={f.label}
@@ -250,14 +246,11 @@ export default function App() {
                     <>
                       <div className="flex items-center justify-between gap-4 sticky top-16 z-30 bg-(--color-bg)/80 backdrop-blur-md py-2 -mx-1 px-1 rounded-2xl">
                         <OutputTabs active={activeTab} onChange={setActiveTab} />
-                        {activeTab === "preview" && (
-                          <SortBar active={sortMode} onChange={setSortMode} />
-                        )}
                       </div>
 
                       {activeTab === "preview" ? (
                         <ErrorBoundary>
-                          <LivePreview portfolio={sync.portfolio} sortMode={sortMode} />
+                          <LivePreview portfolio={sync.portfolio} />
                         </ErrorBoundary>
                       ) : (
                         <ErrorBoundary>

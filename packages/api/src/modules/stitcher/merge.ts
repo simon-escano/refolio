@@ -10,14 +10,12 @@ import type { ProgressCallback } from "../../lib/progress";
  *
  * This is the core of the Hybrid Thrift Strategy:
  * - Gitlore fields (diagrams, stacks, features) are passed through verbatim
- * - Gemini fields (philosophy, scores, polished descriptions) are merged in
+ * - Gemini fields (philosophy, polished descriptions) are merged in
  */
 export function stitchPortfolio(
   request: GenerateRequest,
   gitloreOutputs: Array<{ id: string; output: GitloreOutput }>,
   narrative: NarrativeOutput,
-  orderedIds: string[],
-  scoreMap: Map<string, number>,
   onProgress: ProgressCallback
 ): MasterPortfolio {
   onProgress({ phase: "stitching", message: "Assembling MasterPortfolio..." });
@@ -37,8 +35,8 @@ export function stitchPortfolio(
     hobbies: narrative.hobbies_enriched ?? [],
   };
 
-  // --- Solutions (Gitlore deterministic + Gemini enhancements) ---
-  const solutions: MasterPortfolio["solutions"] = gitloreOutputs.map(
+  // --- Projects (Gitlore deterministic + Gemini enhancements) ---
+  const projects: MasterPortfolio["projects"] = gitloreOutputs.map(
     ({ id, output }) => {
       const enhancement = narrative.items.find((i) => i.id === id);
       return {
@@ -56,7 +54,6 @@ export function stitchPortfolio(
         links: output.links,
         gallery: output.gallery,
         source: "gitlore" as const,
-        relevance_score: scoreMap.get(id) ?? 50,
       };
     }
   );
@@ -73,7 +70,6 @@ export function stitchPortfolio(
         date: enhancement?.generated_date,
         verifiable: !!a.evidence_url,
         evidence_url: a.evidence_url,
-        relevance_score: scoreMap.get(aid) ?? 50,
       };
     }
   );
@@ -92,7 +88,6 @@ export function stitchPortfolio(
           institution: c.institution || "",
           date: c.startDate && c.endDate ? `${c.startDate} - ${c.endDate}` : c.startDate || c.endDate,
           description: enhancement?.enhanced_description,
-          relevance_score: scoreMap.get(cid) ?? 50,
         };
       } else {
         return {
@@ -102,7 +97,6 @@ export function stitchPortfolio(
           institution: enhancement?.generated_institution || "",
           date: enhancement?.generated_date,
           description: enhancement?.enhanced_description || c.certification,
-          relevance_score: scoreMap.get(cid) ?? 50,
         };
       }
     }
@@ -131,44 +125,35 @@ export function stitchPortfolio(
         location: e.location,
         date_range: e.startDate && e.endDate ? `${e.startDate} - ${e.endDate}` : e.startDate || e.endDate,
         contributions: finalContributions,
-        relevance_score: scoreMap.get(eid) ?? 50,
       };
     }
   );
 
   // --- Skills (merge user proficiencies with AI assigned icons) ---
-  const skills: MasterPortfolio["skills"] = {
-    tech: request.skills.tech.map(t => {
-      const enrichment = narrative.tech_skills_enriched?.find(e => e.title.toLowerCase() === t.title.toLowerCase());
-      return {
-        ...t,
-        category: enrichment?.category || "Other",
-        icon: enrichment?.icon || "Code", // fallback
-      };
-    }),
-    languages: request.skills.languages,
-  };
-
-  // --- Rankings ---
-  const rankings: MasterPortfolio["rankings"] = {
-    generated_at: new Date().toISOString(),
-    strategy: "hirer_relevance",
-    ordered_ids: orderedIds,
-  };
+  const tech: MasterPortfolio["tech"] = request.skills.tech.map(t => {
+    const enrichment = narrative.tech_skills_enriched?.find(e => e.title.toLowerCase() === t.title.toLowerCase());
+    return {
+      ...t,
+      category: enrichment?.category || "Other",
+      icon: enrichment?.icon || "Code", // fallback
+    };
+  });
+  
+  const languages: MasterPortfolio["languages"] = request.skills.languages;
 
   const portfolio: MasterPortfolio = {
     profile,
-    rankings,
+    projects,
     experience,
+    tech,
     achievements,
-    solutions,
     credentials,
-    skills,
+    languages,
   };
 
   onProgress({
     phase: "stitching",
-    message: `Portfolio assembled: ${solutions.length} solutions, ${experience.length} experiences, ${achievements.length} achievements`,
+    message: `Portfolio assembled: ${projects.length} projects, ${experience.length} experiences, ${achievements.length} achievements`,
   });
 
   return portfolio;

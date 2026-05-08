@@ -3,7 +3,6 @@ import { streamSSE } from "hono/streaming";
 import { GenerateRequestSchema } from "../schemas/request";
 import { fetchGitloreOutput } from "../modules/gitlore/client";
 import { generateNarrative } from "../modules/narrative/gemini";
-import { processRankings } from "../modules/ranking/scorer";
 import { stitchPortfolio } from "../modules/stitcher/merge";
 import { validatePortfolio } from "../modules/validation/schema";
 import { MonofolioError, Errors } from "../lib/errors";
@@ -90,17 +89,11 @@ async function runPipeline(
     onProgress
   );
 
-  // Step 5: Process rankings
-  onProgress({ phase: "ranking", message: "Computing relevance rankings..." });
-  const { orderedIds, scoreMap } = processRankings(narrative, onProgress);
-
-  // Step 6: Stitch final portfolio
+  // Step 5: Stitch final portfolio
   const portfolio = stitchPortfolio(
     request,
     gitloreOutputs,
     narrative,
-    orderedIds,
-    scoreMap,
     onProgress
   );
 

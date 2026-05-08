@@ -24,11 +24,6 @@ export interface Profile {
   hobbies: Hobby[];
 }
 
-export interface Rankings {
-  generated_at: string;
-  strategy: "hirer_relevance";
-  ordered_ids: string[];
-}
 
 export interface Achievement {
   id: string;
@@ -37,7 +32,6 @@ export interface Achievement {
   date?: string;
   verifiable: boolean;
   evidence_url?: string;
-  relevance_score: number;
 }
 
 export interface StackItem {
@@ -67,7 +61,7 @@ export interface LinkItem {
   url: string;
 }
 
-export interface Solution {
+export interface Project {
   id: string;
   title: string;
   one_liner: string;
@@ -82,7 +76,6 @@ export interface Solution {
   links: LinkItem[];
   gallery: string[];
   source: "gitlore";
-  relevance_score: number;
 }
 
 export interface Credential {
@@ -92,7 +85,6 @@ export interface Credential {
   institution: string;
   date?: string;
   description?: string;
-  relevance_score: number;
 }
 
 export interface Experience {
@@ -102,7 +94,6 @@ export interface Experience {
   location?: string;
   date_range?: string;
   contributions: string[];
-  relevance_score: number;
 }
 
 export interface Skill {
@@ -114,15 +105,12 @@ export interface Skill {
 
 export interface MasterPortfolio {
   profile: Profile;
-  rankings: Rankings;
+  projects: Project[];
   experience: Experience[];
+  tech: Skill[];
   achievements: Achievement[];
-  solutions: Solution[];
   credentials: Credential[];
-  skills: {
-    tech: Skill[];
-    languages: Skill[];
-  };
+  languages: Skill[];
 }
 
 // ─── Progress Events ───
@@ -131,7 +119,6 @@ export type ProgressPhase =
   | "cache"
   | "gitlore"
   | "narrative"
-  | "ranking"
   | "stitching"
   | "validation";
 

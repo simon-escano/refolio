@@ -11,7 +11,6 @@ export interface NarrativeOutput {
   items: Array<{
     id: string;
     type: "solution" | "achievement" | "credential" | "experience";
-    relevance_score: number;
     enhanced_contributions?: string;
     enhanced_description?: string;
     generated_title?: string;
@@ -20,11 +19,10 @@ export interface NarrativeOutput {
   }>;
   hobbies_enriched?: Array<{ title: string; icon: string; color: string }>;
   tech_skills_enriched?: Array<{ title: string; icon: string; category: string }>;
-  ordered_ids: string[];
 }
 
 /**
- * Call Gemini 2.5 Flash to generate narrative enhancements and relevance scores.
+ * Call Gemini 2.5 Flash to generate narrative enhancements.
  * Uses the generateContent API with JSON response mode.
  */
 export async function generateNarrative(

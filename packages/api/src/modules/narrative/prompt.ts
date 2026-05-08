@@ -7,8 +7,6 @@ import type { GitloreOutput } from "../gitlore/client";
  * - profile.philosophy synthesis
  * - achievement description polishing
  * - credential contextualization
- * - relevance_score assignment (0-100) for ALL items
- * - rankings.ordered_ids generation
  * - solutions[].contributions role title synthesis
  */
 export function buildSystemPrompt(): string {
@@ -26,7 +24,6 @@ The JSON MUST match this structure:
     {
       "id": "string — the item ID provided in the input",
       "type": "solution" | "achievement" | "credential" | "experience",
-      "relevance_score": number (0-100),
       "enhanced_contributions": "string — polished role titles (for solutions) or improved bullet points (for experiences)",
       "enhanced_description": "string — polished professional description (for achievements/credentials)",
       "generated_title": "string — (ONLY FOR ACHIEVEMENTS OR CERTIFICATIONS) A concise, professional title summarizing the accomplishment or certification",
@@ -48,29 +45,22 @@ The JSON MUST match this structure:
       "category": "string — best fitting professional category (e.g. 'Frontend', 'Backend', 'DevOps', 'Design')"
     }
   ],
-  "ordered_ids": ["string — all item IDs sorted by relevance_score descending"]
+    }
+  ]
 }
 
-SCORING RUBRIC (apply these weights holistically):
-- Technical Complexity (30%): Depth of architecture, novel algorithms, system design patterns. Microservices > static sites.
-- Impact & Scale (25%): Production deployment, user count, measurable performance improvements.
-- Verifiability (20%): Live URLs, public repos, recognized certifications, published evidence.
-- Recency (15%): More recent work scores higher. Apply gentle decay on older items.
-- Narrative Strength (10%): How compelling the problem→solution story reads for a hiring manager.
-
 CRITICAL RULES:
-1. Score RELATIVE to other items — the best item should score 85-95, the weakest 20-40.
-2. For contributions: synthesize raw notes into polished role titles (e.g., "built the database" → "Database Architect").
-3. For achievements: make descriptions concise, quantified where possible, and recruiter-compelling.
-4. Philosophy must reflect the engineer's actual work patterns, not generic platitudes.
-5. NO hallucinated data. If specifics aren't available, describe qualitative patterns instead.
-6. For Hobbies: parse the user's comma-separated hobbies and assign a highly relevant Lucide icon and aesthetically pleasing hex color.
-7. For Tech Skills: assign a highly relevant Lucide icon. Use generic icons (Code, Terminal, FileCode) if a specific logo icon isn't in Lucide.
-8. Write as if presenting to a hiring manager at a top-tier tech company.`;
+1. For contributions: synthesize raw notes into polished role titles (e.g., "built the database" → "Database Architect").
+2. For achievements: make descriptions concise, quantified where possible, and recruiter-compelling.
+3. Philosophy must reflect the engineer's actual work patterns, not generic platitudes.
+4. NO hallucinated data. If specifics aren't available, describe qualitative patterns instead.
+5. For Hobbies: parse the user's comma-separated hobbies and assign a highly relevant Lucide icon and aesthetically pleasing hex color.
+6. For Tech Skills: assign a highly relevant Lucide icon. Use generic icons (Code, Terminal, FileCode) if a specific logo icon isn't in Lucide.
+7. Write as if presenting to a hiring manager at a top-tier tech company.`;
 }
 
 /**
- * Build the user prompt containing all data for Gemini to score and enhance.
+ * Build the user prompt containing all data for Gemini to enhance.
  */
 export function buildUserPrompt(
   request: GenerateRequest,
