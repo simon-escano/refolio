@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Plus, FolderOpen, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Plus, FolderOpen, Trash2, ChevronLeft, ChevronRight, Link2, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export interface ProjectEntry {
@@ -26,10 +26,10 @@ const emptyProject: ProjectEntry = {
   links: [],
 };
 
-// Deterministic scattered offsets for the "blown out" drafting tabletop aesthetic (fanned layout)
-const SCATTER_ROTATIONS = [-5, 6, -8, 4, -4, 8, -6, 5];
-const SCATTER_Y = [5, -8, 10, -6, 8, -4, 6, -10];
-const SCATTER_X = [-4, 6, -6, 8, -5, 4, -8, 5];
+// Deterministic scattered offsets for the fanned layout
+const SCATTER_ROTATIONS = [-4, 5, -6, 3, -3, 6, -5, 4];
+const SCATTER_Y = [4, -6, 8, -5, 6, -3, 5, -8];
+const SCATTER_X = [-3, 5, -5, 6, -4, 3, -6, 4];
 
 export function GitloreQueue({ projects, onChange, disabled }: Props) {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -37,7 +37,7 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
   const isCarouselMode = totalCards > 3;
 
   const addProject = () => {
-    onChange([...projects, { ...emptyProject }]);
+    onChange([...projects, { ...emptyProject, links: [] }]);
     // Focus the new project card immediately
     setActiveIndex(projects.length);
   };
@@ -46,10 +46,37 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
     onChange(projects.filter((_, i) => i !== index));
   };
 
-  const updateProject = (index: number, field: keyof ProjectEntry, value: string) => {
+  const updateProject = (index: number, field: keyof ProjectEntry, value: any) => {
     const updated = [...projects];
     updated[index] = { ...updated[index], [field]: value };
     onChange(updated);
+  };
+
+  // Nested links updates helpers
+  const updateLink = (pIdx: number, lIdx: number, field: "label" | "url", val: string) => {
+    const updatedProjects = [...projects];
+    const project = { ...updatedProjects[pIdx] };
+    const updatedLinks = [...(project.links || [])];
+    updatedLinks[lIdx] = { ...updatedLinks[lIdx], [field]: val };
+    project.links = updatedLinks;
+    updatedProjects[pIdx] = project;
+    onChange(updatedProjects);
+  };
+
+  const addLink = (pIdx: number) => {
+    const updatedProjects = [...projects];
+    const project = { ...updatedProjects[pIdx] };
+    project.links = [...(project.links || []), { label: "", url: "" }];
+    updatedProjects[pIdx] = project;
+    onChange(updatedProjects);
+  };
+
+  const removeLink = (pIdx: number, lIdx: number) => {
+    const updatedProjects = [...projects];
+    const project = { ...updatedProjects[pIdx] };
+    project.links = (project.links || []).filter((_, idx) => idx !== lIdx);
+    updatedProjects[pIdx] = project;
+    onChange(updatedProjects);
   };
 
   // Keep activeIndex within bounds when cards are removed
@@ -67,8 +94,8 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
       </div>
 
       {isCarouselMode ? (
-        /* ═══ BUNCHNIG CAROUSEL MODE (Overflowing Deck) ═══ */
-        <div className="relative w-full h-[430px] overflow-visible flex items-center justify-center py-12 px-4 sm:px-16">
+        /* ═══ BUNCHING CAROUSEL MODE (Overflowing Deck) ═══ */
+        <div className="relative w-full h-[510px] overflow-visible flex items-center justify-center py-10 px-4 sm:px-16">
           {/* Left Cycle Arrow */}
           {activeIndex > 0 && (
             <button
@@ -102,7 +129,7 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
                   rotateAngle = diff * 5 - 4;
                   translateY = diff * 3;
                   scale = 0.88 + diff * 0.03;
-                  zIndex = 30 + i; // left items stack under each other going left
+                  zIndex = 30 + i;
                   opacity = Math.max(0.25, 1 + diff * 0.25);
                 } else if (diff > 0) {
                   // Bunched on the right
@@ -110,7 +137,7 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
                   rotateAngle = diff * 5 + 4;
                   translateY = -diff * 3;
                   scale = 0.88 - diff * 0.03;
-                  zIndex = 30 - i; // right items stack under each other going right
+                  zIndex = 30 - i;
                   opacity = Math.max(0.25, 1 - diff * 0.25);
                 } else {
                   // Active card in center
@@ -135,29 +162,29 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
                       damping: 20,
                     }}
                     whileHover={isActive ? {
-                      y: -16,
-                      scale: 1.04,
+                      y: -12,
+                      scale: 1.03,
                       zIndex: 50,
                     } : undefined}
                     onClick={!isActive ? () => setActiveIndex(i) : undefined}
-                    className={`playing-card absolute w-[280px] h-[360px] rounded-xl p-5 flex flex-col gap-4 shadow-md bg-[var(--color-surface-container-lowest)]/85 backdrop-blur-md border border-[var(--color-outline-variant)]/40 transition-shadow duration-200 ${
+                    className={`playing-card absolute w-[290px] h-[440px] rounded-xl p-5 flex flex-col gap-3.5 shadow-md bg-[var(--color-surface-container-lowest)]/85 backdrop-blur-md border border-[var(--color-outline-variant)]/40 transition-shadow duration-200 ${
                       !isActive ? "cursor-pointer select-none" : ""
                     }`}
                   >
-                    {/* Card Header */}
-                    <div className="flex justify-between items-center h-6">
-                      <span className="font-mono text-sm font-medium text-[var(--color-outline-variant)]">
-                        {String(i + 1).padStart(2, "0")}
+                    {/* Card Header with inline Trash action */}
+                    <div className="flex justify-between items-center h-6 border-b border-[var(--color-outline-variant)]/30 pb-2 mb-1">
+                      <span className="font-mono text-[10px] font-semibold tracking-wider text-[var(--color-outline-variant)]">
+                        PROJECT {String(i + 1).padStart(2, "0")}
                       </span>
                       {isActive && projects.length > 1 ? (
                         <button
                           type="button"
                           onClick={() => removeProject(i)}
                           disabled={disabled}
-                          className="text-[var(--color-outline-variant)] hover:text-[var(--color-error)] transition-all duration-150 active:scale-90 disabled:opacity-50"
+                          className="text-[var(--color-outline-variant)] hover:text-[var(--color-error)] transition-all duration-150 active:scale-90 disabled:opacity-50 p-0.5 rounded"
                           title="Delete project"
                         >
-                          <Trash2 className="h-[18px] w-[18px]" />
+                          <Trash2 className="h-4.5 w-4.5" />
                         </button>
                       ) : (
                         <FolderOpen className="h-[18px] w-[18px] text-[var(--color-outline-variant)]" />
@@ -165,7 +192,7 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
                     </div>
 
                     {/* Card Body */}
-                    <div className="space-y-3 flex-1">
+                    <div className="space-y-2.5 flex-1 overflow-y-auto scrollbar-none pr-1">
                       <div className="flex flex-col gap-1">
                         <label className="field-label text-[10px]">Repository</label>
                         <input
@@ -186,7 +213,7 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
                           onChange={(e) => updateProject(i, "title", e.target.value)}
                           disabled={disabled || !isActive}
                           placeholder="Project title"
-                          className="input-drafting font-semibold"
+                          className="input-drafting font-semibold text-sm"
                         />
                       </div>
 
@@ -198,7 +225,7 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
                           disabled={disabled || !isActive}
                           placeholder="What did you contribute?"
                           rows={2}
-                          className="input-drafting input-drafting-sm resize-none leading-relaxed"
+                          className="input-drafting input-drafting-sm resize-none leading-relaxed text-xs"
                         />
                       </div>
 
@@ -213,10 +240,60 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
                           className="input-drafting input-drafting-sm resize-none text-xs"
                         />
                       </div>
+
+                      {/* Dynamic links sub-editor as flexible wrapping badges */}
+                      <div className="flex flex-col gap-1 pt-1">
+                        <label className="field-label text-[10px] flex items-center gap-1">
+                          <Link2 className="h-3 w-3 text-[var(--color-primary)]" /> Custom URLs
+                        </label>
+                        <div className="flex flex-wrap gap-1.5 items-center min-h-[30px] pt-1">
+                          {(project.links || []).map((lnk, lIdx) => (
+                            <div
+                              key={lIdx}
+                              className="flex items-center gap-1 px-1.5 py-1 rounded border border-[var(--color-outline-variant)]/40 bg-[var(--color-surface-container-low)] shadow-sm text-[10px] font-mono"
+                            >
+                              <input
+                                type="text"
+                                value={lnk.label}
+                                onChange={(e) => updateLink(i, lIdx, "label", e.target.value)}
+                                disabled={disabled || !isActive}
+                                placeholder="Live"
+                                className="bg-transparent border-none p-0 outline-none w-[35px] text-[10px] font-mono focus:ring-0 placeholder:text-[var(--color-outline-variant)] text-[var(--color-on-surface)]"
+                              />
+                              <span className="text-[var(--color-outline-variant)]">:</span>
+                              <input
+                                type="text"
+                                value={lnk.url}
+                                onChange={(e) => updateLink(i, lIdx, "url", e.target.value)}
+                                disabled={disabled || !isActive}
+                                placeholder="https://..."
+                                className="bg-transparent border-none p-0 outline-none w-[80px] text-[10px] font-mono focus:ring-0 placeholder:text-[var(--color-outline-variant)] text-[var(--color-on-surface)]"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => removeLink(i, lIdx)}
+                                disabled={disabled || !isActive}
+                                className="text-[var(--color-outline-variant)] hover:text-[var(--color-error)] transition-colors active:scale-90 ml-0.5"
+                              >
+                                <X className="h-3 w-3" />
+                              </button>
+                            </div>
+                          ))}
+                          <button
+                            type="button"
+                            onClick={() => addLink(i)}
+                            disabled={disabled || !isActive}
+                            className="flex items-center gap-1 px-1.5 py-1 rounded border border-dashed border-[var(--color-outline-variant)]/60 text-[10px] font-mono hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition-all cursor-pointer active:scale-95"
+                          >
+                            <Plus className="h-3 w-3" />
+                            <span>Link</span>
+                          </button>
+                        </div>
+                      </div>
                     </div>
 
                     {/* Card Footer */}
-                    <div className="font-mono text-[10px] text-[var(--color-outline-variant)] tracking-[0.15em] text-center uppercase border-t border-[var(--color-outline-variant)]/50 pt-2">
+                    <div className="font-mono text-[9px] text-[var(--color-outline-variant)] tracking-[0.15em] text-center uppercase border-t border-[var(--color-outline-variant)]/50 pt-2 shrink-0">
                       Repo Connection
                     </div>
                   </motion.div>
@@ -236,7 +313,6 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
                 let opacity = 1;
 
                 if (diff < 0) {
-                  // Bunched on the left (unlikely to have negative diff for last element unless activeIndex > length, but handled for completeness)
                   translateX = diff * 18 - 145;
                   rotateAngle = diff * 5 - 4;
                   translateY = diff * 3;
@@ -244,7 +320,6 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
                   zIndex = 30 + projects.length;
                   opacity = Math.max(0.25, 1 + diff * 0.25);
                 } else if (diff > 0) {
-                  // Bunched on the right
                   translateX = diff * 18 + 145;
                   rotateAngle = diff * 5 + 4;
                   translateY = -diff * 3;
@@ -252,7 +327,6 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
                   zIndex = 30 - projects.length;
                   opacity = Math.max(0.25, 1 - diff * 0.25);
                 } else {
-                  // Active card in center
                   zIndex = 45;
                 }
 
@@ -274,12 +348,12 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
                       damping: 20,
                     }}
                     whileHover={isActive ? {
-                      y: -16,
-                      scale: 1.04,
+                      y: -12,
+                      scale: 1.03,
                       zIndex: 50,
                     } : undefined}
                     onClick={disabled ? undefined : (!isActive ? () => setActiveIndex(projects.length) : addProject)}
-                    className={`playing-card absolute w-[280px] h-[360px] rounded-xl p-5 flex flex-col justify-center items-center gap-4 border-2 border-dashed border-[var(--color-outline-variant)]/60 bg-[var(--color-surface-container-lowest)]/20 backdrop-blur-md hover:bg-[var(--color-surface-container-lowest)]/40 transition-colors shadow-lg cursor-pointer group`}
+                    className={`playing-card absolute w-[290px] h-[440px] rounded-xl p-5 flex flex-col justify-center items-center gap-4 border-2 border-dashed border-[var(--color-outline-variant)]/60 bg-[var(--color-surface-container-lowest)]/20 backdrop-blur-md hover:bg-[var(--color-surface-container-lowest)]/40 transition-colors shadow-lg cursor-pointer group`}
                   >
                     <div className="flex flex-col items-center gap-3 text-[var(--color-outline-variant)] group-hover:text-[var(--color-primary)] transition-colors">
                       <Plus className="h-12 w-12 stroke-1" />
@@ -308,8 +382,8 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
         </div>
       ) : (
         /* ═══ NORMAL OVERLAPPING FAN MODE (<= 3 cards total) ═══ */
-        <div className="w-full overflow-x-auto py-14 px-16 scrollbar-none flex justify-center">
-          <div className="flex flex-row items-center justify-center min-w-max relative">
+        <div className="w-full overflow-x-auto py-10 px-16 scrollbar-none flex justify-center">
+          <div className="flex flex-row items-center justify-center min-w-max relative h-[480px]">
             <AnimatePresence mode="popLayout">
               {projects.map((project, i) => {
                 const rIdx = i % SCATTER_ROTATIONS.length;
@@ -337,10 +411,10 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
                       transition: { duration: 0.2 },
                     }}
                     whileHover={{
-                      y: -40,
+                      y: -24,
                       x: translateX,
                       rotate: 0,
-                      scale: 1.06,
+                      scale: 1.04,
                       zIndex: 50,
                     }}
                     transition={{
@@ -349,27 +423,27 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
                       damping: 18,
                       delay: i * 0.02,
                     }}
-                    className={`playing-card w-[280px] h-[360px] rounded-xl p-5 flex flex-col gap-4 flex-shrink-0 relative group/proj blowout-card shadow-md bg-[var(--color-surface-container-lowest)]/85 backdrop-blur-md border border-[var(--color-outline-variant)]/40 ${
+                    className={`playing-card w-[290px] h-[440px] rounded-xl p-5 flex flex-col gap-3.5 flex-shrink-0 relative group/proj blowout-card shadow-md bg-[var(--color-surface-container-lowest)]/85 backdrop-blur-md border border-[var(--color-outline-variant)]/40 ${
                       i > 0 ? "-ml-32 md:-ml-38" : ""
                     }`}
                     style={{
                       zIndex: i,
                     }}
                   >
-                    {/* Card Header */}
-                    <div className="flex justify-between items-center h-6">
-                      <span className="font-mono text-sm font-medium text-[var(--color-outline-variant)]">
-                        {String(i + 1).padStart(2, "0")}
+                    {/* Card Header with inline Trash action */}
+                    <div className="flex justify-between items-center h-6 border-b border-[var(--color-outline-variant)]/30 pb-2 mb-1">
+                      <span className="font-mono text-[10px] font-semibold tracking-wider text-[var(--color-outline-variant)]">
+                        PROJECT {String(i + 1).padStart(2, "0")}
                       </span>
                       {projects.length > 1 ? (
                         <button
                           type="button"
                           onClick={() => removeProject(i)}
                           disabled={disabled}
-                          className="text-[var(--color-outline-variant)] hover:text-[var(--color-error)] transition-all duration-150 active:scale-90 disabled:opacity-50"
+                          className="text-[var(--color-outline-variant)] hover:text-[var(--color-error)] transition-all duration-150 active:scale-90 disabled:opacity-50 p-0.5 rounded"
                           title="Delete project"
                         >
-                          <Trash2 className="h-[18px] w-[18px]" />
+                          <Trash2 className="h-4.5 w-4.5" />
                         </button>
                       ) : (
                         <FolderOpen className="h-[18px] w-[18px] text-[var(--color-outline-variant)]" />
@@ -377,7 +451,7 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
                     </div>
 
                     {/* Card Body */}
-                    <div className="space-y-3 flex-1">
+                    <div className="space-y-2.5 flex-1 overflow-y-auto scrollbar-none pr-1">
                       <div className="flex flex-col gap-1">
                         <label className="field-label text-[10px]">Repository</label>
                         <input
@@ -398,7 +472,7 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
                           onChange={(e) => updateProject(i, "title", e.target.value)}
                           disabled={disabled}
                           placeholder="Project title"
-                          className="input-drafting font-semibold"
+                          className="input-drafting font-semibold text-sm"
                         />
                       </div>
 
@@ -410,7 +484,7 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
                           disabled={disabled}
                           placeholder="What did you contribute?"
                           rows={2}
-                          className="input-drafting input-drafting-sm resize-none leading-relaxed"
+                          className="input-drafting input-drafting-sm resize-none leading-relaxed text-xs"
                         />
                       </div>
 
@@ -425,10 +499,60 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
                           className="input-drafting input-drafting-sm resize-none text-xs"
                         />
                       </div>
+
+                      {/* Dynamic links sub-editor as flexible wrapping badges */}
+                      <div className="flex flex-col gap-1 pt-1">
+                        <label className="field-label text-[10px] flex items-center gap-1">
+                          <Link2 className="h-3 w-3 text-[var(--color-primary)]" /> Custom URLs
+                        </label>
+                        <div className="flex flex-wrap gap-1.5 items-center min-h-[30px] pt-1">
+                          {(project.links || []).map((lnk, lIdx) => (
+                            <div
+                              key={lIdx}
+                              className="flex items-center gap-1 px-1.5 py-1 rounded border border-[var(--color-outline-variant)]/40 bg-[var(--color-surface-container-low)] shadow-sm text-[10px] font-mono"
+                            >
+                              <input
+                                type="text"
+                                value={lnk.label}
+                                onChange={(e) => updateLink(i, lIdx, "label", e.target.value)}
+                                disabled={disabled}
+                                placeholder="Live"
+                                className="bg-transparent border-none p-0 outline-none w-[35px] text-[10px] font-mono focus:ring-0 placeholder:text-[var(--color-outline-variant)] text-[var(--color-on-surface)]"
+                              />
+                              <span className="text-[var(--color-outline-variant)]">:</span>
+                              <input
+                                type="text"
+                                value={lnk.url}
+                                onChange={(e) => updateLink(i, lIdx, "url", e.target.value)}
+                                disabled={disabled}
+                                placeholder="https://..."
+                                className="bg-transparent border-none p-0 outline-none w-[80px] text-[10px] font-mono focus:ring-0 placeholder:text-[var(--color-outline-variant)] text-[var(--color-on-surface)]"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => removeLink(i, lIdx)}
+                                disabled={disabled}
+                                className="text-[var(--color-outline-variant)] hover:text-[var(--color-error)] transition-colors active:scale-90 ml-0.5"
+                              >
+                                <X className="h-3 w-3" />
+                              </button>
+                            </div>
+                          ))}
+                          <button
+                            type="button"
+                            onClick={() => addLink(i)}
+                            disabled={disabled}
+                            className="flex items-center gap-1 px-1.5 py-1 rounded border border-dashed border-[var(--color-outline-variant)]/60 text-[10px] font-mono hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition-all cursor-pointer active:scale-95"
+                          >
+                            <Plus className="h-3 w-3" />
+                            <span>Link</span>
+                          </button>
+                        </div>
+                      </div>
                     </div>
 
                     {/* Card Footer */}
-                    <div className="font-mono text-[10px] text-[var(--color-outline-variant)] tracking-[0.15em] text-center uppercase border-t border-[var(--color-outline-variant)]/50 pt-2">
+                    <div className="font-mono text-[9px] text-[var(--color-outline-variant)] tracking-[0.15em] text-center uppercase border-t border-[var(--color-outline-variant)]/50 pt-2 shrink-0">
                       Repo Connection
                     </div>
                   </motion.div>
@@ -455,10 +579,10 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
                       scale: 1,
                     }}
                     whileHover={{
-                      y: -40,
+                      y: -24,
                       x: translateX,
                       rotate: 0,
-                      scale: 1.06,
+                      scale: 1.04,
                       zIndex: 50,
                     }}
                     transition={{
@@ -468,7 +592,7 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
                       delay: projects.length * 0.02,
                     }}
                     onClick={disabled ? undefined : addProject}
-                    className={`w-[280px] h-[360px] rounded-xl p-5 flex flex-col justify-center items-center gap-4 flex-shrink-0 border-2 border-dashed border-[var(--color-outline-variant)]/60 bg-[var(--color-surface-container-lowest)]/20 backdrop-blur-md hover:bg-[var(--color-surface-container-lowest)]/40 transition-colors cursor-pointer group blowout-card animate-fade-up ${
+                    className={`w-[290px] h-[440px] rounded-xl p-5 flex flex-col justify-center items-center gap-4 flex-shrink-0 border-2 border-dashed border-[var(--color-outline-variant)]/60 bg-[var(--color-surface-container-lowest)]/20 backdrop-blur-md hover:bg-[var(--color-surface-container-lowest)]/40 transition-colors cursor-pointer group blowout-card animate-fade-up ${
                       projects.length > 0 ? "-ml-32 md:-ml-38" : ""
                     } ${disabled ? "opacity-50 pointer-events-none" : ""}`}
                     style={{
