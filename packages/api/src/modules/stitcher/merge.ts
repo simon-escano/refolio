@@ -115,11 +115,22 @@ export function stitchPortfolio(
       // Merge enhanced bullet points if provided
       let finalContributions: string[] = [];
       if (enhancement?.enhanced_contributions) {
-        // If Gemini returns a string instead of an array (per the prompt instruction), split by newlines
-        const enhancedStr = enhancement.enhanced_contributions;
-        finalContributions = enhancedStr.split("\n").map(s => s.replace(/^- /, "").trim()).filter(Boolean);
+        const val = enhancement.enhanced_contributions;
+        if (Array.isArray(val)) {
+          finalContributions = val.map((s) => String(s).trim()).filter(Boolean);
+        } else if (typeof val === "string") {
+          finalContributions = val
+            .split("\n")
+            .map((s) => s.replace(/^- /, "").trim())
+            .filter(Boolean);
+        } else {
+          finalContributions = [String(val)];
+        }
       } else if (e.contributions) {
-        finalContributions = e.contributions.split("\n").map(s => s.trim()).filter(Boolean);
+        finalContributions = e.contributions
+          .split("\n")
+          .map((s) => s.trim())
+          .filter(Boolean);
       }
 
       return {
