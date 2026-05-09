@@ -19,14 +19,14 @@ Return ONLY a valid JSON object. No markdown fences, explanations, or preambles.
 The JSON MUST match this structure:
 
 {
-  "philosophy": "string — 1-2 sentence engineering philosophy synthesized from the profile and projects",
+  "philosophy": "string — 1 snappy sentence engineering philosophy synthesized from the profile and projects (MAX 25 words)",
   "items": [
     {
       "id": "string — the item ID provided in the input",
       "type": "solution" | "achievement" | "credential" | "experience",
-      "enhanced_contributions": "string — polished role titles (for solutions) or improved bullet points (for experiences)",
-      "enhanced_description": "string — polished professional description (for achievements/credentials)",
-      "generated_title": "string — (ONLY FOR ACHIEVEMENTS OR CERTIFICATIONS) A concise, professional title summarizing the accomplishment or certification",
+      "enhanced_contributions": "string — polished role titles (for solutions, MAX 8 words) or concise improved bullet points (for experiences, MAX 3 bullet points, MAX 45 words total)",
+      "enhanced_description": "string — polished professional description (for achievements/credentials, MAX 20 words)",
+      "generated_title": "string — (ONLY FOR ACHIEVEMENTS OR CERTIFICATIONS) A highly concise, professional title summarizing the accomplishment or certification",
       "generated_institution": "string — (ONLY FOR CERTIFICATIONS) The issuing organization",
       "generated_date": "string — (ONLY FOR ACHIEVEMENTS OR CERTIFICATIONS) Extracted or estimated date/timeframe if mentioned (e.g. '2023' or 'May 2024'), otherwise omit"
     }
@@ -48,13 +48,14 @@ The JSON MUST match this structure:
 }
 
 CRITICAL RULES:
-1. For contributions: synthesize raw notes into polished role titles (e.g., "built the database" → "Database Architect").
-2. For achievements: make descriptions concise, quantified where possible, and recruiter-compelling.
-3. Philosophy must reflect the engineer's actual work patterns, not generic platitudes.
+1. For contributions: synthesize raw notes into polished role titles (e.g., "built the database" → "Database Architect"). Keep experiences to a max of 3 crisp, highly concise bullet points (max 45 words total).
+2. For achievements: make descriptions extremely concise, quantified where possible, and recruiter-compelling (max 20 words).
+3. Philosophy must reflect the engineer's actual work patterns, not generic platitudes, and must be under 25 words.
 4. NO hallucinated data. If specifics aren't available, describe qualitative patterns instead.
 5. For Hobbies: parse the user's comma-separated hobbies and assign a highly relevant Lucide icon and aesthetically pleasing hex color.
 6. For Tech Skills: group them into a logical professional category, and select a fitting category-level Lucide icon (e.g. 'Layout' for Frontend, 'Server' or 'Database' for Backend, 'Terminal' for DevOps, 'Palette' for Design).
-7. Write as if presenting to a hiring manager at a top-tier tech company.`;
+7. Write as if presenting to a hiring manager at a top-tier tech company.
+8. BE EXTREMELY BRIEF AND CONCISE. Long-winded essays, verbose paragraphs, or bloated responses are strictly forbidden. Keeping responses short guarantees high execution speed and avoids network truncation. Ensure total output stays well under 800 tokens.`;
 }
 
 /**

@@ -40,6 +40,7 @@ export default function App() {
   // ─── Output State ───
   const sync = usePortfolioSync();
   const [activeTab, setActiveTab] = useState<"preview" | "json">("preview");
+  const [viewMode, setViewMode] = useState<"edit" | "output">("edit");
   const canGenerate =
     profile.name.trim() !== "" &&
     profile.role.trim() !== "" &&
@@ -80,11 +81,13 @@ export default function App() {
         onResult: (data) => {
           sync.setFromPipeline(data);
           setIsGenerating(false);
+          setViewMode("output");
           abortRef.current = null;
         },
         onError: (msg) => {
           setError(msg);
           setIsGenerating(false);
+          setViewMode("output");
           abortRef.current = null;
         },
       }
@@ -113,7 +116,34 @@ export default function App() {
       <main className="flex-1 relative z-10">
         <div className="w-full">
           <section id="workspace" className="mx-auto max-w-[1440px] px-5 md:px-16 py-8">
-            {!hasOutput ? (
+            {hasOutput && (
+              <div className="flex justify-center mb-10 animate-fade-in relative z-20">
+                <div className="bg-[var(--color-surface-container-low)] p-1.5 rounded-2xl border border-[var(--color-outline-variant)]/60 flex items-center shadow-lg backdrop-blur-md level-1">
+                  <button
+                    onClick={() => setViewMode("edit")}
+                    className={`px-6 py-3 rounded-xl font-mono text-xs font-semibold tracking-[0.1em] transition-all duration-300 ${
+                      viewMode === "edit"
+                        ? "bg-[var(--color-primary)] text-white shadow-md scale-[1.02]"
+                        : "text-[var(--color-on-surface-variant)] hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-variant)]/20"
+                    }`}
+                  >
+                    DRAFTING TABLE (INPUTS)
+                  </button>
+                  <button
+                    onClick={() => setViewMode("output")}
+                    className={`px-6 py-3 rounded-xl font-mono text-xs font-semibold tracking-[0.1em] transition-all duration-300 ${
+                      viewMode === "output"
+                        ? "bg-[var(--color-primary)] text-white shadow-md scale-[1.02]"
+                        : "text-[var(--color-on-surface-variant)] hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-variant)]/20"
+                    }`}
+                  >
+                    OUTPUT CANVAS ({activeTab === "preview" ? "LIVE PREVIEW" : "RAW JSON"})
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {viewMode === "edit" ? (
               /* ─── MAIN LANDING & WORKSPACE FLOW ─── */
               <div className="space-y-12 pb-20">
                 {/* ─── EYE-CATCHING HERO SECTION ─── */}
@@ -237,6 +267,14 @@ export default function App() {
               <div className="flex gap-8">
                 {/* Left sidebar — compact input stack (1/4 width) */}
                 <aside className="w-1/4 flex flex-col gap-5 max-h-[calc(100vh-120px)] overflow-y-auto pr-2 sticky top-20">
+                  {/* Return to Drafting Table button */}
+                  <button
+                    onClick={() => setViewMode("edit")}
+                    className="w-full py-3.5 px-4 bg-[var(--color-surface-container-low)] hover:bg-[var(--color-surface-variant)] text-[var(--color-primary)] hover:text-[var(--color-primary)] rounded-xl font-mono text-[10px] font-semibold tracking-wider border border-[var(--color-outline-variant)]/40 hover:border-[var(--color-primary)]/50 transition-all shadow-sm flex items-center justify-center gap-2 level-1"
+                  >
+                    <span>←</span> EDIT DRAFTING INPUTS
+                  </button>
+
                   {/* Mini ID Card */}
                   <MiniIdCard name={profile.name} role={profile.role} />
 

@@ -53,8 +53,8 @@ export async function generateNarrative(
     },
     generationConfig: {
       responseMimeType: "application/json",
-      temperature: 0.3,
-      maxOutputTokens: 8192,
+      temperature: 0.1,
+      maxOutputTokens: 1536,
     },
   };
 
@@ -77,27 +77,43 @@ export async function generateNarrative(
   const responseBody = (await res.json()) as {
     candidates?: Array<{
       content?: { parts?: Array<{ text?: string }> };
+      finishReason?: string;
     }>;
   };
 
-  const rawText = responseBody.candidates?.[0]?.content?.parts?.[0]?.text;
+  const candidate = responseBody.candidates?.[0];
+  const finishReason = candidate?.finishReason;
+  const rawText = candidate?.content?.parts?.[0]?.text;
+
   if (!rawText) {
-    throw Errors.narrativeFailure("Gemini returned no content in response");
+    throw Errors.narrativeFailure(
+      `Gemini returned no content. Finish reason: ${finishReason || "UNKNOWN"}`
+    );
   }
 
   const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
   onProgress({
     phase: "narrative",
     message: `Gemini inference complete in ${elapsed}s`,
-    detail: `${rawText.length.toLocaleString()} chars returned`,
+    detail: `${rawText.length.toLocaleString()} chars returned (finishReason: ${finishReason || "STOP"})`,
   });
+
+  // Robustly sanitize rawText from markdown code fences if they got returned by the model
+  let cleanText = rawText.trim();
+  if (cleanText.startsWith("```")) {
+    cleanText = cleanText.replace(/^```[a-zA-Z]*\n/, "");
+    cleanText = cleanText.replace(/\n```$/, "");
+    cleanText = cleanText.trim();
+  }
 
   let parsed: NarrativeOutput;
   try {
-    parsed = JSON.parse(rawText) as NarrativeOutput;
-  } catch {
+    parsed = JSON.parse(cleanText) as NarrativeOutput;
+  } catch (parseErr) {
+    console.error("[Gemini JSON Parse Failure]", parseErr, "Raw Text:", rawText);
     throw Errors.narrativeFailure(
-      "Gemini returned invalid JSON: " + rawText.slice(0, 300)
+      "Gemini returned invalid JSON: " + cleanText.slice(0, 300),
+      { rawText, finishReason, parseError: String(parseErr) }
     );
   }
 
