@@ -14,6 +14,8 @@ export interface ProjectEntry {
 interface Props {
   projects: ProjectEntry[];
   onChange: (projects: ProjectEntry[]) => void;
+  preComputedProjects: any[];
+  onPreComputedChange: (precomputed: any[]) => void;
   disabled?: boolean;
 }
 
@@ -26,12 +28,42 @@ const emptyProject: ProjectEntry = {
   links: [],
 };
 
+const sampleProjectsJson = `[
+  {
+    "title": "Pawductive",
+    "one_liner": "A gamified Android productivity app center around extrinsic and intrinsic psychological motivators.",
+    "contributions": "Lead Mobile Engineer, Android App Architect, UI/UX Lead Designer",
+    "problem": "Generic to-do apps fail to maintain long-term user retention due to lack of emotional reward or game-mechanic feedback.",
+    "goal": "Build an Android client that transforms user productivity metrics into virtual assets and emotional care routines.",
+    "gallery": [],
+    "links": [
+      { "label": "Repository", "url": "https://github.com/simon-escano/Pawductive_2" }
+    ],
+    "key_features": [
+      { "icon": "zap", "text": "Gamified task loop and experience point calculations" },
+      { "icon": "shield", "text": "Offline Room Database SQLite persistence" }
+    ],
+    "architecture_diagram_code": "graph TD\\nA[Android UI] -->|User Actions| B[ViewModel]\\nB -->|State Updates| A\\nB -->|Data Mutators| C[Room Database]",
+    "tech_stack": {
+      "Primary": [{ "name": "Kotlin" }, { "name": "Android SDK" }],
+      "Supporting": [{ "name": "Jetpack Compose" }],
+      "Infrastructure": [{ "name": "SQLite" }]
+    },
+    "stack_reason": "Chosen for native Android robustness, memory efficiency, and sub-second SQL storage queries.",
+    "results": {
+      "performance": { "icon": "zap", "text": "Eliminated UI thread latency by executing all DB transactions on Kotlin Coroutines threads." },
+      "scale": { "icon": "layers", "text": "Architected clean MVVM separation to allow adding shop modules without changing database definitions." },
+      "utility": { "icon": "shield", "text": "Ensured atomic task actions and schema safety with Room's query-time compiler checks." }
+    }
+  }
+]`;
+
 // Deterministic scattered offsets for the fanned layout
 const SCATTER_ROTATIONS = [-4, 5, -6, 3, -3, 6, -5, 4];
 const SCATTER_Y = [4, -6, 8, -5, 6, -3, 5, -8];
 const SCATTER_X = [-3, 5, -5, 6, -4, 3, -6, 4];
 
-export function GitloreQueue({ projects, onChange, disabled }: Props) {
+export function GitloreQueue({ projects, onChange, preComputedProjects, onPreComputedChange, disabled }: Props) {
   const [activeIndex, setActiveIndex] = useState(0);
   const totalCards = projects.length + 1; // Projects plus the Add card
   const isCarouselMode = totalCards > 3;
@@ -79,6 +111,16 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
     onChange(updatedProjects);
   };
 
+  const [usePrecomputed, setUsePrecomputed] = useState(preComputedProjects.length > 0);
+  const [jsonText, setJsonText] = useState(
+    preComputedProjects.length > 0 ? JSON.stringify(preComputedProjects, null, 2) : ""
+  );
+
+  const handleLoadSample = () => {
+    setJsonText(sampleProjectsJson);
+    onPreComputedChange(JSON.parse(sampleProjectsJson));
+  };
+
   // Keep activeIndex within bounds when cards are removed
   useEffect(() => {
     if (activeIndex >= totalCards) {
@@ -93,7 +135,102 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
         Gitlore Queue
       </div>
 
-      {isCarouselMode ? (
+      {/* Workflow Segmented Pill Toggle */}
+      <div className="flex gap-2 items-center mb-6 bg-[var(--color-surface-container-low)] p-1 rounded-xl border border-[var(--color-outline-variant)]/40 w-fit level-1 animate-fade-down">
+        <button
+          type="button"
+          onClick={() => {
+            setUsePrecomputed(false);
+            onPreComputedChange([]);
+          }}
+          className={`px-4 py-2.5 rounded-lg font-mono text-[10px] font-semibold tracking-[0.1em] transition-all duration-200 ${
+            !usePrecomputed
+              ? "bg-[var(--color-primary)] text-white shadow-sm"
+              : "text-[var(--color-on-surface-variant)] hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-variant)]/25"
+          }`}
+        >
+          GITLORE WORKFLOW
+        </button>
+        <button
+          type="button"
+          onClick={() => setUsePrecomputed(true)}
+          className={`px-4 py-2.5 rounded-lg font-mono text-[10px] font-semibold tracking-[0.1em] transition-all duration-200 ${
+            usePrecomputed
+              ? "bg-[var(--color-primary)] text-white shadow-sm"
+              : "text-[var(--color-on-surface-variant)] hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-variant)]/25"
+          }`}
+        >
+          DIRECT JSON INGESTION (SKIP QUEUE)
+        </button>
+      </div>
+
+      {usePrecomputed ? (
+        <div className="bg-[var(--color-surface-container-lowest)] border border-[var(--color-outline-variant)]/40 rounded-2xl p-6 space-y-5 shadow-lg animate-fade-in level-2">
+          <div className="flex justify-between items-start gap-4">
+            <div className="space-y-1">
+              <h3 className="text-sm font-semibold text-[var(--color-on-surface)] flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-[var(--color-primary)] animate-pulse" />
+                Direct Project JSON Ingestion
+              </h3>
+              <p className="text-xs text-[var(--color-on-surface-variant)] leading-relaxed">
+                Skip slow Gitlore extraction and supply pre-computed project objects directly. Saves substantial LLM context limits and token usage.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={handleLoadSample}
+              className="px-3.5 py-1.5 rounded-lg font-mono text-[10px] font-semibold tracking-wider text-[var(--color-primary)] border border-[var(--color-primary)]/30 hover:bg-[var(--color-primary)] hover:text-white transition-all duration-200 shrink-0 shadow-sm"
+            >
+              LOAD SAMPLE SCHEMA
+            </button>
+          </div>
+
+          <textarea
+            value={jsonText}
+            onChange={(e) => {
+              setJsonText(e.target.value);
+              try {
+                const parsed = JSON.parse(e.target.value);
+                if (Array.isArray(parsed)) {
+                  onPreComputedChange(parsed);
+                } else {
+                  onPreComputedChange([]);
+                }
+              } catch (err) {
+                onPreComputedChange([]);
+              }
+            }}
+            disabled={disabled}
+            placeholder={`[\n  {\n    "title": "My Awesome App",\n    "one_liner": "A performant react client...",\n    "contributions": "Lead Developer",\n    "problem": "...",\n    "goal": "...",\n    "key_features": [\n      { "icon": "cpu", "text": "Hardware acceleration" }\n    ],\n    "architecture_diagram_code": "graph TD\\nA-->B",\n    "tech_stack": {\n      "Primary": [{ "name": "React" }],\n      "Supporting": [],\n      "Infrastructure": []\n    },\n    "stack_reason": "...",\n    "results": {\n      "performance": { "icon": "zap", "text": "100ms load time" },\n      "scale": { "icon": "shield", "text": "Qualitative scale" },\n      "utility": { "icon": "code", "text": "Clean code" }\n    }\n  }\n]`}
+            rows={12}
+            className="w-full font-mono text-xs p-4 bg-[var(--color-surface-container-low)] text-[var(--color-on-surface)] border border-[var(--color-outline-variant)]/60 rounded-xl focus:outline-none focus:border-[var(--color-primary)] placeholder:text-[var(--color-outline-variant)] transition-all leading-relaxed focus:ring-1 focus:ring-[var(--color-primary)]/20 shadow-inner resize-y"
+          />
+
+          <div className="flex items-center gap-2 pt-1 border-t border-[var(--color-outline-variant)]/30">
+            {jsonText.trim() ? (() => {
+              try {
+                JSON.parse(jsonText);
+                return (
+                  <div className="flex items-center gap-1.5 text-xs text-emerald-600 font-mono font-semibold">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+                    ✓ Valid JSON structure parsed successfully
+                  </div>
+                );
+              } catch (e: any) {
+                return (
+                  <div className="text-xs text-[var(--color-error)] font-mono font-semibold">
+                    ✗ Invalid JSON syntax: {e.message}
+                  </div>
+                );
+              }
+            })() : (
+              <div className="text-xs text-[var(--color-outline)] font-mono">
+                Paste your projects JSON block above to get started.
+              </div>
+            )}
+          </div>
+        </div>
+      ) : isCarouselMode ? (
         /* ═══ BUNCHING CAROUSEL MODE (Overflowing Deck) ═══ */
         <div className="relative w-full h-[510px] overflow-visible flex items-center justify-center py-10 px-4 sm:px-16">
           {/* Left Cycle Arrow */}
@@ -380,7 +517,7 @@ export function GitloreQueue({ projects, onChange, disabled }: Props) {
             </button>
           )}
         </div>
-      ) : (
+        ) : (
         /* ═══ NORMAL OVERLAPPING FAN MODE (<= 3 cards total) ═══ */
         <div className="w-full overflow-x-auto py-10 px-16 scrollbar-none flex justify-center">
           <div className="flex flex-row items-center justify-center min-w-max relative h-[480px]">

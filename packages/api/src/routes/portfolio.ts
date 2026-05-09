@@ -50,29 +50,41 @@ async function runPipeline(
   // Step 3: Gitlore pass-through for each project
   const gitloreOutputs: Array<{ id: string; output: GitloreOutput }> = [];
 
-  for (let i = 0; i < request.projects.length; i++) {
-    const project = request.projects[i];
-    const id = `solution-${i}`;
-
+  if (request.preComputedProjects && request.preComputedProjects.length > 0) {
     onProgress({
       phase: "gitlore",
-      message: `Processing project ${i + 1}/${request.projects.length}...`,
+      message: `Skipping Gitlore queue — loading ${request.preComputedProjects.length} pre-computed projects`,
     });
+    for (let i = 0; i < request.preComputedProjects.length; i++) {
+      const output = request.preComputedProjects[i] as GitloreOutput;
+      const id = `solution-${i}`;
+      gitloreOutputs.push({ id, output });
+    }
+  } else if (request.projects) {
+    for (let i = 0; i < request.projects.length; i++) {
+      const project = request.projects[i];
+      const id = `solution-${i}`;
 
-    const output = await fetchGitloreOutput(
-      {
-        url: project.url,
-        title: project.title,
-        contributions: project.contributions,
-        context: project.context,
-        gallery: project.gallery,
-        links: project.links,
-      },
-      config,
-      onProgress
-    );
+      onProgress({
+        phase: "gitlore",
+        message: `Processing project ${i + 1}/${request.projects.length}...`,
+      });
 
-    gitloreOutputs.push({ id, output });
+      const output = await fetchGitloreOutput(
+        {
+          url: project.url,
+          title: project.title,
+          contributions: project.contributions,
+          context: project.context,
+          gallery: project.gallery,
+          links: project.links,
+        },
+        config,
+        onProgress
+      );
+
+      gitloreOutputs.push({ id, output });
+    }
   }
 
   onProgress({

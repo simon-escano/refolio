@@ -25,6 +25,7 @@ export default function App() {
   const [projects, setProjects] = usePersistedState<ProjectEntry[]>("refolio_projects", [
     { url: "", title: "", contributions: "", context: "", gallery: [], links: [] },
   ]);
+  const [preComputedProjects, setPreComputedProjects] = usePersistedState<any[]>("refolio_precomputed_projects", []);
   const [achievements, setAchievements] = usePersistedState<AchievementEntry[]>("refolio_achievements", []);
   const [credentials, setCredentials] = usePersistedState<CredentialEntry[]>("refolio_credentials", []);
   const [experience, setExperience] = usePersistedState<ExperienceEntry[]>("refolio_experience", []);
@@ -44,7 +45,7 @@ export default function App() {
   const canGenerate =
     profile.name.trim() !== "" &&
     profile.role.trim() !== "" &&
-    projects.some((p) => p.url.trim() !== "" && p.title.trim() !== "");
+    (preComputedProjects.length > 0 || projects.some((p) => p.url.trim() !== "" && p.title.trim() !== ""));
 
   const handleGenerate = () => {
     setProgress([]);
@@ -64,7 +65,8 @@ export default function App() {
           website: profile.website || undefined,
           hobbies: profile.hobbies || undefined,
         },
-        projects: projects.filter((p) => p.url.trim() && p.title.trim()),
+        projects: preComputedProjects.length > 0 ? [] : projects.filter((p) => p.url.trim() && p.title.trim()),
+        preComputedProjects: preComputedProjects.length > 0 ? preComputedProjects : undefined,
         achievements: achievements.filter((a) => a.accomplishment?.trim()),
         credentials: credentials.filter((c) => {
           if (c.type === "education") return c.title?.trim();
@@ -192,7 +194,13 @@ export default function App() {
                       </span>
                       <div className="h-px bg-[var(--color-outline-variant)]/60 flex-1" />
                     </div>
-                    <GitloreQueue projects={projects} onChange={setProjects} disabled={isGenerating} />
+                    <GitloreQueue
+                      projects={projects}
+                      onChange={setProjects}
+                      preComputedProjects={preComputedProjects}
+                      onPreComputedChange={setPreComputedProjects}
+                      disabled={isGenerating}
+                    />
                   </div>
 
                   {/* Step 3: Professional History */}

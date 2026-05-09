@@ -47,7 +47,10 @@ export const GenerateRequestSchema = z.object({
   }),
 
   /** Hustle Zone — projects to analyze via Gitlore */
-  projects: z.array(ProjectInputSchema).min(1, "At least one project is required"),
+  projects: z.array(ProjectInputSchema).optional().default([]),
+
+  /** Pre-analyzed/Pre-computed projects to bypass Gitlore queue */
+  preComputedProjects: z.array(z.any()).optional().default([]),
 
   /** Hustle Zone — free-text achievements and experience */
   achievements: z
@@ -105,6 +108,16 @@ export const GenerateRequestSchema = z.object({
       })
     ).default([]),
   }).default({ tech: [], languages: [] }),
+}).superRefine((data, ctx) => {
+  const hasProjects = data.projects && data.projects.length > 0;
+  const hasPrecomputed = data.preComputedProjects && data.preComputedProjects.length > 0;
+  if (!hasProjects && !hasPrecomputed) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Either projects (Gitlore queue) or preComputedProjects must be provided",
+      path: ["projects"],
+    });
+  }
 });
 
 export type GenerateRequest = z.infer<typeof GenerateRequestSchema>;
