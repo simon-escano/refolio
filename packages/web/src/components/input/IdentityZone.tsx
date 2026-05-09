@@ -92,21 +92,22 @@ export function IdentityZone({ value, onChange, disabled }: Props) {
             {/* Contact */}
             <div className="flex flex-col gap-1">
               <label className="field-label">Contact</label>
-              <div className="flex gap-2">
+              <div className="flex gap-2 items-end w-full">
                 <select
                   value={value.mobileAreaCode || "+63"}
                   onChange={(e) => update("mobileAreaCode", e.target.value)}
                   disabled={disabled}
-                  className="input-drafting input-drafting-sm w-20 bg-transparent appearance-none cursor-pointer"
+                  className="input-drafting input-drafting-sm bg-transparent cursor-pointer shrink-0"
+                  style={{ width: "80px" }}
                 >
-                  <option value="+1">+1</option>
-                  <option value="+44">+44</option>
-                  <option value="+61">+61</option>
-                  <option value="+63">+63</option>
-                  <option value="+65">+65</option>
-                  <option value="+81">+81</option>
-                  <option value="+86">+86</option>
-                  <option value="+91">+91</option>
+                  <option value="+1" className="bg-[var(--color-surface-container-lowest)] text-[var(--color-on-surface)]">+1</option>
+                  <option value="+44" className="bg-[var(--color-surface-container-lowest)] text-[var(--color-on-surface)]">+44</option>
+                  <option value="+61" className="bg-[var(--color-surface-container-lowest)] text-[var(--color-on-surface)]">+61</option>
+                  <option value="+63" className="bg-[var(--color-surface-container-lowest)] text-[var(--color-on-surface)]">+63</option>
+                  <option value="+65" className="bg-[var(--color-surface-container-lowest)] text-[var(--color-on-surface)]">+65</option>
+                  <option value="+81" className="bg-[var(--color-surface-container-lowest)] text-[var(--color-on-surface)]">+81</option>
+                  <option value="+86" className="bg-[var(--color-surface-container-lowest)] text-[var(--color-on-surface)]">+86</option>
+                  <option value="+91" className="bg-[var(--color-surface-container-lowest)] text-[var(--color-on-surface)]">+91</option>
                 </select>
                 <input
                   type="text"
@@ -114,7 +115,7 @@ export function IdentityZone({ value, onChange, disabled }: Props) {
                   onChange={(e) => update("mobile", e.target.value)}
                   disabled={disabled}
                   placeholder="Phone Number"
-                  className="input-drafting input-drafting-sm flex-1"
+                  className="input-drafting input-drafting-sm flex-grow min-w-0"
                 />
               </div>
             </div>
