@@ -31,6 +31,7 @@ export default function App() {
   const [experience, setExperience] = usePersistedState<ExperienceEntry[]>("refolio_experience", []);
   const [tech, setTech] = usePersistedState<SkillEntry[]>("refolio_tech", []);
   const [languages, setLanguages] = usePersistedState<LanguageEntry[]>("refolio_languages", []);
+  const [skipProjectNarratives, setSkipProjectNarratives] = usePersistedState("refolio_skip_project_narratives", false);
 
   // ─── Pipeline State ───
   const [progress, setProgress] = useState<ProgressEvent[]>([]);
@@ -77,6 +78,7 @@ export default function App() {
           tech: tech.filter((t) => t.title.trim()),
           languages: languages.filter((l) => l.title.trim()),
         },
+        skipProjectNarratives,
       },
       {
         onProgress: (event) => setProgress((prev) => [...prev, event]),
@@ -256,7 +258,29 @@ export default function App() {
                   </div>
 
                   {/* Generate CTA */}
-                  <div className="pt-4 border-t border-[var(--color-outline-variant)]/40">
+                  <div className="pt-6 border-t border-[var(--color-outline-variant)]/40 space-y-4">
+                    {/* Skip Project Narratives Toggle */}
+                    <div className="flex items-center justify-between p-4 rounded-xl border border-[var(--color-outline-variant)]/30 bg-[var(--color-surface-container-low)]/50 backdrop-blur-sm shadow-sm level-1 animate-fade-up">
+                      <div className="space-y-1 pr-4">
+                        <label className="text-xs font-semibold text-[var(--color-on-surface)] flex items-center gap-1.5 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={skipProjectNarratives}
+                            onChange={(e) => setSkipProjectNarratives(e.target.checked)}
+                            disabled={isGenerating}
+                            className="rounded border-[var(--color-outline)] text-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+                          />
+                          Thrifty Generation (Skip Project Narratives)
+                        </label>
+                        <p className="text-[10px] text-[var(--color-on-surface-variant)] leading-relaxed">
+                          Bypasses sending your project summaries to Gemini for enhancement. Highly recommended for heavy portfolios (10+ projects) to guarantee lightning-fast builds and avoid API rate limits.
+                        </p>
+                      </div>
+                      <span className="font-mono text-[9px] text-[var(--color-primary)] tracking-wider uppercase bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/20 px-2 py-0.5 rounded-full font-semibold">
+                        TOKEN SAVER
+                      </span>
+                    </div>
+
                     <GenerateButton
                       canGenerate={canGenerate}
                       isGenerating={isGenerating}
