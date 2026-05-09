@@ -108,6 +108,9 @@ export const GenerateRequestSchema = z.object({
       })
     ).default([]),
   }).default({ tech: [], languages: [] }),
+
+  /** Skip sending projects to Gemini to save tokens and prevent limits/truncations */
+  skipProjectNarratives: z.boolean().optional().default(false),
 }).superRefine((data, ctx) => {
   const hasProjects = data.projects && data.projects.length > 0;
   const hasPrecomputed = data.preComputedProjects && data.preComputedProjects.length > 0;
